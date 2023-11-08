@@ -43,8 +43,14 @@ class Apple implements IGameObject{
     void spawn(){
         // Choose two random values and place the apple
         Random random = new Random();
-        location.x = random.nextInt(mSpawnRange.x) + 1;
-        location.y = random.nextInt(mSpawnRange.y - 1) + 1;
+        //location.x = random.nextInt(mSpawnRange.x) + 1;
+        //location.y = random.nextInt(mSpawnRange.y - 1) + 1;
+        setLocation(random.nextInt(mSpawnRange.x) + 1, random.nextInt(mSpawnRange.y - 1) + 1);
+    }
+
+    void setLocation(int x, int y) {
+        location.x = x;
+        location.y = y;
     }
 
     // Let SnakeGame know where the apple is
