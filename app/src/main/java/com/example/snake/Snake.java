@@ -54,7 +54,18 @@ class Snake implements IGameObject{
         mSegmentSize = ss;
         mMoveRange = mr;
 
-        // Create and scale the bitmaps
+        // Setting up the bitmaps
+        createBitmaps(context);
+        setBitmaps(context, ss);
+
+        // The halfway point across the screen in pixels
+        // Used to detect which side of screen was pressed
+        halfWayPoint = mr.x * ss / 2;
+    }
+
+    //
+    private void createBitmaps(Context context) {
+        // Create the Bitmaps
         mBitmapHeadRight = BitmapFactory
                 .decodeResource(context.getResources(),
                         R.drawable.head);
@@ -72,6 +83,13 @@ class Snake implements IGameObject{
                 .decodeResource(context.getResources(),
                         R.drawable.head);
 
+        // Create the body
+        mBitmapBody = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.body);
+    }
+
+    private void setBitmaps(Context context, int ss) {
         // Modify the bitmaps to face the snake head
         // in the correct direction
         mBitmapHeadRight = Bitmap
@@ -99,18 +117,10 @@ class Snake implements IGameObject{
                 .createBitmap(mBitmapHeadRight,
                         0, 0, ss, ss, matrix, true);
 
-        // Create and scale the body
-        mBitmapBody = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.body);
-
+        // Scale the body
         mBitmapBody = Bitmap
                 .createScaledBitmap(mBitmapBody,
                         ss, ss, false);
-
-        // The halfway point across the screen in pixels
-        // Used to detect which side of screen was pressed
-        halfWayPoint = mr.x * ss / 2;
     }
 
     // Get the snake ready for a new game
