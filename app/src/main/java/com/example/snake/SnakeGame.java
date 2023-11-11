@@ -40,6 +40,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Apple mApple;
 
 
+
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size) {
@@ -192,6 +193,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 mCanvas.drawText(getResources().
                                 getString(R.string.tap_to_play),
                         200, 700, mPaint);
+
             }
 
 

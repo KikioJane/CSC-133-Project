@@ -12,12 +12,12 @@ class Apple implements IGameObject{
 
     // The location of the apple on the grid
     // Not in pixels
-    private Point location = new Point();
+    private final Point location = new Point();
 
     // The range of values we can choose from
     // to spawn an apple
-    private Point mSpawnRange;
-    private int mSize;
+    private final Point mSpawnRange;
+    private final int mSize;
 
     // An image to represent the apple
     private Bitmap mBitmapApple;
@@ -40,13 +40,16 @@ class Apple implements IGameObject{
     }
 
     // This is called every time an apple is eaten
+
+
     void spawn(){
         // Choose two random values and place the apple
         Random random = new Random();
         // location.x = random.nextInt(mSpawnRange.x) + 1;
         // location.y = random.nextInt(mSpawnRange.y - 1) + 1;
-        setLocation(random.nextInt(mSpawnRange.x) + 1, random.nextInt(mSpawnRange.y - 1) + 1);
+        setLocation(random.nextInt(mSpawnRange.x-1) + 1, random.nextInt(mSpawnRange.y - 1) + 1);
     }
+
 
     // Can be used to set more specific locations for other game features
     void setLocation(int x, int y) {

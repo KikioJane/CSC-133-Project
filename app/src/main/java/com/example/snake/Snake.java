@@ -14,17 +14,17 @@ import java.util.ArrayList;
 class Snake implements IGameObject{
 
     // The location in the grid of all the segments
-    private ArrayList<Point> segmentLocations;
+    private final ArrayList<Point> segmentLocations;
 
     // How big is each segment of the snake?
-    private int mSegmentSize;
+    private final int mSegmentSize;
 
     // How big is the entire grid
-    private Point mMoveRange;
+    private final Point mMoveRange;
 
     // Where is the centre of the screen
     // horizontally in pixels?
-    private int halfWayPoint;
+    private final int halfWayPoint;
 
     // For tracking movement Heading
     private enum Heading {
@@ -180,9 +180,9 @@ class Snake implements IGameObject{
 
         // Hit any of the screen edges
         if (segmentLocations.get(0).x == -1 ||
-                segmentLocations.get(0).x > mMoveRange.x ||
+                segmentLocations.get(0).x > mMoveRange.x-1 ||
                 segmentLocations.get(0).y == -1 ||
-                segmentLocations.get(0).y > mMoveRange.y) {
+                segmentLocations.get(0).y > mMoveRange.y-1) {
 
             dead = true;
         }
@@ -198,6 +198,8 @@ class Snake implements IGameObject{
         }
         return dead;
     }
+
+
 
     boolean checkDinner(Point l) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
