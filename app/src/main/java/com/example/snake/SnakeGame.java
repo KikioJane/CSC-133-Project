@@ -64,7 +64,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                         mNumBlocksHigh),
                 blockSize);
 
-        mSnake = Snake.getSnake(context,
+        mSnake = Snake.getSnakeInstance(context,
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);

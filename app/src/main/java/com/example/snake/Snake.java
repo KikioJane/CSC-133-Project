@@ -66,7 +66,7 @@ class Snake implements IGameObject{
         halfWayPoint = mr.x * ss / 2;
     }
 
-    static Snake getSnake(Context context, Point mr, int ss){
+    static Snake getSnakeInstance(Context context, Point mr, int ss){
 
         // Make a new snake object if it doesn't exist yet
         if(mSnake == null){
