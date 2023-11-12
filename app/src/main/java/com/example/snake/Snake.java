@@ -43,8 +43,11 @@ class Snake implements IGameObject{
     // A bitmap for the body
     private Bitmap mBitmapBody;
 
+    // Snake Object for Singleton
+    static private Snake mSnake = null;
 
-    Snake(Context context, Point mr, int ss) {
+
+    private Snake(Context context, Point mr, int ss) {
 
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
@@ -61,6 +64,15 @@ class Snake implements IGameObject{
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+    }
+
+    static Snake getSnakeInstance(Context context, Point mr, int ss){
+
+        // Make a new snake object if it doesn't exist yet
+        if(mSnake == null){
+            mSnake = new Snake(context, mr, ss);
+        }
+        return mSnake;
     }
 
     //
