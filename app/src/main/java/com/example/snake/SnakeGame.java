@@ -1,6 +1,7 @@
 package com.example.snake;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -38,8 +39,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Snake mSnake;
     // And an apple
     private Apple mApple;
-
-
 
     // This is the constructor method that gets called
     // from SnakeActivity
@@ -155,6 +154,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mSoundManager.playCrashSound();
 
             mPaused =true;
+
         }
 
     }
@@ -167,7 +167,13 @@ class SnakeGame extends SurfaceView implements Runnable{
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+            //mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+            //Bitmap BG1 = BitmapFactory.decodeResource(getResources(), R.drawable.space2);
+            //mPaint.setColor(Color.BLUE);
+            //mCanvas.drawBitmap(BG1, 0, 0, mPaint);
+            Draw mDraw = new Draw();
+            Bitmap BG1 = mDraw.drawBG1(mSurfaceHolder, this.getContext());
+            mCanvas.drawBitmap(BG1, 0, 0, mPaint);
 
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
