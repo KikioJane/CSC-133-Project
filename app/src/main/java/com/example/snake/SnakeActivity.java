@@ -8,7 +8,11 @@ import android.view.Display;
 public class SnakeActivity extends Activity {
 
     // Declare an instance of SnakeGame
-    SnakeGame mSnakeGame;
+    private static SnakeGame mSnakeGame;
+
+    public static SnakeGame getSnakeGame() {
+        return mSnakeGame;
+    }
 
     // Set the game up
     @Override
@@ -40,6 +44,6 @@ public class SnakeActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        mSnakeGame.pause();
+        mSnakeGame.stop();
     }
 }
