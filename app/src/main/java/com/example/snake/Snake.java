@@ -81,25 +81,25 @@ class Snake implements IGameObject{
         // Create the Bitmaps
         mBitmapHeadRight = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.head);
+                        R.drawable.glowhead);
 
         // Create 3 more versions of the head for different headings
         mBitmapHeadLeft = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.head);
+                        R.drawable.glowhead);
 
         mBitmapHeadUp = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.head);
+                        R.drawable.glowhead);
 
         mBitmapHeadDown = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.head);
+                        R.drawable.glowhead);
 
         // Create the body
         mBitmapBody = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.body);
+                        R.drawable.glowbody);
     }
 
     private void setBitmaps(Context context, int ss) {
