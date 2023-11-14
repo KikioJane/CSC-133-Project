@@ -36,6 +36,9 @@ class SnakeGame extends SurfaceView implements Runnable{
     // A snake ssss
     private Snake mSnake;
 
+    //***
+    private Background mBackground;
+
     private final AppleFactory mAppleFactory;
 
     // Use a linked list for O(1) time add/remove operations.
@@ -58,7 +61,10 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
-
+        //*** adding background
+        mBackground = Background.getBackgroundInstance(context);
+        mGameObjects.add(mBackground);
+        //***
         mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize, mGameObjects);
         mAppleFactory.createObject();
@@ -67,7 +73,10 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
+
         mGameObjects.add(mSnake);
+
+
     }
 
 
@@ -79,7 +88,13 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // remove the other objects by clearing the list
         mGameObjects.clear();
+        //*** add background? should background be not in the game this way?
+        // I think background has to be first to be drawn below snake?
+        mGameObjects.add(mBackground);
+        //***
         mGameObjects.add(mSnake);
+
+
 
         // create an apple
         mAppleFactory.createObject();
@@ -164,8 +179,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            mCanvas.drawColor(Color.argb(255, 26, 128, 182));
-
+            mCanvas.drawColor(Color.argb(255, 10, 44, 54));
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
             mPaint.setTextSize(120);
