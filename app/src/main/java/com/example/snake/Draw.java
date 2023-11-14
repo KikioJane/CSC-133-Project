@@ -21,7 +21,7 @@ public class Draw {
 
         Paint mPaint = new Paint();
 
-        Bitmap BG1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.space2);
+        Bitmap BG1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.smallstarsbackground);
         mPaint.setColor(Color.BLUE);
         return BG1;
 

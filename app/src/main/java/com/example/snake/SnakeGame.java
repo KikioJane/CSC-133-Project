@@ -167,7 +167,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            //mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+            mCanvas.drawColor(Color.argb(255, 10, 44, 54));
             //Bitmap BG1 = BitmapFactory.decodeResource(getResources(), R.drawable.space2);
             //mPaint.setColor(Color.BLUE);
             //mCanvas.drawBitmap(BG1, 0, 0, mPaint);
