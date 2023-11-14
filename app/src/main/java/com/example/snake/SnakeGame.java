@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.LinkedList;
+
 class SnakeGame extends SurfaceView implements Runnable{
 
     // Objects for the game loop/thread
@@ -18,9 +20,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Is the game currently playing and or paused?
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
-
-    // for playing sound effects
-    private final SoundManager mSoundManager;
 
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
@@ -36,10 +35,12 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // A snake ssss
     private Snake mSnake;
-    // And an apple
-    private Apple mApple;
 
+    private final AppleFactory mAppleFactory;
 
+    // Use a linked list for O(1) time add/remove operations.
+    // This doesn't really matter that much, but why not lol
+    private LinkedList<IGameObject> mGameObjects = new LinkedList<>();
 
     // This is the constructor method that gets called
     // from SnakeActivity
@@ -52,23 +53,21 @@ class SnakeGame extends SurfaceView implements Runnable{
         mNumBlocksHigh = size.y / blockSize;
 
         // Initialize mSoundManager
-        mSoundManager = new SoundManager(context);
+        SoundManager.InitializeSoundManager(context);
 
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
 
-        // Call the constructors of our two game objects
-        mApple = new Apple(context,
-                new Point(NUM_BLOCKS_WIDE,
-                        mNumBlocksHigh),
-                blockSize);
+        mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
+                blockSize, mGameObjects);
+        mAppleFactory.createObject();
 
         mSnake = Snake.getSnakeInstance(context,
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-
+        mGameObjects.add(mSnake);
     }
 
 
@@ -78,8 +77,12 @@ class SnakeGame extends SurfaceView implements Runnable{
         // reset the snake
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
-        // Get the apple ready for dinner
-        mApple.spawn();
+        // remove the other objects by clearing the list
+        mGameObjects.clear();
+        mGameObjects.add(mSnake);
+
+        // create an apple
+        mAppleFactory.createObject();
 
         // Reset the mScore
         mScore = 0;
@@ -92,15 +95,31 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Handles the game loop
     @Override
     public void run() {
+        // Wait a second for the activity to fully load before drawing. Admittedly, I am not a big
+        // fan of this solution, but I can't find a better one so this will do for now.
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        // draw the first frame
+        draw();
+
         while (mPlaying) {
             if(!mPaused) {
                 // Update 10 times a second
                 if (updateRequired()) {
                     update();
+                    draw();
+                }
+            } else {
+                // wait a moment so we don't waste CPU while paused
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
-
-            draw();
         }
     }
 
@@ -132,31 +151,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Update all the game objects
     public void update() {
-
-        // Move the snake
-        mSnake.move();
-
-        // Did the head of the snake eat the apple?
-        if(mSnake.checkDinner(mApple.getLocation())){
-            // This reminds me of Edge of Tomorrow.
-            // One day the apple will be ready!
-            mApple.spawn();
-
-            // Add to  mScore
-            mScore = mScore + 1;
-
-            // Play a sound
-            mSoundManager.playEatSound();
+        for(IGameObject gameObject : mGameObjects) {
+            gameObject.update(mGameObjects);
         }
-
-        // Did the snake die?
-        if (mSnake.detectDeath()) {
-            // Pause the game ready to start again
-            mSoundManager.playCrashSound();
-
-            mPaused =true;
-        }
-
     }
 
 
@@ -176,13 +173,8 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Draw the score
             mCanvas.drawText("" + mScore, 20, 120, mPaint);
 
-            // Draw the apple and the snake
-            mApple.draw(mCanvas, mPaint);
-            mSnake.draw(mCanvas, mPaint);
-
-            // Draw some text while paused
             if(mPaused){
-
+                // Draw some text while paused
                 // Set the size and color of the mPaint for the text
                 mPaint.setColor(Color.argb(255, 255, 255, 255));
                 mPaint.setTextSize(250);
@@ -193,9 +185,12 @@ class SnakeGame extends SurfaceView implements Runnable{
                 mCanvas.drawText(getResources().
                                 getString(R.string.tap_to_play),
                         200, 700, mPaint);
-
+            } else {
+                // draw the game objects
+                for(IGameObject gameObject : mGameObjects) {
+                    gameObject.draw(mCanvas, mPaint);
+                }
             }
-
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -225,9 +220,13 @@ class SnakeGame extends SurfaceView implements Runnable{
         return true;
     }
 
+    // Pause the game
+    public void pause() {
+        mPaused = true;
+    }
 
     // Stop the thread
-    public void pause() {
+    public void stop() {
         mPlaying = false;
         try {
             mThread.join();
@@ -236,11 +235,14 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
     }
 
-
     // Start the thread
     public void resume() {
         mPlaying = true;
         mThread = new Thread(this);
         mThread.start();
+    }
+
+    public void incrementScore() {
+        mScore++;
     }
 }

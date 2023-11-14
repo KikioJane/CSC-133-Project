@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 class Snake implements IGameObject{
 
@@ -148,6 +149,28 @@ class Snake implements IGameObject{
         segmentLocations.add(new Point(w / 2, h / 2));
     }
 
+    public void update(List<IGameObject> gameObjects) {
+        SnakeGame snakeGame = SnakeActivity.getSnakeGame();
+
+        move();
+
+        for(IGameObject gameObject : gameObjects) {
+            if(gameObject instanceof Apple) {
+                Apple apple = (Apple) gameObject;
+                if(checkDinner(apple.getLocation())) {
+                    apple.spawn();
+                    snakeGame.incrementScore();
+                    SoundManager.playEatSound();
+                }
+            }
+            // this could be extended later to handle things like walls, etc.
+        }
+
+        if(detectDeath()) {
+            SoundManager.playCrashSound();
+            snakeGame.pause();
+        }
+    }
 
     void move() {
         // Move the body

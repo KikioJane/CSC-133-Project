@@ -19,12 +19,11 @@ import java.io.IOException;
 
 public class SoundManager {
     // For playing sounds
-    private final SoundPool mSP;
-    private int mEat_ID = -1;
-    private int mCrashID = -1;
+    private static SoundPool mSP = null;
+    private static int mEat_ID = -1;
+    private static int mCrashID = -1;
 
-
-    public SoundManager(Context context) {
+    public static void InitializeSoundManager(Context context) {
         // Initialize the SoundPool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -60,9 +59,9 @@ public class SoundManager {
 
     }
     // methods to access sounds
-    void playEatSound(){
+    public static void playEatSound(){
         mSP.play(mEat_ID, 1, 1, 0, 0, 1);
     }
-    void playCrashSound(){ mSP.play(mCrashID, 1, 1, 0, 0, 1); }
+    public static void playCrashSound(){ mSP.play(mCrashID, 1, 1, 0, 0, 1); }
 }
 
