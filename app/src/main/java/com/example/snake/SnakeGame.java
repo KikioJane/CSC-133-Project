@@ -21,6 +21,9 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
 
+    // for playing sound effects
+    private final SoundManager mSoundManager;
+
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
     private final int mNumBlocksHigh;
@@ -34,13 +37,13 @@ class SnakeGame extends SurfaceView implements Runnable{
     private final Paint mPaint;
 
     // A snake ssss
-    private Snake mSnake;
+    private SpaceWorm mSpaceWorm;
 
-    private final AppleFactory mAppleFactory;
+    //private final AppleFactory mAppleFactory;
 
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
-    private LinkedList<IGameObject> mGameObjects = new LinkedList<>();
+    //private LinkedList<IGameObject> mGameObjects = new LinkedList<>();
 
     // This is the constructor method that gets called
     // from SnakeActivity
@@ -59,15 +62,20 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
 
-        mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
-                blockSize, mGameObjects);
-        mAppleFactory.createObject();
-
-        mSnake = Snake.getSnakeInstance(context,
+        //mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
+        //        blockSize, mGameObjects);
+        //mAppleFactory.createObject();
+        // Call the constructors of our two game objects
+        mStar = new Star(context,
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
-        mGameObjects.add(mSnake);
+
+        mSpaceWorm = SpaceWorm.getSnakeInstance(context,
+                new Point(NUM_BLOCKS_WIDE,
+                        mNumBlocksHigh),
+                blockSize);
+       // mGameObjects.add(mSnake);
     }
 
 
@@ -75,14 +83,17 @@ class SnakeGame extends SurfaceView implements Runnable{
     public void newGame() {
 
         // reset the snake
-        mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        mSpaceWorm.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // remove the other objects by clearing the list
-        mGameObjects.clear();
-        mGameObjects.add(mSnake);
+        //mGameObjects.clear();
+        //mGameObjects.add(mSnake);
 
         // create an apple
-        mAppleFactory.createObject();
+        //mAppleFactory.createObject();
+
+        // Get the apple ready for dinner
+        mStar.spawn();
 
         // Reset the mScore
         mScore = 0;
@@ -151,9 +162,33 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Update all the game objects
     public void update() {
-        for(IGameObject gameObject : mGameObjects) {
-            gameObject.update(mGameObjects);
+        //for(IGameObject gameObject : mGameObjects) {
+        //    gameObject.update(mGameObjects);
+        //}
+        // Move the snake
+        mSpaceWorm.move();
+
+        // Did the head of the snake eat the apple?
+        if(mSpaceWorm.checkDinner(mStar.getLocation())){
+            // This reminds me of Edge of Tomorrow.
+            // One day the apple will be ready!
+            mStar.spawn();
+
+            // Add to  mScore
+            mScore = mScore + 1;
+
+            // Play a sound
+            mSoundManager.playEatSound();
         }
+
+        // Did the snake die?
+        if (mSpaceWorm.detectDeath()) {
+            // Pause the game ready to start again
+            mSoundManager.playCrashSound();
+
+            mPaused =true;
+        }
+
     }
 
 
@@ -173,6 +208,11 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Draw the score
             mCanvas.drawText("" + mScore, 20, 120, mPaint);
 
+            // Draw the apple and the snake
+            mStar.draw(mCanvas, mPaint);
+            mSpaceWorm.draw(mCanvas, mPaint);
+
+            // Draw some text while paused
             if(mPaused){
                 // Draw some text while paused
                 // Set the size and color of the mPaint for the text
@@ -185,12 +225,14 @@ class SnakeGame extends SurfaceView implements Runnable{
                 mCanvas.drawText(getResources().
                                 getString(R.string.tap_to_play),
                         200, 700, mPaint);
-            } else {
-                // draw the game objects
-                for(IGameObject gameObject : mGameObjects) {
-                    gameObject.draw(mCanvas, mPaint);
-                }
             }
+            //else {
+                // draw the game objects
+            //    for(IGameObject gameObject : mGameObjects) {
+            //        gameObject.draw(mCanvas, mPaint);
+            //    }
+            //}
+
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -210,7 +252,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 }
 
                 // Let the Snake class handle the input
-                mSnake.switchHeading(motionEvent);
+                mSpaceWorm.switchHeading(motionEvent);
                 break;
 
             default:
@@ -234,6 +276,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Error
         }
     }
+
 
     // Start the thread
     public void resume() {
