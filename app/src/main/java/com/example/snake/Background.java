@@ -4,32 +4,23 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
-class Background implements IGameObject {
+class Background {
 
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
     private Bitmap mBitmapBackground;
     private static Background mBackground = null;
 
-    private Background(Context context){
+    public Background(Context context){
         mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.starsbackground);
     }
 
-    static Background getBackgroundInstance(Context context){
-
-        // Make a new background object if it doesn't exist yet
-        if(mBackground == null){
-            mBackground = new Background(context);
-        }
-        return mBackground;
-    }
-
-
-    @Override
     public void draw(Canvas canvas, Paint paint){
+        canvas.drawColor(Color.argb(255,10,44,54));
         canvas.drawBitmap(mBitmapBackground, 0,0, paint);
     }
 
