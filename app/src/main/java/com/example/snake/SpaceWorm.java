@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-class Snake implements IGameObject{
+class SpaceWorm implements IDrawable {
 
     // The location in the grid of all the segments
     private final ArrayList<Point> segmentLocations;
@@ -44,10 +44,10 @@ class Snake implements IGameObject{
     private Bitmap mBitmapBody;
 
     // Snake Object for Singleton
-    static private Snake mSnake = null;
+    static private SpaceWorm mSpaceWorm = null;
 
 
-    private Snake(Context context, Point mr, int ss) {
+    private SpaceWorm(Context context, Point mr, int ss) {
 
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
@@ -66,13 +66,13 @@ class Snake implements IGameObject{
         halfWayPoint = mr.x * ss / 2;
     }
 
-    static Snake getSnakeInstance(Context context, Point mr, int ss){
+    static SpaceWorm getSnakeInstance(Context context, Point mr, int ss){
 
         // Make a new snake object if it doesn't exist yet
-        if(mSnake == null){
-            mSnake = new Snake(context, mr, ss);
+        if(mSpaceWorm == null){
+            mSpaceWorm = new SpaceWorm(context, mr, ss);
         }
-        return mSnake;
+        return mSpaceWorm;
     }
 
     //
