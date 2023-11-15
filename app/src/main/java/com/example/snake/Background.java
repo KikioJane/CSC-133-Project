@@ -13,7 +13,7 @@ class Background {
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
     private Bitmap mBitmapBackground;
-    private static Background mBackground = null;
+
 
     public Background(Context context){
         mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.starsbackground);
