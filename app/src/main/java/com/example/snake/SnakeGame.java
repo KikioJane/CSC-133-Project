@@ -37,6 +37,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Snake mSnake;
 
     //***
+    private AsteroidBelt mAsteroidBelt;
     private Background mBackground;
 
     private final AppleFactory mAppleFactory;
@@ -62,10 +63,16 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
         mBackground = new Background(context);
+        //***
+        mAsteroidBelt = new AsteroidBelt(context, new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize);
+        Difficulty difficulty = Difficulty.Hard;
+        mAsteroidBelt.spawn(difficulty);
 
         mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize, mGameObjects);
         mAppleFactory.createObject();
+
 
         mSnake = Snake.getSnakeInstance(context,
                 new Point(NUM_BLOCKS_WIDE,
@@ -73,6 +80,8 @@ class SnakeGame extends SurfaceView implements Runnable{
                 blockSize);
 
         mGameObjects.add(mSnake);
+        //***
+        mGameObjects.add(mAsteroidBelt);
 
 
     }
@@ -87,6 +96,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         // remove the other objects by clearing the list
         mGameObjects.clear();
         mGameObjects.add(mSnake);
+        //***
+        mGameObjects.add(mAsteroidBelt);
 
 
 
