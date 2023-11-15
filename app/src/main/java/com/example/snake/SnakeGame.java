@@ -178,7 +178,8 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
             mPaint.setTextSize(120);
-
+            // Draw the score
+            mCanvas.drawText("" + mScore, 20, 120, mPaint);
             if(mPaused){
                 // Draw some text while paused
                 // Set the size and color of the mPaint for the text
@@ -198,8 +199,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 }
             }
 
-            // Draw the score
-            mCanvas.drawText("" + mScore, 20, 120, mPaint);
+
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
