@@ -38,6 +38,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     //***
     private AsteroidBelt mAsteroidBelt;
+    private int blockSize;
     private Background mBackground;
 
     private final AppleFactory mAppleFactory;
@@ -52,7 +53,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         super(context);
 
         // Work out how many pixels each block is
-        int blockSize = size.x / NUM_BLOCKS_WIDE;
+        blockSize = size.x / NUM_BLOCKS_WIDE;
         // How many blocks of the same size will fit into the height
         mNumBlocksHigh = size.y / blockSize;
 
@@ -63,11 +64,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
         mBackground = new Background(context);
-        //***
-        mAsteroidBelt = new AsteroidBelt(context, new Point(NUM_BLOCKS_WIDE,
-                mNumBlocksHigh), blockSize);
-        Difficulty difficulty = Difficulty.Hard;
-        mAsteroidBelt.spawn(difficulty);
 
         mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize, mGameObjects);
@@ -79,6 +75,8 @@ class SnakeGame extends SurfaceView implements Runnable{
                         mNumBlocksHigh),
                 blockSize);
 
+        createAsteroidBelt();
+
         mGameObjects.add(mSnake);
         //***
         mGameObjects.add(mAsteroidBelt);
@@ -86,9 +84,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     }
 
-
     // Called to start a new game
     public void newGame() {
+
+        createAsteroidBelt();
 
         // reset the snake
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
@@ -106,6 +105,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Reset the mScore
         mScore = 0;
+
 
         // Setup mNextFrameTime so an update can triggered
         mNextFrameTime = System.currentTimeMillis();
@@ -202,7 +202,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 //mCanvas.drawText("Tap To Play!", 200, 700, mPaint);
                 mCanvas.drawText(getResources().
                                 getString(R.string.tap_to_play),
-                        200, 700, mPaint);
+                        575, 750, mPaint);
             } else {
                 // draw the game objects
                 for(IGameObject gameObject : mGameObjects) {
@@ -264,5 +264,14 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     public void incrementScore() {
         mScore++;
+    }
+
+    private void createAsteroidBelt() {
+        mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize);
+        Difficulty difficulty = Difficulty.Hard;
+        mAsteroidBelt.spawn(difficulty);
+
+        mSnake.setAsteroidBelt(mAsteroidBelt);
     }
 }

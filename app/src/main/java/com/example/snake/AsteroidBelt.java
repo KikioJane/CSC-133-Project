@@ -97,4 +97,9 @@ public class AsteroidBelt implements IGameObject {
             canvas.drawBitmap(mBitmapSmallAsteroid, wallLocations.get(i).x* mSize, wallLocations.get(i).y* mSize, paint);
         }
     }
+
+     ArrayList<Point> getWallLocations(){
+        return wallLocations;
+    }
+
 }

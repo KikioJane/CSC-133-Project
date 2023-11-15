@@ -27,6 +27,8 @@ class Snake implements IGameObject{
     // horizontally in pixels?
     private final int halfWayPoint;
 
+    private AsteroidBelt mAsteroidBelt;
+
     // For tracking movement Heading
     private enum Heading {
         UP, RIGHT, DOWN, LEFT
@@ -166,6 +168,7 @@ class Snake implements IGameObject{
             // this could be extended later to handle things like walls, etc.
         }
 
+
         if(detectDeath()) {
             SoundManager.playCrashSound();
             snakeGame.pause();
@@ -230,6 +233,14 @@ class Snake implements IGameObject{
 
                 dead = true;
             }
+        }
+
+        ArrayList<Point> wallLocations = mAsteroidBelt.getWallLocations();
+        for(int i = 0; i < wallLocations.size(); i++){
+
+            if(segmentLocations.get(0).x == wallLocations.get(i).x && segmentLocations.get(0).y == wallLocations.get(i).y)
+                dead = true;
+
         }
         return dead;
     }
@@ -343,5 +354,9 @@ class Snake implements IGameObject{
                     break;
             }
         }
+    }
+
+    void setAsteroidBelt(AsteroidBelt aBelt){
+        mAsteroidBelt = aBelt;
     }
 }
