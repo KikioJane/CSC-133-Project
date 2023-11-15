@@ -15,7 +15,9 @@ class Background {
     private Bitmap mBitmapBackground;
 
 
-    public Background(Context context){
+    Background(Context context){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
         mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.starsbackground);
     }
 
