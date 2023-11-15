@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-class Worm implements IGameObject{
+class Snake implements IGameObject{
 
     // The location in the grid of all the segments
     private final ArrayList<Point> segmentLocations;
@@ -45,10 +45,10 @@ class Worm implements IGameObject{
     private Bitmap mBitmapBody;
 
     // Snake Object for Singleton
-    static private Worm mWorm = null;
+    static private Snake mSnake = null;
 
 
-    private Worm(Context context, Point mr, int ss) {
+    private Snake(Context context, Point mr, int ss) {
 
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
@@ -67,13 +67,13 @@ class Worm implements IGameObject{
         halfWayPoint = mr.x * ss / 2;
     }
 
-    static Worm getSnakeInstance(Context context, Point mr, int ss){
+    static Snake getSnakeInstance(Context context, Point mr, int ss){
 
         // Make a new snake object if it doesn't exist yet
-        if(mWorm == null){
-            mWorm = new Worm(context, mr, ss);
+        if(mSnake == null){
+            mSnake = new Snake(context, mr, ss);
         }
-        return mWorm;
+        return mSnake;
     }
 
     //
@@ -150,16 +150,16 @@ class Worm implements IGameObject{
     }
 
     public void update(List<IGameObject> gameObjects) {
-        WormGame wormGame = WormActivity.getSnakeGame();
+        SnakeGame snakeGame = SnakeActivity.getSnakeGame();
 
         move();
 
         for(IGameObject gameObject : gameObjects) {
-            if(gameObject instanceof Star) {
-                Star star = (Star) gameObject;
-                if(checkDinner(star.getLocation())) {
-                    star.spawn();
-                    wormGame.incrementScore();
+            if(gameObject instanceof Apple) {
+                Apple apple = (Apple) gameObject;
+                if(checkDinner(apple.getLocation())) {
+                    apple.spawn();
+                    snakeGame.incrementScore();
                     SoundManager.playEatSound();
                 }
             }
@@ -168,7 +168,7 @@ class Worm implements IGameObject{
 
         if(detectDeath()) {
             SoundManager.playCrashSound();
-            wormGame.pause();
+            snakeGame.pause();
         }
     }
 

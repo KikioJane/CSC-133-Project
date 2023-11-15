@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import java.util.Random;
 
-class Star implements IGameObject{
+class Apple implements IGameObject{
 
     // The location of the apple on the grid
     // Not in pixels
@@ -23,7 +23,7 @@ class Star implements IGameObject{
     private Bitmap mBitmapApple;
 
     /// Set up the apple in the constructor
-    Star(Context context, Point sr, int s){
+    Apple(Context context, Point sr, int s){
 
         // Make a note of the passed in spawn range
         mSpawnRange = sr;

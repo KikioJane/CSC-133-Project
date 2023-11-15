@@ -5,13 +5,13 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 
-public class WormActivity extends Activity {
+public class SnakeActivity extends Activity {
 
     // Declare an instance of SnakeGame
-    private static WormGame mWormGame;
+    private static SnakeGame mSnakeGame;
 
-    public static WormGame getSnakeGame() {
-        return mWormGame;
+    public static SnakeGame getSnakeGame() {
+        return mSnakeGame;
     }
 
     // Set the game up
@@ -27,23 +27,23 @@ public class WormActivity extends Activity {
         display.getSize(size);
 
         // Create a new instance of the SnakeEngine class
-        mWormGame = new WormGame(this, size);
+        mSnakeGame = new SnakeGame(this, size);
 
         // Make snakeEngine the view of the Activity
-        setContentView(mWormGame);
+        setContentView(mSnakeGame);
     }
 
     // Start the thread in snakeEngine
     @Override
     protected void onResume() {
         super.onResume();
-        mWormGame.resume();
+        mSnakeGame.resume();
     }
 
     // Stop the thread in snakeEngine
     @Override
     protected void onPause() {
         super.onPause();
-        mWormGame.stop();
+        mSnakeGame.stop();
     }
 }

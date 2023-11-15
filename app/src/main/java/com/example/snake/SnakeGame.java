@@ -11,7 +11,7 @@ import android.view.SurfaceView;
 
 import java.util.LinkedList;
 
-class WormGame extends SurfaceView implements Runnable{
+class SnakeGame extends SurfaceView implements Runnable{
 
     // Objects for the game loop/thread
     private Thread mThread = null;
@@ -34,12 +34,12 @@ class WormGame extends SurfaceView implements Runnable{
     private final Paint mPaint;
 
     // A snake ssss
-    private Worm mWorm;
+    private Snake mSnake;
 
     //***
     private Background mBackground;
 
-    private final StarFactory mStarFactory;
+    private final AppleFactory mAppleFactory;
 
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
@@ -47,7 +47,7 @@ class WormGame extends SurfaceView implements Runnable{
 
     // This is the constructor method that gets called
     // from SnakeActivity
-    public WormGame(Context context, Point size) {
+    public SnakeGame(Context context, Point size) {
         super(context);
 
         // Work out how many pixels each block is
@@ -63,16 +63,16 @@ class WormGame extends SurfaceView implements Runnable{
         mPaint = new Paint();
         mBackground = new Background(context);
 
-        mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
+        mAppleFactory = new AppleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize, mGameObjects);
-        mStarFactory.createObject();
+        mAppleFactory.createObject();
 
-        mWorm = Worm.getSnakeInstance(context,
+        mSnake = Snake.getSnakeInstance(context,
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
 
-        mGameObjects.add(mWorm);
+        mGameObjects.add(mSnake);
 
 
     }
@@ -82,16 +82,16 @@ class WormGame extends SurfaceView implements Runnable{
     public void newGame() {
 
         // reset the snake
-        mWorm.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // remove the other objects by clearing the list
         mGameObjects.clear();
-        mGameObjects.add(mWorm);
+        mGameObjects.add(mSnake);
 
 
 
         // create an apple
-        mStarFactory.createObject();
+        mAppleFactory.createObject();
 
         // Reset the mScore
         mScore = 0;
@@ -218,7 +218,7 @@ class WormGame extends SurfaceView implements Runnable{
                 }
 
                 // Let the Snake class handle the input
-                mWorm.switchHeading(motionEvent);
+                mSnake.switchHeading(motionEvent);
                 break;
 
             default:
