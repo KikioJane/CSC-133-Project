@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-class SpaceWorm implements IDrawable {
+class SpaceWorm implements IGameObject {
 
     // The location in the grid of all the segments
     private final ArrayList<Point> segmentLocations;
@@ -155,8 +155,8 @@ class SpaceWorm implements IDrawable {
         move();
 
         for(IGameObject gameObject : gameObjects) {
-            if(gameObject instanceof Apple) {
-                Apple apple = (Apple) gameObject;
+            if(gameObject instanceof Star) {
+                Star apple = (Star) gameObject;
                 if(checkDinner(apple.getLocation())) {
                     apple.spawn();
                     snakeGame.incrementScore();

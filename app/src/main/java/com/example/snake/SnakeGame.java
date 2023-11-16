@@ -22,7 +22,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPaused = true;
 
     // for playing sound effects
-    private final SoundManager mSoundManager;
+    private SoundManager mSoundManager;
 
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
@@ -38,6 +38,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // A snake ssss
     private SpaceWorm mSpaceWorm;
+    private Star mStar;
 
     //private final AppleFactory mAppleFactory;
 

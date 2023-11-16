@@ -10,7 +10,7 @@ import android.graphics.Point;
 //WormHoles will spawn every x amount of stars eaten
 //Each wormhole will have a partner location that will
 // be where the wormhole will transport the SpaceWorm
-public class WormHole extends GameObject implements IDrawable{
+public class WormHole extends GameObject implements IGameObject{
     private Point partnerLocation = new Point();
     private Bitmap mBitmapWormHole;
     public WormHole(Context c, Point sr, int size) {
