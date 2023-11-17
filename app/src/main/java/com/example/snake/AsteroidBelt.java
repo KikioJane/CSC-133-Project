@@ -11,26 +11,21 @@ import java.util.ArrayList;
 import java.util.Random;
 
 // TODO: make it so apple doesn't spawn on wall?
-public class AsteroidBelt implements IGameObject {
+public class AsteroidBelt extends GameObject implements IDrawable{
     // The location of the initial asteroid on the grid
     // Not in pixels
     private final Point location = new Point();
-
-    // The range of values we can choose from
-    // to spawn the first asteroid
-    private final Point mSpawnRange;
-    private final int mSize;
     private Bitmap mBitmapAsteroid;
     private Bitmap mBitmapSmallAsteroid;
     private ArrayList<Point> wallLocations;
+    private Difficulty difficulty;
 
     // An image to represent the apple
     private Bitmap mBitmapApple;
-    AsteroidBelt(Context context, Point sr, int s){
-        // Make a note of the passed in spawn range
-        mSpawnRange = sr;
-        // Make a note of the size of an apple
-        mSize = s;
+    AsteroidBelt(Context context, Point sr, int s, Difficulty d){
+        super(sr, s);
+        // Set difficulty level
+        difficulty = d;
 
         mBitmapAsteroid = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigasteroid);
         // Resize the bitmap
@@ -39,7 +34,8 @@ public class AsteroidBelt implements IGameObject {
         mBitmapSmallAsteroid = BitmapFactory.decodeResource(context.getResources(), R.drawable.smallasteroids);
         mBitmapSmallAsteroid = Bitmap.createScaledBitmap(mBitmapSmallAsteroid, s, s, false);
     }
-    void spawn(Difficulty difficulty){
+
+    public void spawn(){
         int numberOfBelts;
         int maxBeltLength;
         int wallSize;
@@ -109,7 +105,6 @@ public class AsteroidBelt implements IGameObject {
         Random random = new Random();
         return random.nextInt(3);
     }
-    ArrayList<Point> getLocation(){ return wallLocations; }
 
     @Override
     public void draw(Canvas canvas, Paint paint) {

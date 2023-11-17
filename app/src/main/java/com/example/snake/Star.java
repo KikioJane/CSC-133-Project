@@ -15,7 +15,7 @@ class Star extends GameObject implements IDrawable {
     public Star(Context context, Point sr, int s){
         super(sr, s);
         // Load the image to the bitmap
-        mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple);
+        mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellowstar);
 
         // Resize the bitmap
         mBitmapStar = Bitmap.createScaledBitmap(mBitmapStar, s, s, false);

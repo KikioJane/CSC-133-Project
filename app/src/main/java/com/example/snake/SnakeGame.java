@@ -90,7 +90,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         // for asteroid belt
         createAsteroidBelt();
         // Add astroid belt
-        mGameObjects.add(mAsteroidBelt);
+        gameObjects.addGameObject(mAsteroidBelt);
     }
     private SpaceWorm findSpaceWorm()
     {
@@ -136,6 +136,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Add astroid belt
         // mGameObjects.add(mAsteroidBelt);
         // Reset the mScore
+        gameObjects.addGameObject(mAsteroidBelt);
         mScore = 0;
 
         // Setup mNextFrameTime so an update can triggered
@@ -253,6 +254,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Draw the apple and the snake
             findStar().draw(mCanvas, mPaint);
             findSpaceWorm().draw(mCanvas, mPaint);
+            mAsteroidBelt.draw(mCanvas, mPaint);
 
             // Draw some text while paused
             if(mPaused){
@@ -331,11 +333,12 @@ class SnakeGame extends SurfaceView implements Runnable{
     }
 
     private void createAsteroidBelt() {
-        mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
-                mNumBlocksHigh), blockSize);
         Difficulty difficulty = Difficulty.Hard;
-        mAsteroidBelt.spawn(difficulty);
+        mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize, difficulty);
 
-        mSnake.setAsteroidBelt(mAsteroidBelt);
+        mAsteroidBelt.spawn();
+
+        SpaceWorm.setAsteroidBelt(mAsteroidBelt);
     }
 }

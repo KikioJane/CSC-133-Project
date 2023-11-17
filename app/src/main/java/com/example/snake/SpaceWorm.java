@@ -26,7 +26,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     // horizontally in pixels?
     private final int halfWayPoint;
 
-    private AsteroidBelt mAsteroidBelt;
+    private static AsteroidBelt mAsteroidBelt;
 
     // For tracking movement Heading
     private enum Heading {
@@ -361,7 +361,7 @@ class SpaceWorm extends GameObject implements IDrawable {
         }
     }
 
-    void setAsteroidBelt(AsteroidBelt aBelt){
+    static void setAsteroidBelt(AsteroidBelt aBelt){
         mAsteroidBelt = aBelt;
     }
 }
