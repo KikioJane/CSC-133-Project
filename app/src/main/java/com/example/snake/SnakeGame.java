@@ -21,7 +21,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Is the game currently playing and or paused?
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
-    private int blockSize;
 
 
     // for playing sound effects
@@ -45,6 +44,11 @@ class SnakeGame extends SurfaceView implements Runnable{
     //private SpaceWorm mSpaceWorm;
     //private Star mStar;
 
+    //***
+    private AsteroidBelt mAsteroidBelt;
+    private int blockSize;
+    private Background mBackground;
+
     private final StarFactory mStarFactory;
 
     // Use a linked list for O(1) time add/remove operations.
@@ -67,6 +71,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
+        mBackground = new Background(context);
 
         gameObjects = new GameObjectCollection();
         //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
@@ -82,6 +87,10 @@ class SnakeGame extends SurfaceView implements Runnable{
         gameObjects.addGameObject(mStarFactory.createObject());
 
        // mGameObjects.add(mSnake);
+        // for asteroid belt
+        createAsteroidBelt();
+        // Add astroid belt
+        mGameObjects.add(mAsteroidBelt);
     }
     private SpaceWorm findSpaceWorm()
     {
@@ -113,7 +122,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Called to start a new game
     public void newGame() {
-
+        createAsteroidBelt();
         // reset the snake
         findSpaceWorm().reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
@@ -124,7 +133,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         gameObjects.addGameObject(SpaceWorm.getSnakeInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
         //Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
-
+        // Add astroid belt
+        // mGameObjects.add(mAsteroidBelt);
         // Reset the mScore
         mScore = 0;
 
@@ -231,8 +241,8 @@ class SnakeGame extends SurfaceView implements Runnable{
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            mCanvas.drawColor(Color.argb(255, 26, 128, 182));
-
+            mCanvas.drawColor(Color.argb(255, 10, 44, 54));
+            mBackground.draw(mCanvas, mPaint);
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
             mPaint.setTextSize(120);
@@ -309,7 +319,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
     }
 
-
     // Start the thread
     public void resume() {
         mPlaying = true;
@@ -319,5 +328,14 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     public void incrementScore() {
         mScore++;
+    }
+
+    private void createAsteroidBelt() {
+        mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize);
+        Difficulty difficulty = Difficulty.Hard;
+        mAsteroidBelt.spawn(difficulty);
+
+        mSnake.setAsteroidBelt(mAsteroidBelt);
     }
 }
