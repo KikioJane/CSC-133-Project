@@ -123,16 +123,17 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Called to start a new game
     public void newGame() {
-        createAsteroidBelt();
         // reset the snake
         findSpaceWorm().reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        createAsteroidBelt();
 
         // remove the other objects by clearing the list
         gameObjects.clearGameObjectList();
+        gameObjects.addGameObject(mAsteroidBelt);
 
         //re-add Spaceworm object
         gameObjects.addGameObject(SpaceWorm.getSnakeInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
-        gameObjects.addGameObject(mAsteroidBelt);
+
         //Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
         // Add astroid belt

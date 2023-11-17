@@ -247,9 +247,13 @@ class SpaceWorm extends GameObject implements IDrawable {
                 dead = true;
 
          */
-        boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
-        if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
-            dead = true;
+        // don't check if snake is already dead. gives an out of bounds error sometimes.
+        if (dead == false){
+            boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
+            if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
+                dead = true;
+        }
+
 
         return dead;
     }
@@ -368,4 +372,8 @@ class SpaceWorm extends GameObject implements IDrawable {
     static void setAsteroidBelt(AsteroidBelt aBelt){
         mAsteroidBelt = aBelt;
     }
+
+    //private Point getStartingPoint(){
+
+    //}
 }
