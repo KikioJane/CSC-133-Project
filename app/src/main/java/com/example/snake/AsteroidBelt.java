@@ -40,47 +40,70 @@ public class AsteroidBelt implements IGameObject {
         mBitmapSmallAsteroid = Bitmap.createScaledBitmap(mBitmapSmallAsteroid, s, s, false);
     }
     void spawn(Difficulty difficulty){
-        //Spawn the wall based on the initial asteroid
-        Random random = new Random();
-        Point location = new Point(random.nextInt(mSpawnRange.x-1) + 1, random.nextInt(mSpawnRange.y - 1) + 1);
-        makeBelt(difficulty, location);
-    }
-
-    private void makeBelt(Difficulty difficulty, Point location){
+        int numberOfBelts;
+        int maxBeltLength;
         int wallSize;
         wallLocations = new ArrayList<Point>();
         Random random = new Random();
         if (difficulty == Difficulty.Easy){
-            wallSize = random.nextInt(6)+1;
+            numberOfBelts = 3;
+            maxBeltLength = 6;
         }
         else if (difficulty == Difficulty.Medium){
-            wallSize = random.nextInt(10)+1;
+            numberOfBelts = 4;
+            maxBeltLength = 10;
         }
         else{
-            wallSize = random.nextInt(15)+8;
+            numberOfBelts = 5;
+            maxBeltLength = 14;
         }
-        wallLocations.add(location);
-        // TODO:  add some error checking for bounds or something. also make sure
-        //  they don't overlap themselves? or maybe they can?
-        int x = location.x;
-        int y = location.y;
-        for (int i = 1; i<wallSize;i++){
-            int m = randDirection();
-            if (m == 0) {
-                wallLocations.add(new Point(x+1, y));
-                x+=1;
-            }else if (m==1){
-                wallLocations.add(new Point(x, y+1));
-                y+=1;
-            }else if (m==2){
-                wallLocations.add(new Point(x-1, y));
-                x-=1;
-            }else {
-                wallLocations.add(new Point(x, y-1));
-                y-=1;
+        makeBelt(numberOfBelts, maxBeltLength);
+    }
+
+    private void makeBelt(int numberOfBelts, int beltSize){
+        int wallSize;
+        Random random = new Random();
+        // To make multiple belts
+        for(int i = 0; i < numberOfBelts; i++){
+            // Make a random starting location
+            int x = random.nextInt(mSpawnRange.x-1) + 1;
+            int y = random.nextInt(mSpawnRange.y - 1) + 1;
+            // add location of the new starting point
+            wallLocations.add(new Point(x,y));
+            // Determine the size of the wall
+            wallSize = random.nextInt(beltSize)+beltSize/2;
+            // Make a wall by randomly choosing segments adjacent to the most recent one?
+            for (int j = 1; j<wallSize;j++){
+                int m = randDirection();
+                if (m == 0 && (x+1 != mSpawnRange.x-1)) {
+                    wallLocations.add(new Point(x+1, y));
+                    x+=1;
+                }else if (m==1 && (y+1 != mSpawnRange.y-1)){
+                    wallLocations.add(new Point(x, y+1));
+                    y+=1;
+                }else if (m==2 && (x-1 != mSpawnRange.x+1)){
+                    wallLocations.add(new Point(x-1, y));
+                    x-=1;
+                }else if (m==3 && (y-1 != mSpawnRange.y+1)){
+                    wallLocations.add(new Point(x, y-1));
+                    y-=1;
+                }
             }
         }
     }
+    private void easyBelt(){
+        int numberOfBelts = 3;
+        Random random = new Random();
+        //wallLocations = new ArrayList<Point>();
+        int wallSize;
+
+        wallSize = random.nextInt(6)+3;
+        for(int i = 0; i < numberOfBelts; i++){
+            //fillBelt();
+        }
+        //fillBelt();
+    }
+
 
     private int randDirection(){
         Random random = new Random();
