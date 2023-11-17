@@ -78,6 +78,8 @@ public class AsteroidBelt extends GameObject implements IDrawable{
             for (int j = 1; j<wallSize;j++){
                 int m = randomInt(4);
                 if (m == 0 && x+1 < mSpawnRange.x-2 && x+1 > 0) {
+                    // For whatever reason, it just wouldn't work when I tried "!wallLocations..."
+                    // So had to use "... == false" instead. Not sure why.
                     if (wallLocations.contains(new Point(x+1, y ))==false){
                         wallLocations.add(new Point(x+1, y ));
                     }
