@@ -340,5 +340,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         mAsteroidBelt.spawn();
 
         SpaceWorm.setAsteroidBelt(mAsteroidBelt);
+        Star.setAsteroidBelt(mAsteroidBelt);
     }
 }

@@ -62,25 +62,26 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         // To make multiple belts
         for(int i = 0; i < numberOfBelts; i++){
             // Make a random starting location
-            int x = random.nextInt(mSpawnRange.x-1) + 1;
-            int y = random.nextInt(mSpawnRange.y - 1) + 1;
+            int x = random.nextInt(mSpawnRange.x - 3) + 1;
+            int y = random.nextInt(mSpawnRange.y - 3) + 1;
             // add location of the new starting point
             wallLocations.add(new Point(x,y));
             // Determine the size of the wall
             wallSize = random.nextInt(beltSize)+beltSize/2;
             // Make a wall by randomly choosing segments adjacent to the most recent one?
+            // Asteroids cannot touch edge blocks of screen.
             for (int j = 1; j<wallSize;j++){
                 int m = randDirection();
-                if (m == 0 && (x+1 != mSpawnRange.x-1)) {
+                if (m == 0 && x+1 < mSpawnRange.x-2 && x+1 > 0) {
                     wallLocations.add(new Point(x+1, y));
                     x+=1;
-                }else if (m==1 && (y+1 != mSpawnRange.y-1)){
+                }else if (m==1 && y+1 < mSpawnRange.y-2 && y+1 > 0){
                     wallLocations.add(new Point(x, y+1));
                     y+=1;
-                }else if (m==2 && (x-1 != mSpawnRange.x+1)){
+                }else if (m==2 && x-1 < mSpawnRange.x-2 && x-1 > 0){
                     wallLocations.add(new Point(x-1, y));
                     x-=1;
-                }else if (m==3 && (y-1 != mSpawnRange.y+1)){
+                }else if (m==3 && y-1 < mSpawnRange.y-2 && y-1 > 0){
                     wallLocations.add(new Point(x, y-1));
                     y-=1;
                 }
