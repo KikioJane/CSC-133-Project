@@ -6,15 +6,14 @@ import android.graphics.Point;
 import java.util.List;
 
 public class StarFactory extends IGameObjectFactory {
-    public StarFactory(Context context, int NUM_BLOCKS_WIDE, int mNumBlocksHigh, int blockSize,
-                       List<IGameObject> gameObjects) {
-        super(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize, gameObjects);
+    public StarFactory(Context context, int NUM_BLOCKS_WIDE, int mNumBlocksHigh, int blockSize) {
+        super(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
     }
 
     @Override
-    IGameObject createObject() {
+    Star createObject() {
         Star star = new Star(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
-        gameObjects.add(star);
+        //gameObjects.addGameObject(star);
         star.spawn();
         return star;
     }

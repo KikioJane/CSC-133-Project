@@ -9,7 +9,7 @@ import android.graphics.Point;
 
 //Supernovas will spawn every x amount of stars eaten
 //Supernovas will harm the Spaceworm if it tries to eat one (lose a point and segment)
-public class Supernova extends GameObject implements IGameObject{
+public class Supernova extends GameObject implements IDrawable {
     private Bitmap mBitmapSupernova;
     public Supernova(Context c, Point sr, int size) {
         super(sr, size);

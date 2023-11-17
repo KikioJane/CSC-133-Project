@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import java.util.Random;
 
-class Star extends GameObject implements IGameObject {
+class Star extends GameObject implements IDrawable {
     // An image to represent the apple
     private Bitmap mBitmapStar;
     /// Set up the apple in the constructor

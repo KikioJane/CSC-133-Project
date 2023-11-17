@@ -9,15 +9,18 @@ public class GameObjectCollection implements ICollection{
     public void addGameObject(GameObject obj){
         gameObjectList.add(obj);
     }
-    public void removeGameObject(){
-
+    public void removeGameObject(int index){
+        gameObjectList.remove(index);
     }
     public void changeGameObject(){
 
     }
+    public void clearGameObjectList(){
+        gameObjectList.clear();
+    }
 
     @Override
-    public IIterator createGameObjectIterator() {
+    public GameObjectIterator createGameObjectIterator() {
         return new GameObjectIterator(gameObjectList);
     }
 }
