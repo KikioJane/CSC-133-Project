@@ -10,7 +10,6 @@ import android.graphics.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-// TODO: make it so apple doesn't spawn on wall?
 public class AsteroidBelt extends GameObject implements IDrawable{
     // The location of the initial asteroid on the grid
     // Not in pixels
