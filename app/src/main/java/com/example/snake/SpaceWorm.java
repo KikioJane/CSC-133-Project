@@ -240,13 +240,17 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
         }
 
-        ArrayList<Point> wallLocations = mAsteroidBelt.getWallLocations();
+        /*ArrayList<Point> wallLocations = mAsteroidBelt.getWallLocations();
         for(int i = 0; i < wallLocations.size(); i++){
 
             if(segmentLocations.get(0).x == wallLocations.get(i).x && segmentLocations.get(0).y == wallLocations.get(i).y)
                 dead = true;
 
-        }
+         */
+        boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
+        if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
+            dead = true;
+
         return dead;
     }
 

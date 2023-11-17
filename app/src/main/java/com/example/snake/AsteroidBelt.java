@@ -17,7 +17,10 @@ public class AsteroidBelt extends GameObject implements IDrawable{
     private final Point location = new Point();
     private Bitmap mBitmapAsteroid;
     private Bitmap mBitmapSmallAsteroid;
+    // used for drawing only.
     private ArrayList<Point> wallLocations;
+    // used for determining which spaces are occupied by asteroids
+    private boolean[][] asteroidMap;
     private Difficulty difficulty;
 
     // An image to represent the apple
@@ -26,7 +29,8 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         super(sr, s);
         // Set difficulty level
         difficulty = d;
-
+        //*** make asteroidMap the size of the available game blocks
+        asteroidMap = new boolean[sr.x][sr.y];
         mBitmapAsteroid = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigasteroid);
         // Resize the bitmap
         mBitmapAsteroid = Bitmap.createScaledBitmap(mBitmapAsteroid, s, s, false);
@@ -40,6 +44,7 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         int maxBeltLength;
         int wallSize;
         wallLocations = new ArrayList<Point>();
+
         Random random = new Random();
         if (difficulty == Difficulty.Easy){
             numberOfBelts = 3;
@@ -58,53 +63,44 @@ public class AsteroidBelt extends GameObject implements IDrawable{
 
     private void makeBelt(int numberOfBelts, int beltSize){
         int wallSize;
-        Random random = new Random();
         // To make multiple belts
         for(int i = 0; i < numberOfBelts; i++){
             // Make a random starting location
-            int x = random.nextInt(mSpawnRange.x - 3) + 1;
-            int y = random.nextInt(mSpawnRange.y - 3) + 1;
+            int x = randomInt(mSpawnRange.x - 3) + 1;
+            int y = randomInt(mSpawnRange.y - 3) + 1;
             // add location of the new starting point
             wallLocations.add(new Point(x,y));
+            asteroidMap[x][y] = true;
             // Determine the size of the wall
-            wallSize = random.nextInt(beltSize)+beltSize/2;
+            wallSize = randomInt(beltSize)+beltSize/2;
             // Make a wall by randomly choosing segments adjacent to the most recent one?
             // Asteroids cannot touch edge blocks of screen.
             for (int j = 1; j<wallSize;j++){
-                int m = randDirection();
+                int m = randomInt(4);
                 if (m == 0 && x+1 < mSpawnRange.x-2 && x+1 > 0) {
                     wallLocations.add(new Point(x+1, y));
+                    asteroidMap[x+1][y] = true;
                     x+=1;
                 }else if (m==1 && y+1 < mSpawnRange.y-2 && y+1 > 0){
                     wallLocations.add(new Point(x, y+1));
+                    asteroidMap[x][y+1] = true;
                     y+=1;
                 }else if (m==2 && x-1 < mSpawnRange.x-2 && x-1 > 0){
                     wallLocations.add(new Point(x-1, y));
+                    asteroidMap[x-1][y] = true;
                     x-=1;
                 }else if (m==3 && y-1 < mSpawnRange.y-2 && y-1 > 0){
                     wallLocations.add(new Point(x, y-1));
+                    asteroidMap[x][y-1] = true;
                     y-=1;
                 }
             }
         }
     }
-    private void easyBelt(){
-        int numberOfBelts = 3;
+
+    private int randomInt(int range){
         Random random = new Random();
-        //wallLocations = new ArrayList<Point>();
-        int wallSize;
-
-        wallSize = random.nextInt(6)+3;
-        for(int i = 0; i < numberOfBelts; i++){
-            //fillBelt();
-        }
-        //fillBelt();
-    }
-
-
-    private int randDirection(){
-        Random random = new Random();
-        return random.nextInt(3);
+        return random.nextInt(range);
     }
 
     @Override
@@ -112,13 +108,11 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         for (int i =0; i < wallLocations.size(); i+=2){
             canvas.drawBitmap(mBitmapAsteroid, wallLocations.get(i).x* mSize, wallLocations.get(i).y* mSize, paint);
         }
-        for (int i =1; i < wallLocations.size(); i+=2){
-            canvas.drawBitmap(mBitmapSmallAsteroid, wallLocations.get(i).x* mSize, wallLocations.get(i).y* mSize, paint);
+        for (int i =1; i < wallLocations.size(); i+=2) {
+            canvas.drawBitmap(mBitmapSmallAsteroid, wallLocations.get(i).x * mSize, wallLocations.get(i).y * mSize, paint);
         }
     }
-
-     ArrayList<Point> getWallLocations(){
-        return wallLocations;
-    }
+    
+    public boolean[][] getAsteroidMap() { return asteroidMap;}
 
 }

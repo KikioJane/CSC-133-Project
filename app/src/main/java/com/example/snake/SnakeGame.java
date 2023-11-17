@@ -75,6 +75,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         gameObjects = new GameObjectCollection();
         //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
+        // for asteroid belt
+        createAsteroidBelt();
+        // Add astroid belt
+        gameObjects.addGameObject(mAsteroidBelt);
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
 
@@ -87,10 +91,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         gameObjects.addGameObject(mStarFactory.createObject());
 
        // mGameObjects.add(mSnake);
-        // for asteroid belt
-        createAsteroidBelt();
-        // Add astroid belt
-        gameObjects.addGameObject(mAsteroidBelt);
+
     }
     private SpaceWorm findSpaceWorm()
     {
@@ -131,12 +132,13 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         //re-add Spaceworm object
         gameObjects.addGameObject(SpaceWorm.getSnakeInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
+        gameObjects.addGameObject(mAsteroidBelt);
         //Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
         // Add astroid belt
         // mGameObjects.add(mAsteroidBelt);
         // Reset the mScore
-        gameObjects.addGameObject(mAsteroidBelt);
+
         mScore = 0;
 
         // Setup mNextFrameTime so an update can triggered

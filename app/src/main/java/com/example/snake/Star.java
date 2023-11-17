@@ -26,29 +26,29 @@ class Star extends GameObject implements IDrawable {
 
 
     public void spawn(){
-        // Choose two random values and place the apple
-        Random random = new Random();
-        int x = random.nextInt(mSpawnRange.x - 1) + 1;
-        int y = random.nextInt(mSpawnRange.y - 1) + 1;
-        setLocation(random.nextInt(mSpawnRange.x-1) + 1, random.nextInt(mSpawnRange.y - 1) + 1);
+        Point coord = ValidCoord();
+        setLocation(coord.x, coord.y);
     }
 
     // To get a coordinate that is not occupied by the asteroid belt
-    private void ValidCoord(int range){
+    private Point ValidCoord(){
         Random random = new Random();
-        int x = random.nextInt(range) + 1;
-        ///figure out bound checking.
+        int x = random.nextInt(mSpawnRange.x - 1) + 1;
+        int y = random.nextInt(mSpawnRange.y - 1) + 1;
+        boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
+        asteroidMap[39][20] = false;
+        while(asteroidMap[x][y] == true) {
+            x = random.nextInt(mSpawnRange.x - 1) + 1;
+            y = random.nextInt(mSpawnRange.y - 1) + 1;
+        }
+        return new Point(x,y);
     }
-
-    // Can be used to set more specific locations for other game features
-
 
     // Draw the apple
     @Override
     public void draw(Canvas canvas, Paint paint){
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
-
     }
 
     static void setAsteroidBelt(AsteroidBelt aBelt){
