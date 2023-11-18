@@ -10,9 +10,8 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
-import java.util.List;
 
-class Snake implements IGameObject{
+class SpaceWorm extends GameObject implements IDrawable {
 
     // The location in the grid of all the segments
     private final ArrayList<Point> segmentLocations;
@@ -45,11 +44,11 @@ class Snake implements IGameObject{
     private Bitmap mBitmapBody;
 
     // Snake Object for Singleton
-    static private Snake mSnake = null;
+    static private SpaceWorm mSpaceWorm = null;
 
 
-    private Snake(Context context, Point mr, int ss) {
-
+    private SpaceWorm(Context context, Point mr, int ss) {
+        super(mr, ss);
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
 
@@ -67,13 +66,13 @@ class Snake implements IGameObject{
         halfWayPoint = mr.x * ss / 2;
     }
 
-    static Snake getSnakeInstance(Context context, Point mr, int ss){
+    static SpaceWorm getSnakeInstance(Context context, Point mr, int ss){
 
         // Make a new snake object if it doesn't exist yet
-        if(mSnake == null){
-            mSnake = new Snake(context, mr, ss);
+        if(mSpaceWorm == null){
+            mSpaceWorm = new SpaceWorm(context, mr, ss);
         }
-        return mSnake;
+        return mSpaceWorm;
     }
 
     //
@@ -149,14 +148,20 @@ class Snake implements IGameObject{
         segmentLocations.add(new Point(w / 2, h / 2));
     }
 
+    //Not used in SpaceWorm
+    @Override
+    public void spawn() {
+
+    }
+    /*
     public void update(List<IGameObject> gameObjects) {
         SnakeGame snakeGame = SnakeActivity.getSnakeGame();
 
         move();
 
         for(IGameObject gameObject : gameObjects) {
-            if(gameObject instanceof Apple) {
-                Apple apple = (Apple) gameObject;
+            if(gameObject instanceof Star) {
+                Star apple = (Star) gameObject;
                 if(checkDinner(apple.getLocation())) {
                     apple.spawn();
                     snakeGame.incrementScore();
@@ -171,7 +176,7 @@ class Snake implements IGameObject{
             snakeGame.pause();
         }
     }
-
+    */
     void move() {
         // Move the body
         // Start at the back and move it
