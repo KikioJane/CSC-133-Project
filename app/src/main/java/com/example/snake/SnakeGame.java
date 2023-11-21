@@ -282,10 +282,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                     mCanvas.drawText(getResources().getString(R.string.tap_to_resume),
                         screenSize.x - 530, 95, mPaint);
 
-                    // Darken the screen when paused while playing
-//                    ColorMatrix colorMatrix = new ColorMatrix();
-//                    colorMatrix.setSaturation(0.5f);
-//                    mPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+                    // Darken the screen when paused during gameplay
                     mCanvas.drawColor(Color.argb(127, 0, 0, 0));
                 } else {
                     // Draw some text while paused
@@ -311,9 +308,6 @@ class SnakeGame extends SurfaceView implements Runnable{
             //        gameObject.draw(mCanvas, mPaint);
             //    }
             //}
-
-            // clear the color filter in case it was applied
-//            mPaint.setColorFilter(null);
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -357,7 +351,6 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Error
         }
     }
-
 
     // Start the thread
     public void resume() {
