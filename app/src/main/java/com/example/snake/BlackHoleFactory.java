@@ -3,7 +3,7 @@ package com.example.snake;
 import android.content.Context;
 import android.graphics.Point;
 
-public class BlackHoleFactory extends IGameObjectFactory {
+public class BlackHoleFactory extends IGameObjectFactory{
     public BlackHoleFactory(Context context, int NUM_BLOCKS_WIDE, int mNumBlocksHigh, int blockSize) {
         super(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
     }
@@ -15,4 +15,6 @@ public class BlackHoleFactory extends IGameObjectFactory {
         blackHole.spawn();
         return blackHole;
     }
+
+
 }

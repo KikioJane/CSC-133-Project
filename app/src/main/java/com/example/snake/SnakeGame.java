@@ -250,25 +250,35 @@ class SnakeGame extends SurfaceView implements Runnable{
         if(findSpaceWorm().checkDinner(findStar().getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
+
             findStar().spawn();
 
             // Add to  mScore
             mScore = mScore + 1;
 
+            if(mScore % 5 == 0 && mScore != 0){
+                gameObjects.addGameObject(mBlackHoleFactory.createObject());
+            }
+
             // Play a sound
             mSoundManager.playEatSound();
         }
 
+
         // Did the head of the snake go into a black hole
-        if(findSpaceWorm().removeDinner(findBlackHole().getLocation())){
+        for(GameObject o : gameObjects.createGameObjectIterator().list){
+            if(o instanceof BlackHole){
+                if(findSpaceWorm().removeDinner(o.getLocation())){
 
-            findBlackHole().spawn();
+                    // Subtract from  mScore
+                    mScore = mScore - 1;
+                    
+                    o.spawn();
 
-            // Subtract from  mScore
-            mScore = mScore - 1;
-
-            // Play a sound
-            mSoundManager.playEatSound(); //TODO: might want to make a new sound
+                    // Play a sound
+                    mSoundManager.playEatSound(); //TODO: might want to make a new sound
+                }
+            }
         }
 
         // Did the snake die?
@@ -301,7 +311,12 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Draw the apple and the snake
             findStar().draw(mCanvas, mPaint);
-            findBlackHole().draw(mCanvas, mPaint);
+            for(GameObject o : gameObjects.createGameObjectIterator().list){
+                if(o instanceof BlackHole){
+                    ((BlackHole) o).draw(mCanvas, mPaint);
+                }
+            }
+//            findBlackHole().draw(mCanvas, mPaint);
             findSpaceWorm().draw(mCanvas, mPaint);
             mAsteroidBelt.draw(mCanvas, mPaint);
 
