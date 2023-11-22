@@ -256,6 +256,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Add to  mScore
             mScore = mScore + 1;
 
+            // If mScore is a factor of 5 then spawn a new black hole
             if(mScore % 5 == 0 && mScore != 0){
                 gameObjects.addGameObject(mBlackHoleFactory.createObject());
             }
@@ -268,13 +269,13 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Did the head of the snake go into a black hole
         for(GameObject o : gameObjects.createGameObjectIterator().list){
             if(o instanceof BlackHole){
-                if(findSpaceWorm().removeDinner(o.getLocation())){
+                if(findSpaceWorm().removeDinner(o.getLocation())) {
 
                     // Subtract from  mScore
                     mScore = mScore - 1;
-                    
+                    if(mScore == -1)
+                        break;
                     o.spawn();
-
                     // Play a sound
                     mSoundManager.playEatSound(); //TODO: might want to make a new sound
                 }
@@ -412,7 +413,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     }
 
     private void createAsteroidBelt() {
-        Difficulty difficulty = Difficulty.Hard;
+        Difficulty difficulty = Difficulty.Easy;
         mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
