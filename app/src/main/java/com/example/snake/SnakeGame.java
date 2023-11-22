@@ -268,11 +268,11 @@ class SnakeGame extends SurfaceView implements Runnable{
             mScore = mScore - 1;
 
             // Play a sound
-            mSoundManager.playEatSound();
+            mSoundManager.playEatSound(); //TODO: might want to make a new sound
         }
 
         // Did the snake die?
-        if (findSpaceWorm().detectDeath()) {
+        if (mScore == -1 || findSpaceWorm().detectDeath()) {
             // Pause the game ready to start again
             mSoundManager.playCrashSound();
 

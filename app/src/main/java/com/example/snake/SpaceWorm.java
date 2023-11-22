@@ -254,7 +254,6 @@ class SpaceWorm extends GameObject implements IDrawable {
                 dead = true;
         }
 
-
         return dead;
     }
 
