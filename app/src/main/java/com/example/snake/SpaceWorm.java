@@ -45,12 +45,18 @@ class SpaceWorm extends GameObject implements IDrawable {
     // A bitmap for the body
     private Bitmap mBitmapBody;
 
+
     // Snake Object for Singleton
     static private SpaceWorm mSpaceWorm = null;
+
+    //***
+    //Context con;
 
 
     private SpaceWorm(Context context, Point mr, int ss) {
         super(mr, ss);
+        //***
+        //con = context;
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
 
@@ -82,25 +88,27 @@ class SpaceWorm extends GameObject implements IDrawable {
         // Create the Bitmaps
         mBitmapHeadRight = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         // Create 3 more versions of the head for different headings
         mBitmapHeadLeft = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         mBitmapHeadUp = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         mBitmapHeadDown = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         // Create the body
         mBitmapBody = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowbody);
+                        R.drawable.octabody);
+
+
     }
 
     private void setBitmaps(Context context, int ss) {
@@ -135,6 +143,8 @@ class SpaceWorm extends GameObject implements IDrawable {
         mBitmapBody = Bitmap
                 .createScaledBitmap(mBitmapBody,
                         ss, ss, false);
+
+
     }
 
     // Get the snake ready for a new game
@@ -282,6 +292,20 @@ class SpaceWorm extends GameObject implements IDrawable {
         // Don't run this code if ArrayList has nothing in it
         if (!segmentLocations.isEmpty()) {
             // All the code from this method goes here
+            // Draw the snake body one block at a time
+            for (int i = segmentLocations.size()-1; i >0; i--) {
+
+                canvas.drawBitmap(mBitmapBody,
+                        segmentLocations.get(i).x
+                                * mSegmentSize,
+                        segmentLocations.get(i).y
+                                * mSegmentSize, paint);
+                //Draw the in-between segments
+                int m = (((segmentLocations.get(i).x*mSegmentSize)+(segmentLocations.get(i-1).x*mSegmentSize))/2);
+                int n = (((segmentLocations.get(i).y*mSegmentSize)+(segmentLocations.get(i-1).y*mSegmentSize))/2);
+                canvas.drawBitmap(mBitmapBody, m, n, paint);
+
+            }
             // Draw the head
             switch (heading) {
                 case RIGHT:
@@ -317,17 +341,9 @@ class SpaceWorm extends GameObject implements IDrawable {
                     break;
             }
 
-            // Draw the snake body one block at a time
-            for (int i = 1; i < segmentLocations.size(); i++) {
-                canvas.drawBitmap(mBitmapBody,
-                        segmentLocations.get(i).x
-                                * mSegmentSize,
-                        segmentLocations.get(i).y
-                                * mSegmentSize, paint);
-            }
+
         }
     }
-
 
     // Handle changing direction
     void switchHeading(MotionEvent motionEvent) {
