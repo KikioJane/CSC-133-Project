@@ -45,12 +45,8 @@ class SpaceWorm extends GameObject implements IDrawable {
     // A bitmap for the body
     private Bitmap mBitmapBody;
 
-
     // Snake Object for Singleton
     static private SpaceWorm mSpaceWorm = null;
-
-    //***
-    //Context con;
 
 
     private SpaceWorm(Context context, Point mr, int ss) {
@@ -107,8 +103,6 @@ class SpaceWorm extends GameObject implements IDrawable {
         mBitmapBody = BitmapFactory
                 .decodeResource(context.getResources(),
                         R.drawable.octabody);
-
-
     }
 
     private void setBitmaps(Context context, int ss) {
@@ -143,8 +137,6 @@ class SpaceWorm extends GameObject implements IDrawable {
         mBitmapBody = Bitmap
                 .createScaledBitmap(mBitmapBody,
                         ss, ss, false);
-
-
     }
 
     // Get the snake ready for a new game
@@ -165,31 +157,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     public void spawn() {
 
     }
-    /*
-    public void update(List<IGameObject> gameObjects) {
-        SnakeGame snakeGame = SnakeActivity.getSnakeGame();
 
-        move();
-
-        for(IGameObject gameObject : gameObjects) {
-            if(gameObject instanceof Star) {
-                Star apple = (Star) gameObject;
-                if(checkDinner(apple.getLocation())) {
-                    apple.spawn();
-                    snakeGame.incrementScore();
-                    SoundManager.playEatSound();
-                }
-            }
-            // this could be extended later to handle things like walls, etc.
-        }
-
-
-        if(detectDeath()) {
-            SoundManager.playCrashSound();
-            snakeGame.pause();
-        }
-    }
-    */
     void move() {
         // Move the body
         // Start at the back and move it
@@ -250,20 +218,12 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
         }
 
-        /*ArrayList<Point> wallLocations = mAsteroidBelt.getWallLocations();
-        for(int i = 0; i < wallLocations.size(); i++){
-
-            if(segmentLocations.get(0).x == wallLocations.get(i).x && segmentLocations.get(0).y == wallLocations.get(i).y)
-                dead = true;
-
-         */
-        // don't check if snake is already dead. gives an out of bounds error sometimes.
+        // don't check if snake is already dead.
         if (dead == false){
             boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
                 dead = true;
         }
-
 
         return dead;
     }
@@ -301,8 +261,10 @@ class SpaceWorm extends GameObject implements IDrawable {
                         segmentLocations.get(i).y
                                 * mSegmentSize, paint);
                 //Draw the in-between segments
-                int m = (((segmentLocations.get(i).x*mSegmentSize)+(segmentLocations.get(i-1).x*mSegmentSize))/2);
-                int n = (((segmentLocations.get(i).y*mSegmentSize)+(segmentLocations.get(i-1).y*mSegmentSize))/2);
+                int m = (((segmentLocations.get(i).x*mSegmentSize)+
+                        (segmentLocations.get(i-1).x*mSegmentSize))/2);
+                int n = (((segmentLocations.get(i).y*mSegmentSize)+
+                        (segmentLocations.get(i-1).y*mSegmentSize))/2);
                 canvas.drawBitmap(mBitmapBody, m, n, paint);
 
             }
@@ -389,7 +351,4 @@ class SpaceWorm extends GameObject implements IDrawable {
         mAsteroidBelt = aBelt;
     }
 
-    //private Point getStartingPoint(){
-
-    //}
 }
