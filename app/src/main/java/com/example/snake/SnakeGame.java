@@ -167,8 +167,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         //Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
 
-        // Add new BlackHole Object
-        gameObjects.addGameObject(mBlackHoleFactory.createObject());
+//        // Add new BlackHole Object
+//        gameObjects.addGameObject(mBlackHoleFactory.createObject());
 
         // Reset the mScore
         mScore = 0;
@@ -257,7 +257,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mScore = mScore + 1;
 
             // If mScore is a factor of 5 then spawn a new black hole
-            if(mScore % 5 == 0 && mScore != 0){
+            if(mScore % 3 == 0 && mScore != 0){
                 gameObjects.addGameObject(mBlackHoleFactory.createObject());
             }
 
@@ -265,20 +265,30 @@ class SnakeGame extends SurfaceView implements Runnable{
             mSoundManager.playEatSound();
         }
 
-
+        // TODO: Make spawns based on amount of stars
         // Did the head of the snake go into a black hole
+        int i = 0;
         for(GameObject o : gameObjects.createGameObjectIterator().list){
             if(o instanceof BlackHole){
+                i++;
                 if(findSpaceWorm().removeDinner(o.getLocation())) {
 
                     // Subtract from  mScore
                     mScore = mScore - 1;
                     if(mScore == -1)
                         break;
-                    o.spawn();
+
+                    // Move off screen
+                    o.getLocation().x = -1;
+                    o.getLocation().y = -1;
+
+                    // Respawn only if score is higher than factor
+                    if(mScore >= 3 * i)
+                        o.spawn();
                     // Play a sound
                     mSoundManager.playEatSound(); //TODO: might want to make a new sound
                 }
+
             }
         }
 
