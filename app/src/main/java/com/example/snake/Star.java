@@ -37,7 +37,7 @@ class Star extends GameObject implements IDrawable {
         int y = random.nextInt(mSpawnRange.y - 1) + 1;
         boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
         asteroidMap[mSpawnRange.x - 1][mSpawnRange.y - 1] = false;
-        while(asteroidMap[x][y] == true) {
+        while(asteroidMap[x][y]) {
             x = random.nextInt(mSpawnRange.x - 1) + 1;
             y = random.nextInt(mSpawnRange.y - 1) + 1;
         }
