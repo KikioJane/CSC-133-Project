@@ -48,6 +48,8 @@ class SpaceWorm extends GameObject implements IDrawable {
     // Snake Object for Singleton
     static private SpaceWorm mSpaceWorm = null;
 
+    private boolean invisible = false;
+
 
     private SpaceWorm(Context context, Point mr, int ss) {
         super(mr, ss);
@@ -219,7 +221,7 @@ class SpaceWorm extends GameObject implements IDrawable {
         }
 
         // don't check if snake is already dead.
-        if (dead == false){
+        if (dead == false && invisible == false){
             boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
                 dead = true;
@@ -367,4 +369,42 @@ class SpaceWorm extends GameObject implements IDrawable {
         mAsteroidBelt = aBelt;
     }
 
+    // if the worm eats a blue apple, it should be invisible
+    public void setInvisible(Context context){
+        createInvisibleBitmaps(context);
+        setBitmaps(context, mSegmentSize);
+        invisible = true;
+    }
+    private void createInvisibleBitmaps(Context context) {
+        // Create the Bitmaps
+        mBitmapHeadRight = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        // Create 3 more versions of the head for different headings
+        mBitmapHeadLeft = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        mBitmapHeadUp = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        mBitmapHeadDown = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        // Create the body
+        mBitmapBody = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctabody);
+    }
+
+    // reset the worm to normal
+    public void resetInvisible(Context context){
+        createBitmaps(context);
+        setBitmaps(context, mSegmentSize);
+        invisible = false;
+    }
+    public boolean getInvisible(){ return invisible;}
 }

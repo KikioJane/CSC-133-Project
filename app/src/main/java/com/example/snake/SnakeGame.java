@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -54,6 +55,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     private final StarFactory mStarFactory;
     private final BlackHoleFactory mBlackHoleFactory;
+
+    private final Handler invisibilityHandler = new Handler();
+    private int invisibilityCount = 0;
 
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
@@ -126,6 +130,15 @@ class SnakeGame extends SurfaceView implements Runnable{
         while(gameObjectIterator.hasNext())
         {
             GameObject curr = gameObjectIterator.getNext();
+            //***
+            /*if(curr instanceof YellowStar)
+            {
+                return (YellowStar) curr;
+            }
+            if(curr instanceof BlueStar)
+            {
+                return (BlueStar) curr;
+            }*/
             if(curr instanceof Star)
             {
                 return (Star) curr;
@@ -206,6 +219,16 @@ class SnakeGame extends SurfaceView implements Runnable{
                         throw new RuntimeException(e);
                     }
                 }
+                // set invisibility to last for 10 seconds
+                if(findSpaceWorm().getInvisible() == true){
+                    if(invisibilityCount == 100){
+                        findSpaceWorm().resetInvisible(context);
+                        invisibilityCount = 0;
+                    }
+                    else{
+                        invisibilityCount += 1;
+                    }
+                }
             }
         }
     }
@@ -250,7 +273,13 @@ class SnakeGame extends SurfaceView implements Runnable{
         if(findSpaceWorm().checkDinner(findStar().getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
-
+            if (findStar().getType() == StarType.blue){
+                // set invisibility count to 0 in the event that the worm is already invisible
+                invisibilityCount = 0;
+                findSpaceWorm().setInvisible(context);
+            }
+            // Generate a new kind of star
+            gameObjects.changeGameObject(findStar(), mStarFactory.createObject());
             findStar().spawn();
 
             // Add to  mScore
