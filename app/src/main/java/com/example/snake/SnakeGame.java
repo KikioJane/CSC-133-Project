@@ -41,6 +41,8 @@ class SnakeGame extends SurfaceView implements Runnable{
     Bitmap mPausedBitmap;
     Bitmap mResumeBitmap;
 
+    private Difficulty difficulty = Difficulty.Easy;
+
     // GameObjects
     private GameObjectCollection gameObjects;
     //private GameObjectIterator gameObjectIterator;
@@ -213,9 +215,22 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Check to see if it is time for an update
     public boolean updateRequired() {
-
-        // Run at 10 frames per second
-        final long TARGET_FPS = 10;
+        final long TARGET_FPS;
+        switch (difficulty) {
+            case Easy:
+                TARGET_FPS = 4;
+                break;
+            case Medium:
+                TARGET_FPS = 7;
+                break;
+            case Hard:
+                TARGET_FPS = 12;
+                break;
+            default:
+                // this branch shouldn't be hit so it doesn't really matter what's here
+                TARGET_FPS = 1;
+                break;
+        }
         // There are 1000 milliseconds in a second
         final long MILLIS_PER_SECOND = 1000;
 
@@ -423,7 +438,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     }
 
     private void createAsteroidBelt() {
-        Difficulty difficulty = Difficulty.Easy;
         mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
@@ -432,5 +446,9 @@ class SnakeGame extends SurfaceView implements Runnable{
         SpaceWorm.setAsteroidBelt(mAsteroidBelt);
         Star.setAsteroidBelt(mAsteroidBelt);
         BlackHole.setAsteroidBelt(mAsteroidBelt);
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 }
