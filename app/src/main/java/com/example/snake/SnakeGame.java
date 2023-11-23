@@ -127,15 +127,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         while(gameObjectIterator.hasNext())
         {
             GameObject curr = gameObjectIterator.getNext();
-            //***
-            /*if(curr instanceof YellowStar)
-            {
-                return (YellowStar) curr;
-            }
-            if(curr instanceof BlueStar)
-            {
-                return (BlueStar) curr;
-            }*/
             if(curr instanceof Star)
             {
                 return (Star) curr;
@@ -389,13 +380,6 @@ class SnakeGame extends SurfaceView implements Runnable{
                 // Draw pause icon
                 mCanvas.drawBitmap(mPausedBitmap, screenSize.x - 125, 25, mPaint);
             }
-
-            //else {
-                // draw the game objects
-            //    for(IGameObject gameObject : mGameObjects) {
-            //        gameObject.draw(mCanvas, mPaint);
-            //    }
-            //}
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
