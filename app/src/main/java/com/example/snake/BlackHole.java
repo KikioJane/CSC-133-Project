@@ -14,7 +14,7 @@ public class BlackHole extends Star implements IDrawable {
 //    private static AsteroidBelt mAsteroidBelt;
     public BlackHole(Context c, Point sr, int size) {
         super(c, sr, size);
-        mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.black_hole);
+        mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackhole);
         // Resize the bitmap
         mBitmapBlackHole = Bitmap.createScaledBitmap(mBitmapBlackHole, size, size, false);
     }
