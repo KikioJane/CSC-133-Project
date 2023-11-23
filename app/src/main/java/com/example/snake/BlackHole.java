@@ -9,11 +9,11 @@ import android.graphics.Point;
 
 //Blackholes will spawn every x amount of stars eaten
 //They will kill the SpaceWorm if it collides with it
-public class BlackHole extends YellowStar implements IDrawable {
+public class BlackHole extends Star implements IDrawable {
     private Bitmap mBitmapBlackHole;
 //    private static AsteroidBelt mAsteroidBelt;
     public BlackHole(Context c, Point sr, int size) {
-        super(c, sr, size);
+        super(sr, size);
         mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackhole);
         // Resize the bitmap
         mBitmapBlackHole = Bitmap.createScaledBitmap(mBitmapBlackHole, size, size, false);

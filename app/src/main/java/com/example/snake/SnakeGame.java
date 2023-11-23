@@ -307,7 +307,10 @@ class SnakeGame extends SurfaceView implements Runnable{
                 if(spaceWorm.removeDinner(o.getLocation())) {
 
                     // Subtract from  mScore
-                    mScore = mScore - 1;
+                    if (!findSpaceWorm().getInvisible()){
+                        mScore = mScore - 1;
+                    }
+
                     if(mScore == -1)
                         break;
 
