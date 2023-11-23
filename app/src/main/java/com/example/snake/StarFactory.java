@@ -10,14 +10,6 @@ public class StarFactory extends IGameObjectFactory {
         super(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
     }
 
-    /*@Override
-    YellowStar createObject() {
-        YellowStar star = new YellowStar(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
-        //gameObjects.addGameObject(star);
-        star.spawn();
-        return star;
-    }*/
-
     @Override
     Star createObject() {
         StarType type;

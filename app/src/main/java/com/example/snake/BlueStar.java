@@ -10,6 +10,7 @@ import android.graphics.Point;
 class BlueStar extends Star {
     // An image to represent the star
     private Bitmap mBitmapStar;
+    private final StarType type = StarType.blue;
     /// Set up the apple in the constructor
     public BlueStar(Context context, Point sr, int s){
         super(sr, s);
@@ -32,9 +33,7 @@ class BlueStar extends Star {
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
     }
-
     public StarType getType(){
-        return StarType.blue;
+        return type;
     }
-
 }

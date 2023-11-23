@@ -7,14 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 class SnakeGame extends SurfaceView implements Runnable{
     //Context
-    private Context context;
+    private final Context context;
     // Objects for the game loop/thread
     private Thread mThread = null;
     // Control pausing between updates
@@ -23,7 +22,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
     private volatile boolean mGameRunning = false;
-    private Point screenSize;
+    private final Point screenSize;
 
     // for playing sound effects
     private SoundManager mSoundManager;
@@ -43,7 +42,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     Bitmap mResumeBitmap;
 
     // GameObjects
-    private GameObjectCollection gameObjects;
+    private final GameObjectCollection gameObjects;
     //private GameObjectIterator gameObjectIterator;
     //private SpaceWorm mSpaceWorm;
     //private Star mStar;
@@ -51,12 +50,10 @@ class SnakeGame extends SurfaceView implements Runnable{
     //***
     private AsteroidBelt mAsteroidBelt;
     private int blockSize;
-    private Background mBackground;
+    private final Background mBackground;
 
     private final StarFactory mStarFactory;
     private final BlackHoleFactory mBlackHoleFactory;
-
-    private final Handler invisibilityHandler = new Handler();
     private int invisibilityCount = 0;
 
     // Use a linked list for O(1) time add/remove operations.
@@ -220,7 +217,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                     }
                 }
                 // set invisibility to last for 10 seconds
-                if(findSpaceWorm().getInvisible() == true){
+                if(findSpaceWorm().getInvisible()){
                     if(invisibilityCount == 100){
                         findSpaceWorm().resetInvisible(context);
                         invisibilityCount = 0;
@@ -325,6 +322,9 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (mScore == -1 || findSpaceWorm().detectDeath()) {
             // Pause the game ready to start again
             mSoundManager.playCrashSound();
+            // reset the worm to visible
+            invisibilityCount = 0;
+            findSpaceWorm().resetInvisible(context);
 
             mPaused = true;
             mGameRunning = false;

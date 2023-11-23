@@ -9,7 +9,7 @@ import java.util.Random;
 public abstract class Star extends GameObject implements IDrawable {
 
     private static AsteroidBelt mAsteroidBelt;
-
+    private StarType type;
     public Star(Point sr, int size) {
         super(sr, size);
     }
@@ -33,8 +33,8 @@ public abstract class Star extends GameObject implements IDrawable {
     static void setAsteroidBelt(AsteroidBelt aBelt){
         mAsteroidBelt = aBelt;
     }
-
+    public StarType getType(){ return type; }
     @Override
     public abstract void draw(Canvas canvas, Paint paint);
-    public abstract StarType getType();
+
 }
