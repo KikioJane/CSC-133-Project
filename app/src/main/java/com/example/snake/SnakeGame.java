@@ -253,16 +253,17 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Update all the game objects
     public void update() {
-
+        SpaceWorm spaceWorm = findSpaceWorm();
 
         //for(IGameObject gameObject : mGameObjects) {
         //    gameObject.update(mGameObjects);
         //}
         // Move the snake
-        findSpaceWorm().move();
+        spaceWorm.move();
 
         // Did the head of the snake eat the apple?
-        if(findSpaceWorm().checkDinner(findStar().getLocation())){
+        Star star = findStar();
+        if(star != null && spaceWorm.checkDinner(star.getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
 
@@ -286,7 +287,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         for(GameObject o : gameObjects.createGameObjectIterator().list){
             if(o instanceof BlackHole){
                 i++;
-                if(findSpaceWorm().removeDinner(o.getLocation())) {
+                if(spaceWorm.removeDinner(o.getLocation())) {
 
                     // Subtract from  mScore
                     mScore = mScore - 1;
@@ -308,7 +309,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
 
         // Did the snake die?
-        if (mScore == -1 || findSpaceWorm().detectDeath()) {
+        if (mScore == -1 || spaceWorm.detectDeath()) {
             // Pause the game ready to start again
             mSoundManager.playCrashSound();
 
