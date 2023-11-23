@@ -48,9 +48,13 @@ class SpaceWorm extends GameObject implements IDrawable {
     // Snake Object for Singleton
     static private SpaceWorm mSpaceWorm = null;
 
+    private boolean invisible = false;
+
 
     private SpaceWorm(Context context, Point mr, int ss) {
         super(mr, ss);
+        //***
+        //con = context;
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
 
@@ -82,25 +86,25 @@ class SpaceWorm extends GameObject implements IDrawable {
         // Create the Bitmaps
         mBitmapHeadRight = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         // Create 3 more versions of the head for different headings
         mBitmapHeadLeft = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         mBitmapHeadUp = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         mBitmapHeadDown = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowhead);
+                        R.drawable.octahead);
 
         // Create the body
         mBitmapBody = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.glowbody);
+                        R.drawable.octabody);
     }
 
     private void setBitmaps(Context context, int ss) {
@@ -155,31 +159,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     public void spawn() {
 
     }
-    /*
-    public void update(List<IGameObject> gameObjects) {
-        SnakeGame snakeGame = SnakeActivity.getSnakeGame();
 
-        move();
-
-        for(IGameObject gameObject : gameObjects) {
-            if(gameObject instanceof Star) {
-                Star apple = (Star) gameObject;
-                if(checkDinner(apple.getLocation())) {
-                    apple.spawn();
-                    snakeGame.incrementScore();
-                    SoundManager.playEatSound();
-                }
-            }
-            // this could be extended later to handle things like walls, etc.
-        }
-
-
-        if(detectDeath()) {
-            SoundManager.playCrashSound();
-            snakeGame.pause();
-        }
-    }
-    */
     void move() {
         // Move the body
         // Start at the back and move it
@@ -240,15 +220,8 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
         }
 
-        /*ArrayList<Point> wallLocations = mAsteroidBelt.getWallLocations();
-        for(int i = 0; i < wallLocations.size(); i++){
-
-            if(segmentLocations.get(0).x == wallLocations.get(i).x && segmentLocations.get(0).y == wallLocations.get(i).y)
-                dead = true;
-
-         */
-        // don't check if snake is already dead. gives an out of bounds error sometimes.
-        if (dead == false){
+        // don't check if snake is already dead.
+        if (dead == false && invisible == false){
             boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
                 dead = true;
@@ -297,6 +270,24 @@ class SpaceWorm extends GameObject implements IDrawable {
         // Don't run this code if ArrayList has nothing in it
         if (!segmentLocations.isEmpty()) {
             // All the code from this method goes here
+            // Draw the snake body one block at a time
+            for (int i = segmentLocations.size()-1; i >0; i--) {
+                if (segmentLocations.get(i).x == -10){
+                    continue;
+                }
+                canvas.drawBitmap(mBitmapBody,
+                        segmentLocations.get(i).x
+                                * mSegmentSize,
+                        segmentLocations.get(i).y
+                                * mSegmentSize, paint);
+                //Draw the in-between segments
+                int m = (((segmentLocations.get(i).x*mSegmentSize)+
+                        (segmentLocations.get(i-1).x*mSegmentSize))/2);
+                int n = (((segmentLocations.get(i).y*mSegmentSize)+
+                        (segmentLocations.get(i-1).y*mSegmentSize))/2);
+                canvas.drawBitmap(mBitmapBody, m, n, paint);
+
+            }
             // Draw the head
             switch (heading) {
                 case RIGHT:
@@ -332,17 +323,9 @@ class SpaceWorm extends GameObject implements IDrawable {
                     break;
             }
 
-            // Draw the snake body one block at a time
-            for (int i = 1; i < segmentLocations.size(); i++) {
-                canvas.drawBitmap(mBitmapBody,
-                        segmentLocations.get(i).x
-                                * mSegmentSize,
-                        segmentLocations.get(i).y
-                                * mSegmentSize, paint);
-            }
+
         }
     }
-
 
     // Handle changing direction
     void switchHeading(MotionEvent motionEvent) {
@@ -388,7 +371,42 @@ class SpaceWorm extends GameObject implements IDrawable {
         mAsteroidBelt = aBelt;
     }
 
-    //private Point getStartingPoint(){
+    // if the worm eats a blue apple, it should be invisible
+    public void setInvisible(Context context){
+        createInvisibleBitmaps(context);
+        setBitmaps(context, mSegmentSize);
+        invisible = true;
+    }
+    private void createInvisibleBitmaps(Context context) {
+        // Create the Bitmaps
+        mBitmapHeadRight = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
 
-    //}
+        // Create 3 more versions of the head for different headings
+        mBitmapHeadLeft = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        mBitmapHeadUp = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        mBitmapHeadDown = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctahead);
+
+        // Create the body
+        mBitmapBody = BitmapFactory
+                .decodeResource(context.getResources(),
+                        R.drawable.invisibleoctabody);
+    }
+
+    // reset the worm to normal
+    public void resetInvisible(Context context){
+        createBitmaps(context);
+        setBitmaps(context, mSegmentSize);
+        invisible = false;
+    }
+    public boolean getInvisible(){ return invisible;}
 }

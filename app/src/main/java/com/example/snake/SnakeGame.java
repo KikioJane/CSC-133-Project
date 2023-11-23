@@ -13,7 +13,7 @@ import android.view.SurfaceView;
 
 class SnakeGame extends SurfaceView implements Runnable{
     //Context
-    private Context context;
+    private final Context context;
     // Objects for the game loop/thread
     private Thread mThread = null;
     // Control pausing between updates
@@ -22,7 +22,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
     private volatile boolean mGameRunning = false;
-    private Point screenSize;
+    private final Point screenSize;
 
     // for playing sound effects
     private SoundManager mSoundManager;
@@ -44,7 +44,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Difficulty difficulty = Difficulty.Easy;
 
     // GameObjects
-    private GameObjectCollection gameObjects;
+    private final GameObjectCollection gameObjects;
     //private GameObjectIterator gameObjectIterator;
     //private SpaceWorm mSpaceWorm;
     //private Star mStar;
@@ -52,10 +52,11 @@ class SnakeGame extends SurfaceView implements Runnable{
     //***
     private AsteroidBelt mAsteroidBelt;
     private int blockSize;
-    private Background mBackground;
+    private final Background mBackground;
 
     private final StarFactory mStarFactory;
     private final BlackHoleFactory mBlackHoleFactory;
+    private int invisibilityCount = 0;
 
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
@@ -208,6 +209,16 @@ class SnakeGame extends SurfaceView implements Runnable{
                         throw new RuntimeException(e);
                     }
                 }
+                // set invisibility to last for 10 seconds
+                if(findSpaceWorm().getInvisible()){
+                    if(invisibilityCount == 120){
+                        findSpaceWorm().resetInvisible(context);
+                        invisibilityCount = 0;
+                    }
+                    else{
+                        invisibilityCount += 1;
+                    }
+                }
             }
         }
     }
@@ -266,7 +277,13 @@ class SnakeGame extends SurfaceView implements Runnable{
         if(star != null && spaceWorm.checkDinner(star.getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
-
+            if (findStar().getType() == StarType.blue){
+                // set invisibility count to 0 in the event that the worm is already invisible
+                invisibilityCount = 0;
+                findSpaceWorm().setInvisible(context);
+            }
+            // Generate a new kind of star
+            gameObjects.changeGameObject(findStar(), mStarFactory.createObject());
             findStar().spawn();
 
             // Add to  mScore
@@ -312,6 +329,9 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (mScore == -1 || spaceWorm.detectDeath()) {
             // Pause the game ready to start again
             mSoundManager.playCrashSound();
+            // reset the worm to visible
+            invisibilityCount = 0;
+            findSpaceWorm().resetInvisible(context);
 
             mPaused = true;
             mGameRunning = false;
@@ -376,13 +396,6 @@ class SnakeGame extends SurfaceView implements Runnable{
                 // Draw pause icon
                 mCanvas.drawBitmap(mPausedBitmap, screenSize.x - 125, 25, mPaint);
             }
-
-            //else {
-                // draw the game objects
-            //    for(IGameObject gameObject : mGameObjects) {
-            //        gameObject.draw(mCanvas, mPaint);
-            //    }
-            //}
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
