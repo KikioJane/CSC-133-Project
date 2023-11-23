@@ -272,7 +272,9 @@ class SpaceWorm extends GameObject implements IDrawable {
             // All the code from this method goes here
             // Draw the snake body one block at a time
             for (int i = segmentLocations.size()-1; i >0; i--) {
-
+                if (segmentLocations.get(i).x == -10){
+                    continue;
+                }
                 canvas.drawBitmap(mBitmapBody,
                         segmentLocations.get(i).x
                                 * mSegmentSize,
