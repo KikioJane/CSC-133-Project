@@ -41,6 +41,8 @@ class SnakeGame extends SurfaceView implements Runnable{
     Bitmap mPausedBitmap;
     Bitmap mResumeBitmap;
 
+    private Difficulty difficulty = Difficulty.Easy;
+
     // GameObjects
     private final GameObjectCollection gameObjects;
     //private GameObjectIterator gameObjectIterator;
@@ -224,9 +226,22 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Check to see if it is time for an update
     public boolean updateRequired() {
-
-        // Run at 10 frames per second
-        final long TARGET_FPS = 10;
+        final long TARGET_FPS;
+        switch (difficulty) {
+            case Easy:
+                TARGET_FPS = 4;
+                break;
+            case Medium:
+                TARGET_FPS = 7;
+                break;
+            case Hard:
+                TARGET_FPS = 12;
+                break;
+            default:
+                // this branch shouldn't be hit so it doesn't really matter what's here
+                TARGET_FPS = 1;
+                break;
+        }
         // There are 1000 milliseconds in a second
         final long MILLIS_PER_SECOND = 1000;
 
@@ -249,16 +264,17 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Update all the game objects
     public void update() {
-
+        SpaceWorm spaceWorm = findSpaceWorm();
 
         //for(IGameObject gameObject : mGameObjects) {
         //    gameObject.update(mGameObjects);
         //}
         // Move the snake
-        findSpaceWorm().move();
+        spaceWorm.move();
 
         // Did the head of the snake eat the apple?
-        if(findSpaceWorm().checkDinner(findStar().getLocation())){
+        Star star = findStar();
+        if(star != null && spaceWorm.checkDinner(star.getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
             if (findStar().getType() == StarType.blue){
@@ -288,7 +304,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         for(GameObject o : gameObjects.createGameObjectIterator().list){
             if(o instanceof BlackHole){
                 i++;
-                if(findSpaceWorm().removeDinner(o.getLocation())) {
+                if(spaceWorm.removeDinner(o.getLocation())) {
 
                     // Subtract from  mScore
                     mScore = mScore - 1;
@@ -310,7 +326,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
 
         // Did the snake die?
-        if (mScore == -1 || findSpaceWorm().detectDeath()) {
+        if (mScore == -1 || spaceWorm.detectDeath()) {
             // Pause the game ready to start again
             mSoundManager.playCrashSound();
             // reset the worm to visible
@@ -436,7 +452,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     }
 
     private void createAsteroidBelt() {
-        Difficulty difficulty = Difficulty.Easy;
         mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
@@ -445,5 +460,9 @@ class SnakeGame extends SurfaceView implements Runnable{
         SpaceWorm.setAsteroidBelt(mAsteroidBelt);
         Star.setAsteroidBelt(mAsteroidBelt);
         BlackHole.setAsteroidBelt(mAsteroidBelt);
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 }
