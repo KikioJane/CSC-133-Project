@@ -211,7 +211,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 }
                 // set invisibility to last for 10 seconds
                 if(findSpaceWorm().getInvisible()){
-                    if(invisibilityCount == 100){
+                    if(invisibilityCount == 120){
                         findSpaceWorm().resetInvisible(context);
                         invisibilityCount = 0;
                     }
