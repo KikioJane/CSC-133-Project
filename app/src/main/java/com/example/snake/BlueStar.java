@@ -23,7 +23,7 @@ class BlueStar extends Star {
 
 
     public void spawn(){
-        Point coord = super.ValidCoord();
+        Point coord = super.validCoord();
         setLocation(coord.x, coord.y);
     }
 

@@ -220,9 +220,17 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
         }
 
+        //***
+        /*
         // don't check if snake is already dead.
         if (dead == false && invisible == false){
             boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
+            if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
+                dead = true;
+        }*/
+        // don't check if snake is already dead.
+        if (dead == false && invisible == false){
+            boolean[][] asteroidMap = AsteroidBelt.getAsteroidMap();
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
                 dead = true;
         }

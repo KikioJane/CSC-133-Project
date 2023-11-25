@@ -89,7 +89,10 @@ class SnakeGame extends SurfaceView implements Runnable{
         gameObjects = new GameObjectCollection();
         //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
         // for asteroid belt
-        createAsteroidBelt();
+        //createAsteroidBelt();
+        mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize, difficulty);
+
         // Add astroid belt
         gameObjects.addGameObject(mAsteroidBelt);
 
@@ -112,7 +115,9 @@ class SnakeGame extends SurfaceView implements Runnable{
     private SpaceWorm findSpaceWorm()
     {
         GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
-
+        //TODO make it so iterator actually does something?
+        // make it add a large list of objects at beginning, then use it to recycle them
+        // if they are not active when another one needs to spawn? idk look at shooter game
         while(gameObjectIterator.hasNext())
         {
             GameObject curr = gameObjectIterator.getNext();
@@ -158,7 +163,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // reset the snake
         findSpaceWorm().reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
-        createAsteroidBelt();
+        //createAsteroidBelt();
+        mAsteroidBelt.spawn(difficulty);
+
 
         // remove the other objects by clearing the list
         gameObjects.clearGameObjectList();
@@ -455,7 +462,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         mScore++;
     }
 
-    private void createAsteroidBelt() {
+    /*private void createAsteroidBelt() {
         mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
@@ -465,7 +472,17 @@ class SnakeGame extends SurfaceView implements Runnable{
         Star.setAsteroidBelt(mAsteroidBelt);
         BlackHole.setAsteroidBelt(mAsteroidBelt);
     }
+     */
+    private void createAsteroidBelt() {
+        mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize, difficulty);
 
+        mAsteroidBelt.spawn();
+
+        //SpaceWorm.setAsteroidBelt(mAsteroidBelt);
+        //Star.setAsteroidBelt(mAsteroidBelt);
+        //BlackHole.setAsteroidBelt(mAsteroidBelt);
+    }
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
     }
