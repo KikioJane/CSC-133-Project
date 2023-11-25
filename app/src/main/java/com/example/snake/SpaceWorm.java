@@ -258,7 +258,9 @@ class SpaceWorm extends GameObject implements IDrawable {
             // This is OK because on the next call to
             // move it will take the position of
             // the segment in front of it
-            segmentLocations.remove(segmentLocations.size()-1);
+            if (!invisible){
+                segmentLocations.remove(segmentLocations.size()-1);
+            }
             return true;
         }
         return false;

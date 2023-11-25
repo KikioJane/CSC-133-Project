@@ -319,6 +319,8 @@ class SnakeGame extends SurfaceView implements Runnable{
                     o.getLocation().y = -1;
 
                     // Respawn only if score is higher than factor
+                    //TODO: when snake eats a black hole while invisible, it will immediately respawn
+                    //TODO: do we want that?
                     if(mScore >= 3 * i)
                         o.spawn();
                     // Play a sound
@@ -341,7 +343,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
 
     }
-
 
     // Do all the drawing
     public void draw() {
