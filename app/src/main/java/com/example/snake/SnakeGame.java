@@ -88,22 +88,27 @@ class SnakeGame extends SurfaceView implements Runnable {
         mPaint = new Paint();
         mBackground = new Background(context);
 
-        mPausedBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_icon);
-        mPausedBitmap = Bitmap.createScaledBitmap(mPausedBitmap, 100, 100, false);
-        mResumeBitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.resume_icon);
-        mResumeBitmap = Bitmap.createScaledBitmap(mResumeBitmap, 100, 100, false);
+        setBitmaps();
 
         gameObjects = new GameObjectCollection();
         //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
-        // for asteroid belt
-        createAsteroidBelt();
-        // Add astroid belt
-        gameObjects.addGameObject(mAsteroidBelt);
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
         mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize);
+
+        addGameObjects();
+
+        // mGameObjects.add(mSnake);
+    }
+
+    // Method to add game objects into the game object collection
+    private void addGameObjects() {
+        // For asteroid belt
+        createAsteroidBelt();
+
+        // Add asteroid belt
+        gameObjects.addGameObject(mAsteroidBelt);
 
         // Call the constructors of our two game objects
         gameObjects.addGameObject(SpaceWorm.getSnakeInstance(context,
@@ -115,8 +120,15 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Add new BlackHole Object
         gameObjects.addGameObject(mBlackHoleFactory.createObject());
+    }
 
-        // mGameObjects.add(mSnake);
+
+    private void setBitmaps() {
+        mPausedBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_icon);
+        mPausedBitmap = Bitmap.createScaledBitmap(mPausedBitmap, 100, 100, false);
+        mResumeBitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.resume_icon);
+        mResumeBitmap = Bitmap.createScaledBitmap(mResumeBitmap, 100, 100, false);
     }
 
     private SpaceWorm findSpaceWorm() {
