@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Snake</string>
-    <string name="tap_to_play">Tap To Play!</string>
-    <string name="tap_to_resume">Tap to resume</string>
+    <string name="tap_to_play">Tap Anywhere To Play!</string>
+    <string name="tap_to_resume">Tap to Resume</string>
+    <string name="tap_to_play_again">Tap Anywhere to Play Again</string>
+    <string name="game_over">Game Over!</string>
+    <string name="score">Score</string>
+    <string name="title_text">Space Worm</string>
+    <string name="easyText">Easy</string>
+    <string name="mediumText">Medium</string>
+    <string name="hardText">Hard</string>
+    <string name="highScoresText">High Scores</string>
+    <string name="scoresMenuBackText">Back</string>
+    <string name="gameLayoutBackText">Exit to Menu</string>
 </resources>

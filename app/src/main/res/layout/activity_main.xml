@@ -1,112 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:rotation="0"
     tools:context=".SnakeActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="389dp"
-        android:layout_height="92dp"
-        android:text="Space Worm"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="60sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_layout_view_flipper">
 
-    <Button
-        android:id="@+id/easyButton"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#59A847"
-        android:text="Easy"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_menu_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/mediumButton"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="#DCC034"
-        android:text="Medium"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/easyButton" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="389dp"
+                android:layout_height="92dp"
+                android:text="@string/title_text"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="60sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.05" />
 
-    <Button
-        android:id="@+id/hardButton"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="#DD1E1E"
-        android:text="Hard"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mediumButton" />
+            <Button
+                android:id="@+id/easyButton"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#59A847"
+                android:text="@string/easyText"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/highScoresButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="#4158C6"
-        android:text="High Scores"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hardButton" />
+            <Button
+                android:id="@+id/mediumButton"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#DCC034"
+                android:text="@string/mediumText"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/easyButton" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/mainMenuGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:constraint_referenced_ids="easyButton,mediumButton,hardButton,highScoresButton" />
+            <Button
+                android:id="@+id/hardButton"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#DD1E1E"
+                android:text="@string/hardText"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mediumButton" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/scoresMenuGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:constraint_referenced_ids="editTextTextMultiLine,scoresMenuBackButton" />
+            <Button
+                android:id="@+id/highScoresButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:layout_marginBottom="32dp"
+                android:backgroundTint="#4158C6"
+                android:text="@string/highScoresText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hardButton" />
 
-    <EditText
-        android:id="@+id/editTextTextMultiLine"
-        android:layout_width="335dp"
-        android:layout_height="196dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:text="1. This\n2. Will\n3. Be\n4. Implemented\n5. Later"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/mainMenuGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="easyButton,mediumButton,hardButton,highScoresButton" />
 
-    <Button
-        android:id="@+id/scoresMenuBackButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/scoresMenuGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="editTextTextMultiLine,scoresMenuBackButton" />
 
+            <EditText
+                android:id="@+id/editTextTextMultiLine"
+                android:layout_width="335dp"
+                android:layout_height="196dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:text="1. This\n2. Will\n3. Be\n4. Implemented\n5. Later"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <Button
+                android:id="@+id/scoresMenuBackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/scoresMenuBackText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/game_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/gameLayoutBackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/gameLayoutBackText"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>
