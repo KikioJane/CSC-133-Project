@@ -58,6 +58,8 @@ class SnakeGame extends SurfaceView implements Runnable{
     private final BlackHoleFactory mBlackHoleFactory;
     private int invisibilityCount = 0;
 
+    private WormHoleCollection mWormHoleCollection;
+
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
     //private LinkedList<IGameObject> mGameObjects = new LinkedList<>();
@@ -108,6 +110,16 @@ class SnakeGame extends SurfaceView implements Runnable{
         gameObjects.addGameObject(mBlackHoleFactory.createObject());
 
        // mGameObjects.add(mSnake);
+        mWormHoleCollection = new WormHoleCollection();
+        //test creation of portal
+        mWormHoleCollection.addWormHole(new WormHole(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
+        //spawn portal
+        GameObjectIterator whIterator = mWormHoleCollection.createGameObjectIterator();
+        while(whIterator.hasNext()) {
+            WormHole curr = (WormHole) whIterator.getNext();
+            curr.spawn();
+        }
+
     }
     private SpaceWorm findSpaceWorm()
     {
@@ -239,6 +251,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                 break;
             default:
                 // this branch shouldn't be hit so it doesn't really matter what's here
+                // error handling here?
                 TARGET_FPS = 1;
                 break;
         }
@@ -289,7 +302,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Add to  mScore
             mScore = mScore + 1;
 
-            // If mScore is a factor of 5 then spawn a new black hole
+            // If mScore is a factor of 3 then spawn a new black hole and a new Portal
             if(mScore % 3 == 0 && mScore != 0){
                 gameObjects.addGameObject(mBlackHoleFactory.createObject());
             }
@@ -322,6 +335,24 @@ class SnakeGame extends SurfaceView implements Runnable{
                     mSoundManager.playEatSound(); //TODO: might want to make a new sound
                 }
 
+            }
+        }
+
+        //Did the SpaceWorm head enter a portal?
+        GameObjectIterator whIterator = mWormHoleCollection.createGameObjectIterator();
+        while(whIterator.hasNext()){
+            WormHole curr = (WormHole) whIterator.getNext();
+            //colides with main portal
+            if(curr.getLocation().equals(spaceWorm.getHeadLocation()))
+            {
+                spaceWorm.setHeadLocation(curr.getPartnerLocation());
+                break;
+            }
+            //colides with partner portal
+            if(curr.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
+            {
+                spaceWorm.setHeadLocation(curr.getLocation());
+                break;
             }
         }
 
@@ -358,14 +389,21 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Draw the apple and the snake
             findStar().draw(mCanvas, mPaint);
+            findSpaceWorm().draw(mCanvas, mPaint);
+
             for(GameObject o : gameObjects.createGameObjectIterator().list){
                 if(o instanceof BlackHole){
                     ((BlackHole) o).draw(mCanvas, mPaint);
                 }
             }
 //            findBlackHole().draw(mCanvas, mPaint);
-            findSpaceWorm().draw(mCanvas, mPaint);
             mAsteroidBelt.draw(mCanvas, mPaint);
+            //draw WormHoles
+            GameObjectIterator whIterator = mWormHoleCollection.createGameObjectIterator();
+            while(whIterator.hasNext())
+            {
+                ((WormHole) whIterator.getNext()).draw(mCanvas, mPaint);
+            }
 
             if(mPaused) {
                 if (mGameRunning) {

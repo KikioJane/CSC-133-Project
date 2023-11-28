@@ -80,7 +80,14 @@ class SpaceWorm extends GameObject implements IDrawable {
         }
         return mSpaceWorm;
     }
-
+    public Point getHeadLocation()
+    {
+        return segmentLocations.get(0);
+    }
+    public void setHeadLocation(Point location)
+    {
+        segmentLocations.get(0).set(location.x, location.y);
+    }
     //
     private void createBitmaps(Context context) {
         // Create the Bitmaps
