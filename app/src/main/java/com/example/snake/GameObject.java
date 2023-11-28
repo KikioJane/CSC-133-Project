@@ -14,7 +14,8 @@ public abstract class GameObject {
     // to spawn an apple
     protected Point mSpawnRange;
     protected int mSize;
-    private boolean isActive = false;
+    protected boolean isActive = false;
+    private String mTag;
 
 
     public GameObject (Point sr, int size)
@@ -38,4 +39,7 @@ public abstract class GameObject {
     }
     // see if the object is active
     boolean checkActive(){ return isActive; }
+    void setInactive() {
+        isActive = false;
+    }
 }

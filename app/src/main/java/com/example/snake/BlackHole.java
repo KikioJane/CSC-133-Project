@@ -11,12 +11,14 @@ import android.graphics.Point;
 //They will kill the SpaceWorm if it collides with it
 public class BlackHole extends Star implements IDrawable {
     private Bitmap mBitmapBlackHole;
+
 //    private static AsteroidBelt mAsteroidBelt;
     public BlackHole(Context c, Point sr, int size) {
         super(sr, size);
+        points = -1;
+        segmentsLost = 1;
         //mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackhole);
-        mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackholepurple2);
-
+        mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackholepurple);
         // Resize the bitmap
         mBitmapBlackHole = Bitmap.createScaledBitmap(mBitmapBlackHole, size, size, false);
     }

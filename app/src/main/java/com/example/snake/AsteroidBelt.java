@@ -83,6 +83,9 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         for(int i = 0; i < numberOfBelts; i++){
             AsteroidCluster x = new AsteroidCluster(c, mSpawnRange, mSize);
             clusters.add(x);
+            Point p = validCoord();
+            while (p.x == mSpawnRange.x || p.x == 0 ||p.y == 0 || p.y == mSpawnRange.y)
+                p = validCoord();
             asteroidMap = x.spawn(beltSize, validCoord(), asteroidMap);
         }
         emptyCenterScreen();
@@ -110,11 +113,11 @@ public class AsteroidBelt extends GameObject implements IDrawable{
     // returns a coordinate that does not contain an asteroid.
     public static Point validCoord(){
         Random random = new Random();
-        int x = random.nextInt(rangeX - 1) + 1;
-        int y = random.nextInt(rangeY - 1) + 1;
+        int x = random.nextInt(rangeX - 2) + 1;
+        int y = random.nextInt(rangeY - 2) + 1;
         while(asteroidMap[x][y]) {
-            x = random.nextInt(rangeX - 1) + 1;
-            y = random.nextInt(rangeY - 1) + 1;
+            x = random.nextInt(rangeX - 2) + 1;
+            y = random.nextInt(rangeY - 2) + 1;
         }
         return new Point(x,y);
     }

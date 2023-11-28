@@ -14,6 +14,9 @@ class YellowStar extends Star implements IDrawable {
     /// Set up the apple in the constructor
     public YellowStar(Context context, Point sr, int s){
         super(sr, s);
+        isActive = true;
+        points = 1;
+        segmentsLost = 0;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellowstar);
 
@@ -36,5 +39,6 @@ class YellowStar extends Star implements IDrawable {
     public StarType getType(){
         return type;
     }
+
 
 }

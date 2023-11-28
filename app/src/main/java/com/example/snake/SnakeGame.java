@@ -115,9 +115,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     private SpaceWorm findSpaceWorm()
     {
         GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
-        //TODO make it so iterator actually does something?
-        // make it add a large list of objects at beginning, then use it to recycle them
-        // if they are not active when another one needs to spawn? idk look at shooter game
         while(gameObjectIterator.hasNext())
         {
             GameObject curr = gameObjectIterator.getNext();
@@ -281,7 +278,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Did the head of the snake eat the apple?
         Star star = findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation())){
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsLost())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
             if (findStar().getType() == StarType.blue){
@@ -289,12 +286,12 @@ class SnakeGame extends SurfaceView implements Runnable{
                 invisibilityCount = 0;
                 findSpaceWorm().setInvisible(context);
             }
+            // Add to  mScore
+            mScore = mScore + findStar().points();
+
             // Generate a new kind of star
             gameObjects.changeGameObject(findStar(), mStarFactory.createObject());
             findStar().spawn();
-
-            // Add to  mScore
-            mScore = mScore + 1;
 
             // If mScore is a factor of 5 then spawn a new black hole
             if(mScore % 3 == 0 && mScore != 0){
@@ -311,12 +308,11 @@ class SnakeGame extends SurfaceView implements Runnable{
         for(GameObject o : gameObjects.createGameObjectIterator().list){
             if(o instanceof BlackHole){
                 i++;
-                if(spaceWorm.removeDinner(o.getLocation())) {
+                if(spaceWorm.checkDinner(o.getLocation(), findBlackHole().segmentsLost())) {
 
                     // Subtract from  mScore
-                    if (!findSpaceWorm().getInvisible()){
-                        mScore = mScore - 1;
-                    }
+                    if (!findSpaceWorm().getInvisible())
+                        mScore = mScore - findBlackHole().points();
 
                     if(mScore == -1)
                         break;
@@ -326,9 +322,7 @@ class SnakeGame extends SurfaceView implements Runnable{
                     o.getLocation().y = -1;
 
                     // Respawn only if score is higher than factor
-                    //TODO: when snake eats a black hole while invisible, it will immediately respawn
-                    //TODO: do we want that?
-                    if(mScore >= 3 * i)
+                    if(mScore >= 3 * i && !findSpaceWorm().getInvisible())
                         o.spawn();
                     // Play a sound
                     mSoundManager.playEatSound(); //TODO: might want to make a new sound
