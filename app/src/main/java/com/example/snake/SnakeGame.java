@@ -86,7 +86,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
-        mBackground = new Background(context);
+        mBackground = new Background(context, size);
 
         setBitmaps();
 
@@ -175,7 +175,8 @@ class SnakeGame extends SurfaceView implements Runnable {
     // Called to start a new game
     public void newGame() {
         mGameOver = false;
-
+        // change background placement
+        mBackground.resetPlacement();
         // reset the snake
         SpaceWorm spaceWorm = findSpaceWorm();
         spaceWorm.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
