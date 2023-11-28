@@ -345,7 +345,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
                     // Subtract from  mScore
                     if (!findSpaceWorm().getInvisible())
-                        mScore = mScore - findBlackHole().points();
+                        mScore = mScore + findBlackHole().points(); // Points is negative
 
                     if(mScore == -1)
                         break;
