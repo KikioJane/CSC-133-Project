@@ -25,6 +25,33 @@ public class GameObjectIterator implements IIterator{
             return true;
         return false;
     }
+    SpaceWorm findSpaceWorm() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof SpaceWorm) {
+                return (SpaceWorm) curr;
+            }
+        }
+        return null;
+    }
 
+    Star findStar() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof Star) {
+                return (Star) curr;
+            }
+        }
+        return null;
+    }
 
+    BlackHole findBlackHole() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof BlackHole) {
+                return (BlackHole) curr;
+            }
+        }
+        return null;
+    }
 }
