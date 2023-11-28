@@ -107,7 +107,8 @@ public class AsteroidBelt extends GameObject implements IDrawable{
     @Override
     public void draw(Canvas canvas, Paint paint) {
         for(AsteroidCluster x : clusters){
-            x.draw(canvas, paint, mSize);
+            if(x != null)
+                x.draw(canvas, paint, mSize);
         }
     }
     // returns a coordinate that does not contain an asteroid.
@@ -127,7 +128,7 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         return aMap;
     }
 
-    private void resetAsteroids(){
+    public void resetAsteroids(){
         clusters.clear();
         for (boolean[] row : asteroidMap){
             Arrays.fill(row, false);

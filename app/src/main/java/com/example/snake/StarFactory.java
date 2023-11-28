@@ -42,4 +42,9 @@ public class StarFactory extends IGameObjectFactory {
                 throw new IllegalArgumentException("Unknown star type "+ type);
         }
     }
+
+    public void replaceStar(GameObjectCollection gameObjects, StarFactory mStarFactory){
+        gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
+        gameObjects.createGameObjectIterator().findStar().spawn();
+    }
 }

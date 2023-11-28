@@ -49,6 +49,10 @@ class SpaceWorm extends GameObject implements IDrawable {
     static private SpaceWorm mSpaceWorm = null;
 
     private boolean invisible = false;
+    int invisibilityCount = 0;
+    public void setInvisibilityCount(int invisibilityCount) {
+        this.invisibilityCount = invisibilityCount;
+    }
 
 
     private SpaceWorm(Context context, Point mr, int ss) {
@@ -220,7 +224,7 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
         }
 
-        // don't check if snake is already dead.
+        // Don't check if snake is already dead.
         if (dead == false && invisible == false){
             boolean[][] asteroidMap = AsteroidBelt.getAsteroidMap();
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
@@ -249,24 +253,6 @@ class SpaceWorm extends GameObject implements IDrawable {
                 if (segmentLocations.size() > 1){
                     segmentLocations.remove(segmentLocations.size()-1);
                 }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    boolean removeDinner(Point l) {
-        //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
-        if (segmentLocations.get(0).x == l.x &&
-                segmentLocations.get(0).y == l.y) {
-
-            // Add a new Point to the list
-            // located off-screen.
-            // This is OK because on the next call to
-            // move it will take the position of
-            // the segment in front of it
-            if (!invisible){
-                segmentLocations.remove(segmentLocations.size()-1);
             }
             return true;
         }
@@ -376,10 +362,6 @@ class SpaceWorm extends GameObject implements IDrawable {
         }
     }
 
-    static void setAsteroidBelt(AsteroidBelt aBelt){
-        mAsteroidBelt = aBelt;
-    }
-
     // if the worm eats a blue apple, it should be invisible
     public void setInvisible(Context context){
         createInvisibleBitmaps(context);
@@ -418,4 +400,15 @@ class SpaceWorm extends GameObject implements IDrawable {
         invisible = false;
     }
     public boolean getInvisible(){ return invisible;}
+    public void updateInvisible(Context context){
+        // set invisibility to last for 10 seconds
+        if (invisible) {
+            if (invisibilityCount == 120) {
+                resetInvisible(context);
+                invisibilityCount = 0;
+            } else {
+                invisibilityCount += 1;
+            }
+        }
+    }
 }
