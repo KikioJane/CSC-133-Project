@@ -18,7 +18,8 @@ class Background {
     Background(Context context){
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.starsbackground);
+        //mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.starsbackground);
+        mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.spacebackground);
     }
 
     public void draw(Canvas canvas, Paint paint){

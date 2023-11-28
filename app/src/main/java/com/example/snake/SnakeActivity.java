@@ -5,17 +5,17 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ViewFlipper;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
-import androidx.core.content.res.TypedArrayUtils;
-
-import java.util.LinkedList;
 
 public class SnakeActivity extends Activity implements View.OnClickListener {
     // Declare an instance of SnakeGame
-    private static SnakeGame mSnakeGame;
+    private SnakeGame mSnakeGame;
+
+    private ViewFlipper viewFlipper;
 
     private Button easyButton;
     private Button mediumButton;
@@ -23,12 +23,10 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
     private Button highScoresButton;
     private Button scoresMenuBackButton;
 
+    private Button gameLayoutBackButton;
+
     private Group mainMenuGroup;
     private Group scoresMenuGroup;
-
-    public static SnakeGame getSnakeGame() {
-        return mSnakeGame;
-    }
 
     // Set the game up
     @Override
@@ -42,10 +40,10 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
         Point size = new Point();
         display.getSize(size);
 
-        // Create a new instance of the SnakeEngine class
-        mSnakeGame = new SnakeGame(this, size);
-
         setContentView(R.layout.activity_main);
+        viewFlipper = findViewById(R.id.main_layout_view_flipper);
+
+        ConstraintLayout gameLayout = findViewById(R.id.game_layout);
 
         mainMenuGroup = findViewById(R.id.mainMenuGroup);
         easyButton = findViewById(R.id.easyButton);
@@ -60,6 +58,12 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
             findViewById(id).setOnClickListener(this);
         }
         scoresMenuBackButton.setOnClickListener(this);
+
+        gameLayoutBackButton = findViewById(R.id.gameLayoutBackButton);
+        gameLayoutBackButton.setOnClickListener(this);
+        // Create a new instance of the SnakeEngine class
+        mSnakeGame = new SnakeGame(this, size, gameLayoutBackButton);
+        gameLayout.addView(mSnakeGame, 0);
     }
 
     // Start the thread in snakeEngine
@@ -74,11 +78,15 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
         mSnakeGame.stop();
+        // return to main menu
+        viewFlipper.setDisplayedChild(0);
     }
 
     // Handle click events for all the menu buttons
     @Override
     public void onClick(View clickedView) {
+        // TODO: figure out how to add animations between menus
+
         if (clickedView == highScoresButton) {
             // go to high scores menu
             mainMenuGroup.setVisibility(View.INVISIBLE);
@@ -96,7 +104,13 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
             } else if (clickedView == hardButton) {
                 mSnakeGame.setDifficulty(Difficulty.Hard);
             }
-            setContentView(mSnakeGame);
+            // go to the game view
+            viewFlipper.setDisplayedChild(1);
+        } else if (clickedView == gameLayoutBackButton) {
+            // go back to the main menu view
+            viewFlipper.setDisplayedChild(0);
+            mSnakeGame.newGame();
+            mSnakeGame.returnToMenu();
         }
     }
 }

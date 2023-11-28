@@ -14,6 +14,8 @@ public abstract class GameObject {
     // to spawn an apple
     protected Point mSpawnRange;
     protected int mSize;
+    protected boolean isActive = false;
+    private String mTag;
 
 
     public GameObject (Point sr, int size)
@@ -34,5 +36,10 @@ public abstract class GameObject {
     // SnakeGame can share this with the snake
     Point getLocation(){
         return location;
+    }
+    // see if the object is active
+    boolean checkActive(){ return isActive; }
+    void setInactive() {
+        isActive = false;
     }
 }

@@ -19,6 +19,9 @@ public class StarFactory extends IGameObjectFactory {
         if (randVal == 4){
             type = StarType.blue;
         }
+        else if (randVal == 3){
+            type = StarType.pink;
+        }
         else{
             type = StarType.yellow;
         }
@@ -33,6 +36,8 @@ public class StarFactory extends IGameObjectFactory {
                 return new YellowStar(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
             case blue:
                 return new BlueStar(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
+            case pink:
+                return new PinkStar(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
             default:
                 throw new IllegalArgumentException("Unknown star type "+ type);
         }

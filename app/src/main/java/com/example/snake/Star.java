@@ -8,33 +8,27 @@ import java.util.Random;
 
 public abstract class Star extends GameObject implements IDrawable {
 
-    private static AsteroidBelt mAsteroidBelt;
+    //private static AsteroidBelt mAsteroidBelt;
+    protected int points;
+    protected int segmentsLost;
     private StarType type;
     public Star(Point sr, int size) {
         super(sr, size);
+        isActive = true;
     }
-
     public void spawn(){
-        Point coord = ValidCoord();
+        //Point coord = ValidCoord();
+        Point coord = AsteroidBelt.validCoord();
         setLocation(coord.x, coord.y);
     }
-    protected Point ValidCoord(){
-        Random random = new Random();
-        int x = random.nextInt(mSpawnRange.x - 1) + 1;
-        int y = random.nextInt(mSpawnRange.y - 1) + 1;
-        boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
-        asteroidMap[mSpawnRange.x - 1][mSpawnRange.y - 1] = false;
-        while(asteroidMap[x][y]) {
-            x = random.nextInt(mSpawnRange.x - 1) + 1;
-            y = random.nextInt(mSpawnRange.y - 1) + 1;
-        }
-        return new Point(x,y);
-    }
-    static void setAsteroidBelt(AsteroidBelt aBelt){
-        mAsteroidBelt = aBelt;
+    protected Point validCoord(){
+        return AsteroidBelt.validCoord();
     }
     public StarType getType(){ return type; }
     @Override
     public abstract void draw(Canvas canvas, Paint paint);
+    public int points(){ return points;}
+    public int segmentsLost() { return segmentsLost;}
+
 
 }

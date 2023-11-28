@@ -1,24 +1,26 @@
+
 package com.example.snake;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
+        import android.content.Context;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.graphics.Canvas;
+        import android.graphics.Paint;
+        import android.graphics.Point;
 
-class BlueStar extends Star {
+// worm gains a point and loses a segment.
+class PinkStar extends Star {
     // An image to represent the star
     private Bitmap mBitmapStar;
-    private final StarType type = StarType.blue;
+    private final StarType type = StarType.pink;
     /// Set up the apple in the constructor
-    public BlueStar(Context context, Point sr, int s){
+    public PinkStar(Context context, Point sr, int s){
         super(sr, s);
         isActive = true;
         points = 1;
-        segmentsLost = 0;
+        segmentsLost = 1;
         // Load the image to the bitmap
-        mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluestar);
+        mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.pinkstar);
 
         // Resize the bitmap
         mBitmapStar = Bitmap.createScaledBitmap(mBitmapStar, s, s, false);
@@ -39,5 +41,4 @@ class BlueStar extends Star {
     public StarType getType(){
         return type;
     }
-
 }
