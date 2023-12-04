@@ -26,6 +26,7 @@ public class AsteroidBelt extends GameObject implements IDrawable{
     private ArrayList<AsteroidCluster> clusters;
     private static int rangeX;
     private static int rangeY;
+    private final boolean isActive = true;
 
 
     private Context c;
@@ -52,8 +53,7 @@ public class AsteroidBelt extends GameObject implements IDrawable{
         }
         return mAsteroidBelt;
     }
-    public void spawn(){
-        spawn(difficulty);
+    public void spawn(){ spawn(difficulty);
     }
 
     public void spawn(Difficulty difficulty){
@@ -106,7 +106,7 @@ public class AsteroidBelt extends GameObject implements IDrawable{
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
-        for(AsteroidCluster x : clusters){
+        for (AsteroidCluster x : clusters) {
             x.draw(canvas, paint, mSize);
         }
     }

@@ -26,7 +26,6 @@ class Background {
     Background(Context context, Point sr){
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        //mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.starsbackground);
         mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.spacebackground);
         bWidth = mBitmapBackground.getWidth();
         bHeight = mBitmapBackground.getHeight();
@@ -35,7 +34,6 @@ class Background {
 
     public void draw(Canvas canvas, Paint paint){
         canvas.drawColor(Color.argb(255,10,44,54));
-        //canvas.drawBitmap(mBitmapBackground, 0,0, paint);
         canvas.drawBitmap(mBitmapBackground, x,y, paint);
     }
 

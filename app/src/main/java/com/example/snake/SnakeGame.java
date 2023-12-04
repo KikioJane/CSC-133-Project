@@ -293,10 +293,6 @@ class SnakeGame extends SurfaceView implements Runnable {
     // Update all the game objects
     public void update() {
         SpaceWorm spaceWorm = findSpaceWorm();
-
-        //for(IGameObject gameObject : mGameObjects) {
-        //    gameObject.update(mGameObjects);
-        //}
         // Move the snake
         spaceWorm.move();
 
@@ -313,9 +309,8 @@ class SnakeGame extends SurfaceView implements Runnable {
         // Did the head of the snake eat the apple?
         Star star = findStar();
         if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsLost())){
-            // This reminds me of Edge of Tomorrow.
-            // One day the apple will be ready!
-            if (findStar().getType() == StarType.blue){
+            // if the worm has eaten a star do stuff.
+            if (star.getType() == StarType.blue){
                 // set invisibility count to 0 in the event that the worm is already invisible
                 invisibilityCount = 0;
                 spaceWorm.setInvisible(context);
@@ -335,6 +330,18 @@ class SnakeGame extends SurfaceView implements Runnable {
             // Play a sound
             mSoundManager.playEatSound();
         }
+        else { // this stuff is for the supernova star
+            if (star.getType() == StarType.supernova){
+                findStar().updateStar();
+            }
+            if (!star.checkActive()){
+                // if the star is inactive, change the star.
+                gameObjects.changeGameObject(findStar(), mStarFactory.createObject());
+                findStar().spawn();
+                star.getType();
+                findStar().getType();
+            }
+        }
 
         // TODO: Make spawns based on amount of stars
         // Did the head of the snake go into a black hole
@@ -344,7 +351,7 @@ class SnakeGame extends SurfaceView implements Runnable {
                 i++;
                 if(spaceWorm.checkDinner(o.getLocation(), findBlackHole().segmentsLost())) {
 
-                    // Subtract from  mScore
+                    // Subtract from  mScore if worm is not invisible
                     if (!findSpaceWorm().getInvisible())
                         mScore = mScore - findBlackHole().points();
 
@@ -355,7 +362,7 @@ class SnakeGame extends SurfaceView implements Runnable {
                     o.getLocation().x = -1;
                     o.getLocation().y = -1;
 
-                    // Respawn only if score is higher than factor
+                    // Respawn only if score is higher than factor if the worm is not invisible
                     if(mScore >= 3 * i && !findSpaceWorm().getInvisible())
                         o.spawn();
                     // Play a sound

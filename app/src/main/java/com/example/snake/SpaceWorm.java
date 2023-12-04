@@ -49,6 +49,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     static private SpaceWorm mSpaceWorm = null;
 
     private boolean invisible = false;
+    private final boolean isActive;
 
 
     private SpaceWorm(Context context, Point mr, int ss) {
@@ -70,6 +71,7 @@ class SpaceWorm extends GameObject implements IDrawable {
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+        isActive = true;
     }
 
     static SpaceWorm getSnakeInstance(Context context, Point mr, int ss){
@@ -236,18 +238,22 @@ class SpaceWorm extends GameObject implements IDrawable {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
-            if (segmentsLost==0){
-                // Add a new Point to the list
-                // located off-screen.
-                // This is OK because on the next call to
-                // move it will take the position of
-                // the segment in front of it
-                segmentLocations.add(new Point(-10, -10));
+            if (segmentsLost>=0){
+                for (int i = 0; i < segmentsLost; i++){
+                    // Add a new Point to the list
+                    // located off-screen.
+                    // This is OK because on the next call to
+                    // move it will take the position of
+                    // the segment in front of it
+                    segmentLocations.add(new Point(-10, -10));
+                }
             }
-            else if (segmentsLost == 1){
+            else if (segmentsLost < 0){
                 // remove a segment if the snake is not invisible
                 if (segmentLocations.size() > 1){
-                    segmentLocations.remove(segmentLocations.size()-1);
+                    for (int i = 0; i > segmentsLost; i--){
+                        segmentLocations.remove(segmentLocations.size()-1);
+                    }
                 }
             }
             return true;

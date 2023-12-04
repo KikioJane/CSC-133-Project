@@ -4,13 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-import java.util.Random;
-
 public abstract class Star extends GameObject implements IDrawable {
 
     //private static AsteroidBelt mAsteroidBelt;
     protected int points;
-    protected int segmentsLost;
+    protected int segmentAmount;
     private StarType type;
     public Star(Point sr, int size) {
         super(sr, size);
@@ -18,8 +16,9 @@ public abstract class Star extends GameObject implements IDrawable {
     }
     public void spawn(){
         //Point coord = ValidCoord();
-        Point coord = AsteroidBelt.validCoord();
+        Point coord = validCoord();
         setLocation(coord.x, coord.y);
+        this.isActive = true;
     }
     protected Point validCoord(){
         return AsteroidBelt.validCoord();
@@ -28,7 +27,8 @@ public abstract class Star extends GameObject implements IDrawable {
     @Override
     public abstract void draw(Canvas canvas, Paint paint);
     public int points(){ return points;}
-    public int segmentsLost() { return segmentsLost;}
+    public int segmentsLost() { return segmentAmount;}
+    public void updateStar(){;};
 
 
 }
