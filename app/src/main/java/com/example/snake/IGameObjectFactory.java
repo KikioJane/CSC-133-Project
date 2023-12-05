@@ -10,6 +10,7 @@ abstract class IGameObjectFactory {
     protected final int mNumBlocksHigh;
     protected final int blockSize;
     //protected final GameObjectCollection gameObjects;
+    protected Difficulty difficulty = Difficulty.Easy;
 
     public IGameObjectFactory(Context context, int NUM_BLOCKS_WIDE, int mNumBlocksHigh, int blockSize) {
         this.context = context;
@@ -21,4 +22,8 @@ abstract class IGameObjectFactory {
 
 
     abstract GameObject createObject();
+
+    protected void setDifficulty(Difficulty d){
+        difficulty = d;
+    }
 }

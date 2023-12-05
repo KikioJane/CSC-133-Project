@@ -103,6 +103,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize);
 
+
         addGameObjects();
 
         // mGameObjects.add(mSnake);
@@ -175,6 +176,9 @@ class SnakeGame extends SurfaceView implements Runnable {
     // Called to start a new game
     public void newGame() {
         mGameOver = false;
+        // set difficulty levels
+        mStarFactory.setDifficulty(difficulty);
+        mBlackHoleFactory.setDifficulty(difficulty);
         // change background placement
         mBackground.resetPlacement();
         // reset the snake
@@ -182,6 +186,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         spaceWorm.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
         spaceWorm.resetInvisible(context);
         invisibilityCount = 0;
+
 
         //createAsteroidBelt();
         mAsteroidBelt.spawn(difficulty);

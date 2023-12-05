@@ -16,8 +16,13 @@ public class StarFactory extends IGameObjectFactory {
     Star createObject() {
         StarType type;
         Star star;
+        int bound = 5;
         Random random = new Random();
-        int randVal = random.nextInt(5);
+        if (this.difficulty == Difficulty.Medium)
+            bound = 12;
+        if (this.difficulty == Difficulty.Hard)
+            bound = 20;
+        int randVal = random.nextInt(bound);
         if (randVal == 1){
             type = StarType.blue;
         }
