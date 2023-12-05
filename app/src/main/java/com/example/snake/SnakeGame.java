@@ -124,9 +124,6 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
-
-        // Add new BlackHole Object
-        gameObjects.addGameObject(mBlackHoleFactory.createObject());
     }
 
 
@@ -313,7 +310,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Did the head of the snake eat the apple?
         Star star = findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded(), star.points())){
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded())){
             // if the worm has eaten a star do stuff.
             if (star.getType() == StarType.blue){
                 // set invisibility count to 0 in the event that the worm is already invisible
@@ -328,7 +325,7 @@ class SnakeGame extends SurfaceView implements Runnable {
             findStar().spawn();
 
             // If mScore is a factor of 5 then spawn a new black hole
-            if (mScore % 3 == 0 && mScore != 0) {
+            while (mScore / 3 != 0 && mScore != 0 && (mScore/3 != mBlackHoleFactory.getCount())) {
                 gameObjects.addGameObject(mBlackHoleFactory.createObject());
             }
 
@@ -354,7 +351,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
-                if(spaceWorm.checkDinner(o.getLocation(), findBlackHole().segmentsAdded(), findBlackHole().points())) {
+                if(spaceWorm.checkDinner(o.getLocation(), findBlackHole().segmentsAdded())) {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!findSpaceWorm().getInvisible())
@@ -378,7 +375,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         }
 
         // Did the snake die?
-        if (mScore == -1 || spaceWorm.detectDeath()) {
+        if (mScore <= -1 || spaceWorm.detectDeath()) {
             mSoundManager.playCrashSound();
 
             // reset the worm to visible
