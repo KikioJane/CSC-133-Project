@@ -176,6 +176,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         // set difficulty levels
         mStarFactory.setDifficulty(difficulty);
         mBlackHoleFactory.setDifficulty(difficulty);
+        mBlackHoleFactory.setCount(0);
         // change background placement
         mBackground.resetPlacement();
         // reset the snake
@@ -325,7 +326,7 @@ class SnakeGame extends SurfaceView implements Runnable {
             findStar().spawn();
 
             // If mScore is a factor of 5 then spawn a new black hole
-            while (mScore % 3 == 0 && mScore != 0 && (mScore/3 != mBlackHoleFactory.getCount())) {
+            while (mScore % 3 == 0 && mScore != 0 && (mScore/3 != mBlackHoleFactory.getCount())) { // TODO: problem with freezing
                 gameObjects.addGameObject(mBlackHoleFactory.createObject());
             }
 
@@ -544,26 +545,11 @@ class SnakeGame extends SurfaceView implements Runnable {
         mScore++;
     }
 
-    /*private void createAsteroidBelt() {
-        mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
-                mNumBlocksHigh), blockSize, difficulty);
-
-        mAsteroidBelt.spawn();
-
-        SpaceWorm.setAsteroidBelt(mAsteroidBelt);
-        Star.setAsteroidBelt(mAsteroidBelt);
-        BlackHole.setAsteroidBelt(mAsteroidBelt);
-    }
-     */
     private void createAsteroidBelt() {
         mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
         mAsteroidBelt.spawn();
-
-        //SpaceWorm.setAsteroidBelt(mAsteroidBelt);
-        //Star.setAsteroidBelt(mAsteroidBelt);
-        //BlackHole.setAsteroidBelt(mAsteroidBelt);
     }
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
