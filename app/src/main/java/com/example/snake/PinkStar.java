@@ -43,4 +43,12 @@ class PinkStar extends Star {
     public StarType getType(){
         return type;
     }
+
+
+    @Override
+    public int points(){
+        points = this.randPoints();
+        segmentAmount = points;
+        return points;
+    }
 }

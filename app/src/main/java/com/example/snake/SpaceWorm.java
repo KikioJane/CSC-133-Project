@@ -234,12 +234,12 @@ class SpaceWorm extends GameObject implements IDrawable {
 
 
 
-    boolean checkDinner(Point l, int segmentsLost) {
+    boolean checkDinner(Point l, int segmentsAdded, int points) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
-            if (segmentsLost>=0){
-                for (int i = 0; i < segmentsLost; i++){
+            if (segmentsAdded>=0){
+                for (int i = 0; i < segmentsAdded; i++){
                     // Add a new Point to the list
                     // located off-screen.
                     // This is OK because on the next call to
@@ -248,10 +248,13 @@ class SpaceWorm extends GameObject implements IDrawable {
                     segmentLocations.add(new Point(-10, -10));
                 }
             }
-            else if (segmentsLost < 0){
-                // remove a segment if the snake is not invisible
-                if (segmentLocations.size() > 1){
-                    for (int i = 0; i > segmentsLost; i--){
+            else if (segmentsAdded < 0){
+                // remove a segments
+                if (segmentLocations.size() <= -segmentsAdded){
+                    segmentsAdded = -segmentLocations.size();
+                }
+                for (int i = 0; i > segmentsAdded; i--){
+                    if (segmentLocations.size() > 1){
                         segmentLocations.remove(segmentLocations.size()-1);
                     }
                 }

@@ -308,7 +308,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Did the head of the snake eat the apple?
         Star star = findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsLost())){
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded(), star.points())){
             // if the worm has eaten a star do stuff.
             if (star.getType() == StarType.blue){
                 // set invisibility count to 0 in the event that the worm is already invisible
@@ -349,7 +349,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
-                if(spaceWorm.checkDinner(o.getLocation(), findBlackHole().segmentsLost())) {
+                if(spaceWorm.checkDinner(o.getLocation(), findBlackHole().segmentsAdded(), findBlackHole().points())) {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!findSpaceWorm().getInvisible())

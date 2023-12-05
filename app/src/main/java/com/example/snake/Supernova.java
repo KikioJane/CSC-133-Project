@@ -66,4 +66,11 @@ public class Supernova extends Star implements IDrawable {
         return type;
     }
     boolean checkActive(){ return isActive; }
+
+    @Override
+    public int points(){
+        points = this.randPoints()+3;
+        segmentAmount = -points;
+        return points;
+    }
 }

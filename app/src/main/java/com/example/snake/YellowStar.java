@@ -16,7 +16,7 @@ class YellowStar extends Star implements IDrawable {
         super(sr, s);
         isActive = true;
         points = 1;
-        segmentAmount = 0;
+        segmentAmount = 1;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellowstar);
 
@@ -40,6 +40,8 @@ class YellowStar extends Star implements IDrawable {
     public void updateStar(){}
 
     //public StarType getType(){ return type; }
+    @Override
+    public int points(){ return points; }
 
 
 }
