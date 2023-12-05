@@ -325,7 +325,7 @@ class SnakeGame extends SurfaceView implements Runnable {
             findStar().spawn();
 
             // If mScore is a factor of 5 then spawn a new black hole
-            while (mScore / 3 != 0 && mScore != 0 && (mScore/3 != mBlackHoleFactory.getCount())) {
+            while (mScore % 3 == 0 && mScore != 0 && (mScore/3 != mBlackHoleFactory.getCount())) {
                 gameObjects.addGameObject(mBlackHoleFactory.createObject());
             }
 
