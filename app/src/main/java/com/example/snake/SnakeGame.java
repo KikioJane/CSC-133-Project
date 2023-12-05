@@ -367,6 +367,9 @@ class SnakeGame extends SurfaceView implements Runnable {
                     // Respawn only if score is higher than factor if the worm is not invisible
                     if(mScore >= 3 * i && !findSpaceWorm().getInvisible())
                         o.spawn();
+                    else{
+                        mBlackHoleFactory.setCount(mBlackHoleFactory.getCount() - 1);
+                    }
                     // Play a sound
                     mSoundManager.playEatSound(); //TODO: might want to make a new sound
                 }

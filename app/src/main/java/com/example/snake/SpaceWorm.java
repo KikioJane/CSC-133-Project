@@ -253,7 +253,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                 if (segmentLocations.size() <= -segmentsAdded){
                     segmentsAdded = -segmentLocations.size();
                 }
-                for (int i = 0; i > segmentsAdded; i--){
+                for (int i = 0; i >= segmentsAdded; i--){
                     if (segmentLocations.size() > 1){
                         segmentLocations.remove(segmentLocations.size()-1);
                     }

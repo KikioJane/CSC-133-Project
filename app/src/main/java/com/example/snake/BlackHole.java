@@ -40,5 +40,4 @@ public class BlackHole extends YellowStar implements IDrawable {
         segmentAmount = - points;
         return points;
     }
-
 }
