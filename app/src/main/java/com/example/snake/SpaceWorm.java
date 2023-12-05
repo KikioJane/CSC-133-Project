@@ -409,4 +409,6 @@ class SpaceWorm extends GameObject implements IDrawable {
         invisible = false;
     }
     public boolean getInvisible(){ return invisible;}
+
+    public int getSegmentsCount(){return segmentLocations.size();}
 }
