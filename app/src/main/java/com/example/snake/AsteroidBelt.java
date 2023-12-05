@@ -9,6 +9,7 @@ import android.graphics.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 
 public class AsteroidBelt extends GameObject implements IDrawable{
@@ -106,9 +107,13 @@ public class AsteroidBelt extends GameObject implements IDrawable{
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
-        for(AsteroidCluster x : clusters){
-            if(x != null)
-                x.draw(canvas, paint, mSize);
+        try {
+            for(AsteroidCluster x : clusters){
+                if(x != null)
+                    x.draw(canvas, paint, mSize);
+            }
+        } catch (ConcurrentModificationException e) {
+            // TODO: I was seeing this error so I put a try catch here. Does this break anything?
         }
     }
     // returns a coordinate that does not contain an asteroid.

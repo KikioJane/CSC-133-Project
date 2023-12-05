@@ -174,8 +174,6 @@ class SnakeGame extends SurfaceView implements Runnable {
                         throw new RuntimeException(e);
                     }
                 }
-                // set invisibility to last for 10 seconds
-                gameObjects.createGameObjectIterator().findSpaceWorm().updateInvisible(context);
             }
         }
     }
@@ -222,14 +220,9 @@ class SnakeGame extends SurfaceView implements Runnable {
     public void update() {
         SpaceWorm spaceWorm = gameObjects.createGameObjectIterator().findSpaceWorm();
 
-        //for(IGameObject gameObject : mGameObjects) {
-        //    gameObject.update(mGameObjects);
-        //}
         // Move the snake
         spaceWorm.move();
-
-        // set invisibility to last for 10 seconds
-        gameObjects.createGameObjectIterator().findSpaceWorm().updateInvisible(context);
+        spaceWorm.updateInvisible(context);
 
         // Did the head of the snake eat the apple?
         Star star = gameObjects.createGameObjectIterator().findStar();
@@ -299,6 +292,8 @@ class SnakeGame extends SurfaceView implements Runnable {
             mGameRunning = false;
             mGameOver = true;
             setBackButtonVisibilityOnUiThread(VISIBLE);
+
+            ScoresService.addScore(mScore);
         }
     }
 
