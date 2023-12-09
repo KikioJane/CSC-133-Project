@@ -7,8 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-import java.util.Random;
-
 // Black holes will spawn every x amount of stars eaten
 // They will kill the SpaceWorm if it collides with it
 public class BlackHole extends YellowStar implements IDrawable {
@@ -30,14 +28,14 @@ public class BlackHole extends YellowStar implements IDrawable {
                 location.x * mSize, location.y * mSize, paint);
     }
 
-    protected int randPoints(){
-        Random r = new Random();
-        return r.nextInt(2)+1;
-    }
-
-    public int points(){
-        points = 1 + this.randPoints();
-        segmentAmount = - points;
+    public int points(int score){
+        if(score < 16) {
+            points = 1;
+            segmentAmount = -points;
+        } else if(16 <= score && score <= 30){
+            points = score/10;
+            segmentAmount = -points;
+        } else
         return points;
     }
 }
