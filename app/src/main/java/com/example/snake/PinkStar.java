@@ -18,7 +18,7 @@ class PinkStar extends Star {
         super(sr, s);
         isActive = true;
         points = 1;
-        segmentsLost = 1;
+        segmentAmount = -1;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.pinkstar);
 
@@ -38,7 +38,17 @@ class PinkStar extends Star {
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
     }
+    @Override
+    public void updateStar(){}
     public StarType getType(){
         return type;
+    }
+
+
+    @Override
+    public int points(){
+        points = this.randPoints();
+        segmentAmount = points;
+        return points;
     }
 }

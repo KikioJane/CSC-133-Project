@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-class BlueStar extends Star {
+class BlueStar extends Star implements IDrawable{
     // An image to represent the star
     private Bitmap mBitmapStar;
     private final StarType type = StarType.blue;
@@ -16,7 +16,7 @@ class BlueStar extends Star {
         super(sr, s);
         isActive = true;
         points = 1;
-        segmentsLost = 0;
+        segmentAmount = 1;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluestar);
 
@@ -25,10 +25,11 @@ class BlueStar extends Star {
     }
 
 
-    public void spawn(){
+    /*public void spawn(){
         Point coord = super.validCoord();
         setLocation(coord.x, coord.y);
-    }
+        this.isActive = true;
+    }*/
 
     // Draw the star
     @Override
@@ -36,8 +37,12 @@ class BlueStar extends Star {
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
     }
+    //@Override
+    //public void updateStar(){}
     public StarType getType(){
         return type;
     }
+    @Override
+    public int points(){ return points; }
 
 }

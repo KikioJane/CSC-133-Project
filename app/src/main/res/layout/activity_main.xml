@@ -6,14 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#0a2c36"
-    android:foreground="@drawable/smallstarsbackground"
+    android:forceHasOverlappingRendering="true"
     android:rotation="0"
+    android:visibility="visible"
     tools:context=".SnakeActivity">
 
     <ViewFlipper
+        android:id="@+id/main_layout_view_flipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main_layout_view_flipper">
+        android:background="@drawable/smallstars">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main_menu_layout"
@@ -39,12 +41,13 @@
                 android:id="@+id/easyButton"
                 android:layout_width="100dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/button1"
                 android:elegantTextHeight="false"
                 android:text="@string/easyText"
                 android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
@@ -53,37 +56,53 @@
                 android:layout_width="100dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
-                android:backgroundTint="#DCC034"
+                android:background="@drawable/button2"
                 android:text="@string/mediumText"
                 android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/easyButton" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="186dp"
+                android:layout_height="95dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/scoresMenuBackButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.471"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleText"
+                app:layout_constraintVertical_bias="0.441" />
 
             <Button
                 android:id="@+id/hardButton"
                 android:layout_width="100dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
-                android:backgroundTint="#DD1E1E"
+                android:background="@drawable/button3"
                 android:text="@string/hardText"
                 android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mediumButton" />
 
             <Button
                 android:id="@+id/highScoresButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="38dp"
                 android:layout_marginBottom="32dp"
-                android:backgroundTint="#4158C6"
+                android:background="@drawable/button4"
                 android:text="@string/highScoresText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hardButton" />
+                app:layout_constraintTop_toBottomOf="@+id/hardButton"
+                app:layout_constraintVertical_bias="1.0" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/mainMenuGroup"
@@ -99,20 +118,11 @@
                 android:visibility="invisible"
                 app:constraint_referenced_ids="recyclerView,scoresMenuBackButton" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="300dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@+id/scoresMenuBackButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleText" />
-
             <Button
                 android:id="@+id/scoresMenuBackButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/scoresMenuBackText"
                 app:layout_constraintBottom_toBottomOf="parent"

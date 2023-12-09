@@ -49,6 +49,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     static private SpaceWorm mSpaceWorm = null;
 
     private boolean invisible = false;
+    private final boolean isActive;
     int invisibilityCount = 0;
     public void setInvisibilityCount(int invisibilityCount) {
         this.invisibilityCount = invisibilityCount;
@@ -74,6 +75,7 @@ class SpaceWorm extends GameObject implements IDrawable {
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+        isActive = true;
     }
 
     static SpaceWorm getSnakeInstance(Context context, Point mr, int ss){
@@ -236,22 +238,29 @@ class SpaceWorm extends GameObject implements IDrawable {
 
 
 
-    boolean checkDinner(Point l, int segmentsLost) {
+    boolean checkDinner(Point l, int segmentsAdded, int points) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
-            if (segmentsLost==0){
-                // Add a new Point to the list
-                // located off-screen.
-                // This is OK because on the next call to
-                // move it will take the position of
-                // the segment in front of it
-                segmentLocations.add(new Point(-10, -10));
+            if (segmentsAdded>=0){
+                for (int i = 0; i < segmentsAdded; i++){
+                    // Add a new Point to the list
+                    // located off-screen.
+                    // This is OK because on the next call to
+                    // move it will take the position of
+                    // the segment in front of it
+                    segmentLocations.add(new Point(-10, -10));
+                }
             }
-            else if (segmentsLost == 1){
-                // remove a segment if the snake is not invisible
-                if (segmentLocations.size() > 1){
-                    segmentLocations.remove(segmentLocations.size()-1);
+            else if (segmentsAdded < 0){
+                // remove a segments
+                if (segmentLocations.size() <= -segmentsAdded){
+                    segmentsAdded = -segmentLocations.size();
+                }
+                for (int i = 0; i > segmentsAdded; i--){
+                    if (segmentLocations.size() > 1){
+                        segmentLocations.remove(segmentLocations.size()-1);
+                    }
                 }
             }
             return true;

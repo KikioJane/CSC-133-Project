@@ -65,7 +65,6 @@ class SnakeGame extends SurfaceView implements Runnable {
     // This doesn't really matter that much, but why not lol
     //private LinkedList<IGameObject> mGameObjects = new LinkedList<>();
 
-
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size, Button backButton) {
@@ -85,22 +84,29 @@ class SnakeGame extends SurfaceView implements Runnable {
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
-        mBackground = new Background(context);
+        mBackground = new Background(context, size);
 
         setBitmaps();
+
+        gameObjects = new GameObjectCollection();
+        //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
+        // for asteroid belt
+        //createAsteroidBelt();
+        mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize, difficulty);
+
+        // Add astroid belt
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
         mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
                 blockSize);
 
-        gameObjects = new GameObjectCollection();
-        // Adds game objects into the GameObjectCollection
         addGameObjects();
     }
 
     // Method to add game objects into the game object collection
     private void addGameObjects() {
-        // For makes asteroid belt and spawns it
+        // For asteroid belt
         createAsteroidBelt();
 
         // Add asteroid belt
@@ -113,7 +119,11 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
+
+        // Add new BlackHole Object
+        gameObjects.addGameObject(mBlackHoleFactory.createObject());
     }
+
 
     private void setBitmaps() {
         mPausedBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_icon);
@@ -126,7 +136,13 @@ class SnakeGame extends SurfaceView implements Runnable {
     // Called to start a new game
     public void newGame() {
         mGameOver = false;
-
+        // set difficulty levels
+        mStarFactory.setDifficulty(difficulty);
+        mBlackHoleFactory.setDifficulty(difficulty);
+        // change background placement
+        mBackground.resetPlacement();
+        // change background placement
+        mBackground.resetPlacement();
         // reset the snake
         SpaceWorm spaceWorm = gameObjects.createGameObjectIterator().findSpaceWorm();
         spaceWorm.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
@@ -145,6 +161,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         // Setup mNextFrameTime so an update can triggered
         mNextFrameTime = System.currentTimeMillis();
     }
+
 
     // Handles the game loop
     @Override
@@ -226,7 +243,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Did the head of the snake eat the apple?
         Star star = gameObjects.createGameObjectIterator().findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsLost())){
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded(), star.points())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
             if (gameObjects.createGameObjectIterator().findStar().getType() == StarType.blue){
@@ -250,6 +267,18 @@ class SnakeGame extends SurfaceView implements Runnable {
             // Play a sound
             mSoundManager.playEatSound();
         }
+        else { // this stuff is for the supernova star
+            if (star.getType() == StarType.supernova){
+                star.updateStar();
+            }
+            if (!star.checkActive()){
+                // if the star is inactive, change the star.
+                gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
+                gameObjects.createGameObjectIterator().findStar().spawn();
+                star.getType();
+                gameObjects.createGameObjectIterator().findStar().getType();
+            }
+        }
 
         // TODO: Make spawns based on amount of stars
         // Did the head of the snake go into a black hole
@@ -257,7 +286,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
-                if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsLost())) {
+                if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsAdded(), gameObjects.createGameObjectIterator().findBlackHole().points())) {
 
                     // Subtract from  mScore
                     if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())

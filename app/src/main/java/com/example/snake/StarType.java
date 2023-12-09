@@ -1,5 +1,5 @@
 package com.example.snake;
 
 public enum StarType {
-    yellow, blue, pink
+    yellow, blue, pink, supernova
 }
