@@ -71,10 +71,10 @@
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/scoresMenuBackButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.144"
+                app:layout_constraintHorizontal_bias="0.471"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleText"
-                app:layout_constraintVertical_bias="0.434" />
+                app:layout_constraintVertical_bias="0.441" />
 
             <Button
                 android:id="@+id/hardButton"
