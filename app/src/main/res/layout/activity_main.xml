@@ -44,33 +44,48 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/button1"
                 android:elegantTextHeight="false"
-                android:text="Easy"
+                android:text="@string/easyText"
                 android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
             <Button
                 android:id="@+id/mediumButton"
                 android:layout_width="100dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/button2"
                 android:text="@string/mediumText"
                 android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/easyButton" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="186dp"
+                android:layout_height="95dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/scoresMenuBackButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.144"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleText"
+                app:layout_constraintVertical_bias="0.434" />
 
             <Button
                 android:id="@+id/hardButton"
                 android:layout_width="100dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/button3"
                 android:text="@string/hardText"
                 android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mediumButton" />
 
@@ -84,8 +99,10 @@
                 android:text="@string/highScoresText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.499"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hardButton" />
+                app:layout_constraintTop_toBottomOf="@+id/hardButton"
+                app:layout_constraintVertical_bias="1.0" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/mainMenuGroup"
@@ -100,16 +117,6 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
                 app:constraint_referenced_ids="recyclerView,scoresMenuBackButton" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="300dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@+id/scoresMenuBackButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
             <Button
                 android:id="@+id/scoresMenuBackButton"

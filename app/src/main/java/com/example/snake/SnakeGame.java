@@ -243,7 +243,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Did the head of the snake eat the apple?
         Star star = gameObjects.createGameObjectIterator().findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsLost())){
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded(), star.points())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
             if (gameObjects.createGameObjectIterator().findStar().getType() == StarType.blue){
