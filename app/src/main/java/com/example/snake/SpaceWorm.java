@@ -50,6 +50,10 @@ class SpaceWorm extends GameObject implements IDrawable {
 
     private boolean invisible = false;
     private final boolean isActive;
+    int invisibilityCount = 0;
+    public void setInvisibilityCount(int invisibilityCount) {
+        this.invisibilityCount = invisibilityCount;
+    }
 
 
     private SpaceWorm(Context context, Point mr, int ss) {
@@ -222,7 +226,7 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
         }
 
-        // don't check if snake is already dead.
+        // Don't check if snake is already dead.
         if (dead == false && invisible == false){
             boolean[][] asteroidMap = AsteroidBelt.getAsteroidMap();
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
@@ -234,7 +238,7 @@ class SpaceWorm extends GameObject implements IDrawable {
 
 
 
-    boolean checkDinner(Point l, int segmentsAdded) {
+    boolean checkDinner(Point l, int segmentsAdded, int points) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
@@ -250,7 +254,7 @@ class SpaceWorm extends GameObject implements IDrawable {
             }
             else if (segmentsAdded < 0){
                 // remove a segments
-                if (segmentLocations.size() < -segmentsAdded){
+                if (segmentLocations.size() <= -segmentsAdded){
                     segmentsAdded = -segmentLocations.size();
                 }
                 for (int i = 0; i > segmentsAdded; i--){
@@ -367,10 +371,6 @@ class SpaceWorm extends GameObject implements IDrawable {
         }
     }
 
-    static void setAsteroidBelt(AsteroidBelt aBelt){
-        mAsteroidBelt = aBelt;
-    }
-
     // if the worm eats a blue apple, it should be invisible
     public void setInvisible(Context context){
         createInvisibleBitmaps(context);
@@ -409,6 +409,17 @@ class SpaceWorm extends GameObject implements IDrawable {
         invisible = false;
     }
     public boolean getInvisible(){ return invisible;}
+    public void updateInvisible(Context context){
+        // set invisibility to last for 10 seconds
+        if (invisible) {
+            if (invisibilityCount == 120) {
+                resetInvisible(context);
+                invisibilityCount = 0;
+            } else {
+                invisibilityCount += 1;
+            }
+        }
+    }
 
     public int getSegmentsCount(){return segmentLocations.size();}
 }

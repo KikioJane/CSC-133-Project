@@ -10,6 +10,8 @@ import android.widget.ViewFlipper;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SnakeActivity extends Activity implements View.OnClickListener {
     // Declare an instance of SnakeGame
@@ -40,30 +42,48 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
         Point size = new Point();
         display.getSize(size);
 
+        // initialize view flipper
         setContentView(R.layout.activity_main);
         viewFlipper = findViewById(R.id.main_layout_view_flipper);
 
         ConstraintLayout gameLayout = findViewById(R.id.game_layout);
 
+        // get main menu objects
         mainMenuGroup = findViewById(R.id.mainMenuGroup);
         easyButton = findViewById(R.id.easyButton);
         mediumButton = findViewById(R.id.mediumButton);
         hardButton = findViewById(R.id.hardButton);
         highScoresButton = findViewById(R.id.highScoresButton);
 
+        // get high scores menu objects
         scoresMenuGroup = findViewById(R.id.scoresMenuGroup);
         scoresMenuBackButton = findViewById(R.id.scoresMenuBackButton);
+        // Set up high scores view. We use a RecyclerView with a custom adapter so that we can
+        // update the scores data dynamically.
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        //TODO:
+//        HighScoresAdapter highScoresAdapter = new HighScoresAdapter();
+//        recyclerView.setAdapter(highScoresAdapter);
+//        ScoresService.setHighScoresAdapter(highScoresAdapter);
 
+        // get objects for the game layout
+        gameLayoutBackButton = findViewById(R.id.gameLayoutBackButton);
+        // Create a new instance of the SnakeEngine class
+        mSnakeGame = new SnakeGame(this, size, gameLayoutBackButton);
+        gameLayout.addView(mSnakeGame, 0);
+
+        // register click listeners for all buttons
         for (int id : mainMenuGroup.getReferencedIds()) {
             findViewById(id).setOnClickListener(this);
         }
         scoresMenuBackButton.setOnClickListener(this);
-
-        gameLayoutBackButton = findViewById(R.id.gameLayoutBackButton);
         gameLayoutBackButton.setOnClickListener(this);
-        // Create a new instance of the SnakeEngine class
-        mSnakeGame = new SnakeGame(this, size, gameLayoutBackButton);
-        gameLayout.addView(mSnakeGame, 0);
+
+        // uncomment this to add some scores for testing
+        /* for (int i = 0; i < 10; i++) {
+            ScoresService.addScore(i * 2);
+        } */
     }
 
     // Start the thread in snakeEngine

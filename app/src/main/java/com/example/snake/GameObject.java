@@ -1,9 +1,6 @@
 package com.example.snake;
 
-import android.graphics.Bitmap;
 import android.graphics.Point;
-
-import java.util.List;
 
 public abstract class GameObject {
     // The location of the Game Object on the grid
