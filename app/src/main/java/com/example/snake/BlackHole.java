@@ -19,6 +19,7 @@ public class BlackHole extends YellowStar implements IDrawable {
         mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackholepurple);
         // Resize the bitmap
         mBitmapBlackHole = Bitmap.createScaledBitmap(mBitmapBlackHole, size, size, false);
+        points = -1;
     }
 
     @Override
@@ -30,4 +31,5 @@ public class BlackHole extends YellowStar implements IDrawable {
     public StarType getType(){
         return type;
     }
+    public int points(){ return points;}
 }
