@@ -50,12 +50,12 @@ class SnakeGame extends SurfaceView implements Runnable {
     private final GameObjectCollection gameObjects;
     //***
     private AsteroidBelt mAsteroidBelt;
-    private int blockSize;
+    private final int blockSize;
     private final Background mBackground;
 
     private final StarFactory mStarFactory;
     private final BlackHoleFactory mBlackHoleFactory;
-    private Button backButton;
+    private final Button backButton;
 
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
@@ -87,7 +87,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         gameObjects = new GameObjectCollection();
 
         // Add asteroid belt
-        mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+        mAsteroidBelt = AsteroidBelt.getInstance(new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
@@ -138,7 +138,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         spaceWorm.resetInvisible(context);
 
         //createAsteroidBelt();
-        mAsteroidBelt.spawn(difficulty);
+        mAsteroidBelt.spawn(this.context, difficulty);
 
         // remove the other objects by clearing the list
         gameObjects.clearGameObjectList();
@@ -232,7 +232,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Did the head of the snake eat the apple?
         Star star = gameObjects.createGameObjectIterator().findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded(), star.points())){
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
             if (gameObjects.createGameObjectIterator().findStar().getType() == StarType.blue){
@@ -249,7 +249,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
 
             // Play a sound
-            mSoundManager.playEatSound();
+            mSoundManager.playStarSound(star.getType());
         }
         else { // this stuff is for the supernova star
             if (star.getType() == StarType.supernova){
@@ -259,8 +259,6 @@ class SnakeGame extends SurfaceView implements Runnable {
                 // if the star is inactive, change the star.
                 gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
                 gameObjects.createGameObjectIterator().findStar().spawn();
-                star.getType();
-                gameObjects.createGameObjectIterator().findStar().getType();
             }
         }
 
@@ -271,7 +269,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
-                if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsAdded(), gameObjects.createGameObjectIterator().findBlackHole().points())) {
+                if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsAdded())) {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
@@ -297,14 +295,20 @@ class SnakeGame extends SurfaceView implements Runnable {
                         mBlackHoleFactory.setCount(mBlackHoleFactory.getCount() - 1);
                     }
                     // Play a sound
-                    /** mSoundManager.playEatSound(); TODO: might want to make a new sound **/
+                    mSoundManager.playStarSound(gameObjects.createGameObjectIterator().findBlackHole().getType());
                 }
             }
         }
 
         // Did the snake die?
-        if (tempScore <= -1 || spaceWorm.detectDeath()) {
-            mSoundManager.playCrashSound();
+        if (tempScore <= -1 || spaceWorm.detectDeath()>0) {
+            // Determine which death sound to play
+            if (spaceWorm.detectDeath() == 2){
+                mSoundManager.playAsteroidCrashSound();
+            }
+            else{
+                mSoundManager.playEdgeCrashSound();
+            }
 
             // reset the worm to visible
             gameObjects.createGameObjectIterator().findSpaceWorm().setInvisibilityCount(0);
@@ -314,8 +318,6 @@ class SnakeGame extends SurfaceView implements Runnable {
             mGameRunning = false;
             mGameOver = true;
             setBackButtonVisibilityOnUiThread(VISIBLE);
-
-
             ScoresService.addScore(mScore);
         }
     }
@@ -466,11 +468,11 @@ class SnakeGame extends SurfaceView implements Runnable {
     }
 
     private void createAsteroidBelt() {
-        mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+        mAsteroidBelt = AsteroidBelt.getInstance(new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
-
         mAsteroidBelt.spawn();
     }
+
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
     }

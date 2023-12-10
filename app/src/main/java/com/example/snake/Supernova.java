@@ -19,6 +19,7 @@ public class Supernova extends Star implements IDrawable {
     private int timeCounter = 0;
     private int jumpCounter=0;
     private final StarType type = StarType.supernova;
+
     public Supernova(Context c, Point sr, int size) {
         super(sr, size);
         isActive = true;
@@ -29,12 +30,6 @@ public class Supernova extends Star implements IDrawable {
         mBitmapSupernova = Bitmap.createScaledBitmap(mBitmapSupernova, size*2, size*2, false);
     }
 
-
-    /*public void spawn() {
-        Point coord = super.validCoord();
-        setLocation(coord.x, coord.y);
-        this.isActive = true;
-    }*/
 
     @Override
     public void draw(Canvas canvas, Paint paint) {

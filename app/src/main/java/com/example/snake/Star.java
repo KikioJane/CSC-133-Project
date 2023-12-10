@@ -19,7 +19,6 @@ public abstract class Star extends GameObject implements IDrawable {
     }
 
     public void spawn(){
-        //Point coord = ValidCoord();
         Point coord = validCoord();
         setLocation(coord.x, coord.y);
         this.isActive = true;

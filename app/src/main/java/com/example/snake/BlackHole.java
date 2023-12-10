@@ -12,6 +12,9 @@ import android.graphics.Point;
 public class BlackHole extends YellowStar implements IDrawable {
     private Bitmap mBitmapBlackHole;
 
+    private final StarType type = StarType.blackhole;
+
+
     public BlackHole(Context c, Point sr, int size) {
         super(c, sr, size);
         points = 1;
@@ -36,5 +39,8 @@ public class BlackHole extends YellowStar implements IDrawable {
         }
         segmentAmount = -points;
         return points;
+    }
+    public StarType getType(){
+        return type;
     }
 }

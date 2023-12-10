@@ -6,20 +6,20 @@ import android.graphics.Point;
 import java.util.Random;
 
 public class StarFactory extends IGameObjectFactory {
-    private final GameObjectCollection starObjects;
     public StarFactory(Context context, int NUM_BLOCKS_WIDE, int mNumBlocksHigh, int blockSize) {
         super(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
-        starObjects = new GameObjectCollection();
     }
 
     @Override
     Star createObject() {
         StarType type;
         Star star;
-        int bound = 5;
+        // bound should be set to 6 normally
+        // 4 is for demo purposes
+        int bound = 4;
         Random random = new Random();
         if (this.difficulty == Difficulty.Medium)
-            bound = 12;
+            bound = 13;
         if (this.difficulty == Difficulty.Hard)
             bound = 20;
         int randVal = random.nextInt(bound);
@@ -53,10 +53,5 @@ public class StarFactory extends IGameObjectFactory {
             default:
                 throw new IllegalArgumentException("Unknown star type "+ type);
         }
-    }
-
-    public void replaceStar(GameObjectCollection gameObjects, StarFactory mStarFactory){
-        gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
-        gameObjects.createGameObjectIterator().findStar().spawn();
     }
 }

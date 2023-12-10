@@ -13,7 +13,8 @@ class PinkStar extends Star {
     // An image to represent the star
     private Bitmap mBitmapStar;
     private final StarType type = StarType.pink;
-    /// Set up the apple in the constructor
+
+    /// Set up the star in the constructor
     public PinkStar(Context context, Point sr, int s){
         super(sr, s);
         isActive = true;
@@ -21,11 +22,9 @@ class PinkStar extends Star {
         segmentAmount = -1;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.pinkstar);
-
         // Resize the bitmap
         mBitmapStar = Bitmap.createScaledBitmap(mBitmapStar, s, s, false);
     }
-
 
     public void spawn(){
         Point coord = super.validCoord();
@@ -38,12 +37,13 @@ class PinkStar extends Star {
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
     }
+
     @Override
     public void updateStar(){}
+
     public StarType getType(){
         return type;
     }
-
 
     @Override
     public int points(){

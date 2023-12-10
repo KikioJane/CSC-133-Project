@@ -29,35 +29,25 @@ public class AsteroidBelt extends GameObject implements IDrawable{
     private static int rangeY;
     private final boolean isActive = true;
 
-
-    private Context c;
-    private AsteroidBelt(Context context, Point sr, int s, Difficulty d){
+    private AsteroidBelt(Point sr, int s, Difficulty d){
         super(sr, s);
-        c = context;
         difficulty = d;
         rangeX = sr.x;
         rangeY = sr.y;
         clusters = new ArrayList<>();
         // make asteroidMap the size of the available game blocks
         asteroidMap = new boolean[mSpawnRange.x][mSpawnRange.y];
-        mBitmapAsteroid = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigasteroid);
-        // Resize the bitmap
-        mBitmapAsteroid = Bitmap.createScaledBitmap(mBitmapAsteroid, s, s, false);
-
-        mBitmapSmallAsteroid = BitmapFactory.decodeResource(context.getResources(), R.drawable.smallasteroids);
-        mBitmapSmallAsteroid = Bitmap.createScaledBitmap(mBitmapSmallAsteroid, s, s, false);
     }
 
-    static AsteroidBelt getInstance(Context context, Point sr, int s, Difficulty d){
+    static AsteroidBelt getInstance(Point sr, int s, Difficulty d){
         if(mAsteroidBelt == null) {
-            mAsteroidBelt = new AsteroidBelt(context, sr, s, d);
+            mAsteroidBelt = new AsteroidBelt(sr, s, d);
         }
         return mAsteroidBelt;
     }
-    public void spawn(){ spawn(difficulty);
-    }
+    public void spawn(){  }
 
-    public void spawn(Difficulty difficulty){
+    public void spawn(Context context, Difficulty difficulty){
         int numberOfBelts;
         int maxBeltLength;
         int wallSize;
@@ -77,12 +67,12 @@ public class AsteroidBelt extends GameObject implements IDrawable{
             numberOfBelts = 5;
             maxBeltLength = 14;
         }
-        makeBelt(numberOfBelts, maxBeltLength);
+        makeBelt(context, numberOfBelts, maxBeltLength);
     }
 
-    private void makeBelt(int numberOfBelts, int beltSize){
+    private void makeBelt(Context context, int numberOfBelts, int beltSize){
         for(int i = 0; i < numberOfBelts; i++){
-            AsteroidCluster x = new AsteroidCluster(c, mSpawnRange, mSize);
+            AsteroidCluster x = new AsteroidCluster(context, mSpawnRange, mSize);
             clusters.add(x);
             Point p = validCoord();
             while (p.x == mSpawnRange.x || p.x == 0 ||p.y == 0 || p.y == mSpawnRange.y)

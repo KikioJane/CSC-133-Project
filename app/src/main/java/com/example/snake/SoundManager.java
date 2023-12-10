@@ -21,7 +21,13 @@ public class SoundManager {
     // For playing sounds
     private static SoundPool mSP = null;
     private static int mEat_ID = -1;
-    private static int mCrashID = -1;
+    private static int mAsteroidCrashID = -1;
+    private static int mEdgeCrashID = -1;
+    private static int mPowerUp1ID = -1;
+    private static int mPowerUp2ID = -1;
+    private static int mPowerUp3ID = -1;
+    private static int mPowerUp4ID = -1;
+    private static int mHit1ID = -1;
 
     public static void InitializeSoundManager(Context context) {
         // Initialize the SoundPool
@@ -50,8 +56,23 @@ public class SoundManager {
             descriptor = assetManager.openFd("get_apple.ogg");
             mEat_ID = mSP.load(descriptor, 0);
 
-            descriptor = assetManager.openFd("snake_death.ogg");
-            mCrashID = mSP.load(descriptor, 0);
+            descriptor = assetManager.openFd("asteroidDeath.ogg");
+            mAsteroidCrashID = mSP.load(descriptor, 0);
+
+            descriptor = assetManager.openFd("edgeDeath.wav");
+            mEdgeCrashID = mSP.load(descriptor, 0);
+
+            descriptor = assetManager.openFd("powerUp1.wav");
+            mPowerUp1ID = mSP.load(descriptor, 0);
+            descriptor = assetManager.openFd("powerUp2.wav");
+            mPowerUp2ID = mSP.load(descriptor, 0);
+            descriptor = assetManager.openFd("powerUp3.wav");
+            mPowerUp3ID = mSP.load(descriptor, 0);
+            descriptor = assetManager.openFd("powerUp4.wav");
+            mPowerUp4ID = mSP.load(descriptor, 0);
+
+            descriptor = assetManager.openFd("hit1.wav");
+            mHit1ID = mSP.load(descriptor, 0);
 
         } catch (IOException e) {
             // Error
@@ -62,6 +83,33 @@ public class SoundManager {
     public static void playEatSound(){
         mSP.play(mEat_ID, 1, 1, 0, 0, 1);
     }
-    public static void playCrashSound(){ mSP.play(mCrashID, 1, 1, 0, 0, 1); }
+    public static void playAsteroidCrashSound(){ mSP.play(mAsteroidCrashID, 1, 1, 0, 0, 1); }
+    public static void playEdgeCrashSound(){ mSP.play(mEdgeCrashID, 1, 1, 0, 0, 1); }
+    private static void playPowerUp1Sound(){ mSP.play(mPowerUp1ID, 1, 1, 0, 0, 1); }
+    private static void playPowerUp2Sound(){ mSP.play(mPowerUp2ID, 1, 1, 0, 0, 1); }
+    private static void playPowerUp3Sound(){ mSP.play(mPowerUp3ID, 1, 1, 0, 0, 1); }
+    private static void playPowerUp4Sound(){ mSP.play(mPowerUp4ID, 1, 1, 0, 0, 1); }
+    private static void playHit1Sound(){ mSP.play(mHit1ID, 1, 1, 0, 0, 1); }
+
+    public static void playStarSound(StarType type){
+        switch(type){
+            case blue:
+                playPowerUp1Sound();
+                break;
+            case supernova:
+                playPowerUp2Sound();
+                break;
+            case blackhole:
+                playHit1Sound();
+                break;
+            case pink:
+                playPowerUp3Sound();
+                break;
+            default:
+                //playEatSound();
+                playPowerUp4Sound();
+                break;
+        }
+    }
 }
 
