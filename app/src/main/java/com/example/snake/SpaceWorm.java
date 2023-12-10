@@ -26,7 +26,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     // horizontally in pixels?
     private final int halfWayPoint;
 
-    //private static AsteroidBelt mAsteroidBelt;
+    private SoundManager mSoundManager;
 
     // For tracking movement Heading
     private enum Heading {
@@ -405,6 +405,8 @@ class SpaceWorm extends GameObject implements IDrawable {
                 resetInvisible(context);
                 invisibilityCount = 0;
             } else {
+                if(invisibilityCount % 10 == 0)
+                    mSoundManager.playInvisibleGlow();
                 invisibilityCount += 1;
             }
         }
