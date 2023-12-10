@@ -7,35 +7,20 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-//Blackholes will spawn every x amount of stars eaten
-//They will kill the SpaceWorm if it collides with it
+// Black holes will spawn every x amount of stars eaten
+// They will kill the SpaceWorm if it collides with it
 public class BlackHole extends YellowStar implements IDrawable {
     private Bitmap mBitmapBlackHole;
-//    private static AsteroidBelt mAsteroidBelt;
+
     public BlackHole(Context c, Point sr, int size) {
         super(c, sr, size);
+        points = 1;
+        segmentAmount = -1;
+
         mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackholepurple);
         // Resize the bitmap
         mBitmapBlackHole = Bitmap.createScaledBitmap(mBitmapBlackHole, size, size, false);
     }
-
-//    public void spawn(){
-//        Point coord = ValidCoord();
-//        setLocation(coord.x, coord.y);
-//    }
-
-//    private Point ValidCoord(){
-//        Random random = new Random();
-//        int x = random.nextInt(mSpawnRange.x - 1) + 1;
-//        int y = random.nextInt(mSpawnRange.y - 1) + 1;
-//        boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
-//        asteroidMap[mSpawnRange.x - 1][mSpawnRange.y - 1] = false;
-//        while(asteroidMap[x][y]) {
-//            x = random.nextInt(mSpawnRange.x - 1) + 1;
-//            y = random.nextInt(mSpawnRange.y - 1) + 1;
-//        }
-//        return new Point(x,y);
-//    }
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
@@ -43,7 +28,13 @@ public class BlackHole extends YellowStar implements IDrawable {
                 location.x * mSize, location.y * mSize, paint);
     }
 
-//    static void setAsteroidBelt(AsteroidBelt aBelt){
-//        mAsteroidBelt = aBelt;
-//    }
+    public int points(int score){
+        if (score < 16) {
+            points = 1;
+        } else {
+            points = score / 10;
+        }
+        segmentAmount = -points;
+        return points;
+    }
 }

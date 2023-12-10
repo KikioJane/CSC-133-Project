@@ -48,10 +48,6 @@ class SnakeGame extends SurfaceView implements Runnable {
 
     // GameObjects
     private final GameObjectCollection gameObjects;
-    //private GameObjectIterator gameObjectIterator;
-    //private SpaceWorm mSpaceWorm;
-    //private Star mStar;
-
     //***
     private AsteroidBelt mAsteroidBelt;
     private int blockSize;
@@ -89,13 +85,10 @@ class SnakeGame extends SurfaceView implements Runnable {
         setBitmaps();
 
         gameObjects = new GameObjectCollection();
-        //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
-        // for asteroid belt
-        //createAsteroidBelt();
+
+        // Add asteroid belt
         mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
-
-        // Add astroid belt
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
         mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
@@ -119,9 +112,6 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
-
-        // Add new BlackHole Object
-        gameObjects.addGameObject(mBlackHoleFactory.createObject());
     }
 
 
@@ -139,8 +129,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         // set difficulty levels
         mStarFactory.setDifficulty(difficulty);
         mBlackHoleFactory.setDifficulty(difficulty);
-        // change background placement
-        mBackground.resetPlacement();
+        mBlackHoleFactory.setCount(0);
         // change background placement
         mBackground.resetPlacement();
         // reset the snake
@@ -252,17 +241,12 @@ class SnakeGame extends SurfaceView implements Runnable {
                 spaceWorm.setInvisible(context);
             }
             // Add to  mScore
-            mScore = mScore + gameObjects.createGameObjectIterator().findStar().points();
+            addToScore(gameObjects.createGameObjectIterator().findStar().points());
 
             // Updates to a a new kind of star
             gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
             gameObjects.createGameObjectIterator().findStar().spawn();
 
-            // If mScore is a factor of 3 then spawn a new black hole
-            if (mScore % 3 == 0 && mScore != 0) {
-                gameObjects.addGameObject(mBlackHoleFactory.createObject());
-                /** mSoundManager.playEatSound(); TODO: make a noise for spawning black holes **/
-            }
 
             // Play a sound
             mSoundManager.playEatSound();
@@ -283,18 +267,24 @@ class SnakeGame extends SurfaceView implements Runnable {
         // TODO: Make spawns based on amount of stars
         // Did the head of the snake go into a black hole
         int i = 0; // Keep count of number of black holes
+        int tempScore = mScore; // To detect death
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
                 if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsAdded(), gameObjects.createGameObjectIterator().findBlackHole().points())) {
 
-                    // Subtract from  mScore
+                    // Subtract from  mScore if worm is not invisible
                     if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
-                        mScore = mScore + gameObjects.createGameObjectIterator().findBlackHole().points(); // Points is negative so +
+                        addToScore(- gameObjects.createGameObjectIterator().findBlackHole().points(mScore));
 
-                    // Eating a black hole decreased the score in to negatives
-                    if(mScore <= -1)
+
+                    if(spaceWorm.getSegmentsCount() <= 1) {// worm will die if it eats a black hole with one segment left
+                        tempScore = -1;
+                    }
+
+                    if(tempScore == -1) {
                         break;
+                    }
 
                     // Move black hole off screen
                     o.getLocation().x = -1;
@@ -303,6 +293,9 @@ class SnakeGame extends SurfaceView implements Runnable {
                     // Respawn only if score is higher than factor
                     if(mScore >= 3 * i && !gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
                         o.spawn();
+                    else{
+                        mBlackHoleFactory.setCount(mBlackHoleFactory.getCount() - 1);
+                    }
                     // Play a sound
                     /** mSoundManager.playEatSound(); TODO: might want to make a new sound **/
                 }
@@ -310,7 +303,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         }
 
         // Did the snake die?
-        if (mScore == -1 || spaceWorm.detectDeath()) {
+        if (tempScore <= -1 || spaceWorm.detectDeath()) {
             mSoundManager.playCrashSound();
 
             // reset the worm to visible
@@ -321,6 +314,7 @@ class SnakeGame extends SurfaceView implements Runnable {
             mGameRunning = false;
             mGameOver = true;
             setBackButtonVisibilityOnUiThread(VISIBLE);
+
 
             ScoresService.addScore(mScore);
         }
@@ -471,21 +465,33 @@ class SnakeGame extends SurfaceView implements Runnable {
         mThread.start();
     }
 
-    public void incrementScore() {
-        mScore++;
-    }
-
     private void createAsteroidBelt() {
         mAsteroidBelt = AsteroidBelt.getInstance(this.getContext(), new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
 
         mAsteroidBelt.spawn();
-
-        //SpaceWorm.setAsteroidBelt(mAsteroidBelt);
-        //Star.setAsteroidBelt(mAsteroidBelt);
-        //BlackHole.setAsteroidBelt(mAsteroidBelt);
     }
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+    }
+
+    void addToScore(int point){
+        if(point >= 0) {
+            for (int i = 0; i < point; i++) {
+                mScore += 1;
+                updateBlackHoleSpawn();
+            }
+        }
+        else if(point < 0){
+            for (int i = 0; i < (-1) * point; i++) {
+                mScore -= 1;
+            }
+        }
+    }
+
+    private void updateBlackHoleSpawn(){
+        if(mScore % 3 == 0 && mScore != 0) {
+            gameObjects.addGameObject(mBlackHoleFactory.createObject());
+        }
     }
 }
