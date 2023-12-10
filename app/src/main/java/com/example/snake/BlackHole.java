@@ -29,16 +29,12 @@ public class BlackHole extends YellowStar implements IDrawable {
     }
 
     public int points(int score){
-        if(score < 16) {
+        if (score < 16) {
             points = 1;
-            segmentAmount = -points;
-        } else if(16 <= score && score <= 30){
-            points = score/10;
-            segmentAmount = -points;
         } else {
-            points = score/5;
-            segmentAmount = -points;
+            points = score / 10;
         }
+        segmentAmount = -points;
         return points;
     }
 }
