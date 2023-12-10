@@ -26,7 +26,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     // horizontally in pixels?
     private final int halfWayPoint;
 
-    private static AsteroidBelt mAsteroidBelt;
+    //private static AsteroidBelt mAsteroidBelt;
 
     // For tracking movement Heading
     private enum Heading {
@@ -49,17 +49,14 @@ class SpaceWorm extends GameObject implements IDrawable {
     static private SpaceWorm mSpaceWorm = null;
 
     private boolean invisible = false;
-    private final boolean isActive;
+    //private final boolean isActive;
     int invisibilityCount = 0;
     public void setInvisibilityCount(int invisibilityCount) {
         this.invisibilityCount = invisibilityCount;
     }
 
-
     private SpaceWorm(Context context, Point mr, int ss) {
         super(mr, ss);
-        //***
-        //con = context;
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
 
@@ -70,7 +67,7 @@ class SpaceWorm extends GameObject implements IDrawable {
 
         // Setting up the bitmaps
         createBitmaps(context);
-        setBitmaps(context, ss);
+        setBitmaps(ss);
 
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
@@ -87,7 +84,6 @@ class SpaceWorm extends GameObject implements IDrawable {
         return mSpaceWorm;
     }
 
-    //
     private void createBitmaps(Context context) {
         // Create the Bitmaps
         mBitmapHeadRight = BitmapFactory
@@ -113,7 +109,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                         R.drawable.octabody);
     }
 
-    private void setBitmaps(Context context, int ss) {
+    private void setBitmaps(int ss) {
         // Modify the bitmaps to face the snake head
         // in the correct direction
         mBitmapHeadRight = Bitmap
@@ -200,20 +196,18 @@ class SpaceWorm extends GameObject implements IDrawable {
                 p.x--;
                 break;
         }
-
     }
 
-    boolean detectDeath() {
+    int detectDeath() {
         // Has the snake died?
-        boolean dead = false;
+        int dead = 0;
 
         // Hit any of the screen edges
         if (segmentLocations.get(0).x == -1 ||
                 segmentLocations.get(0).x > mMoveRange.x-1 ||
                 segmentLocations.get(0).y == -1 ||
                 segmentLocations.get(0).y > mMoveRange.y-1) {
-
-            dead = true;
+            dead = 1;
         }
 
         // Eaten itself?
@@ -221,24 +215,21 @@ class SpaceWorm extends GameObject implements IDrawable {
             // Have any of the sections collided with the head
             if (segmentLocations.get(0).x == segmentLocations.get(i).x &&
                     segmentLocations.get(0).y == segmentLocations.get(i).y) {
-
-                dead = true;
+                dead = 1;
+                break;
             }
         }
 
         // Don't check if snake is already dead.
-        if (dead == false && invisible == false){
+        if (dead == 0 && !invisible){
             boolean[][] asteroidMap = AsteroidBelt.getAsteroidMap();
-            if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
-                dead = true;
+            if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y])
+                dead = 2;
         }
-
         return dead;
     }
 
-
-
-    boolean checkDinner(Point l, int segmentsAdded, int points) {
+    boolean checkDinner(Point l, int segmentsAdded) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
@@ -253,7 +244,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                 }
             }
             else if (segmentsAdded < 0){
-                // remove a segments
+                // remove segments
                 if (segmentLocations.size() <= -segmentsAdded){
                     segmentsAdded = -segmentLocations.size();
                 }
@@ -290,7 +281,6 @@ class SpaceWorm extends GameObject implements IDrawable {
                 int n = (((segmentLocations.get(i).y*mSegmentSize)+
                         (segmentLocations.get(i-1).y*mSegmentSize))/2);
                 canvas.drawBitmap(mBitmapBody, m, n, paint);
-
             }
             // Draw the head
             switch (heading) {
@@ -326,8 +316,6 @@ class SpaceWorm extends GameObject implements IDrawable {
                                     * mSegmentSize, paint);
                     break;
             }
-
-
         }
     }
 
@@ -350,7 +338,6 @@ class SpaceWorm extends GameObject implements IDrawable {
                 case LEFT:
                     heading = Heading.UP;
                     break;
-
             }
         } else {
             // Rotate left
@@ -374,7 +361,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     // if the worm eats a blue apple, it should be invisible
     public void setInvisible(Context context){
         createInvisibleBitmaps(context);
-        setBitmaps(context, mSegmentSize);
+        setBitmaps(mSegmentSize);
         invisible = true;
     }
     private void createInvisibleBitmaps(Context context) {
@@ -405,10 +392,12 @@ class SpaceWorm extends GameObject implements IDrawable {
     // reset the worm to normal
     public void resetInvisible(Context context){
         createBitmaps(context);
-        setBitmaps(context, mSegmentSize);
+        setBitmaps(mSegmentSize);
         invisible = false;
     }
+
     public boolean getInvisible(){ return invisible;}
+
     public void updateInvisible(Context context){
         // set invisibility to last for 10 seconds
         if (invisible) {
