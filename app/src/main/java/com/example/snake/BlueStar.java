@@ -24,24 +24,17 @@ class BlueStar extends Star implements IDrawable{
         mBitmapStar = Bitmap.createScaledBitmap(mBitmapStar, s, s, false);
     }
 
-
-    /*public void spawn(){
-        Point coord = super.validCoord();
-        setLocation(coord.x, coord.y);
-        this.isActive = true;
-    }*/
-
     // Draw the star
     @Override
     public void draw(Canvas canvas, Paint paint){
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
     }
-    //@Override
-    //public void updateStar(){}
+
     public StarType getType(){
         return type;
     }
+
     @Override
     public int points(){ return points; }
 

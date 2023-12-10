@@ -265,7 +265,7 @@ class SnakeGame extends SurfaceView implements Runnable {
             }
 
             // Play a sound
-            mSoundManager.playEatSound();
+            mSoundManager.playStarSound(star.getType());
         }
         else { // this stuff is for the supernova star
             if (star.getType() == StarType.supernova){
@@ -305,6 +305,7 @@ class SnakeGame extends SurfaceView implements Runnable {
                         o.spawn();
                     // Play a sound
                     /** mSoundManager.playEatSound(); TODO: might want to make a new sound **/
+                    mSoundManager.playStarSound(gameObjects.createGameObjectIterator().findBlackHole().getType());
                 }
             }
         }

@@ -11,7 +11,9 @@ import android.graphics.Point;
 //They will kill the SpaceWorm if it collides with it
 public class BlackHole extends YellowStar implements IDrawable {
     private Bitmap mBitmapBlackHole;
-//    private static AsteroidBelt mAsteroidBelt;
+    private final StarType type = StarType.blackhole;
+
+
     public BlackHole(Context c, Point sr, int size) {
         super(c, sr, size);
         mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackholepurple);
@@ -19,31 +21,13 @@ public class BlackHole extends YellowStar implements IDrawable {
         mBitmapBlackHole = Bitmap.createScaledBitmap(mBitmapBlackHole, size, size, false);
     }
 
-//    public void spawn(){
-//        Point coord = ValidCoord();
-//        setLocation(coord.x, coord.y);
-//    }
-
-//    private Point ValidCoord(){
-//        Random random = new Random();
-//        int x = random.nextInt(mSpawnRange.x - 1) + 1;
-//        int y = random.nextInt(mSpawnRange.y - 1) + 1;
-//        boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
-//        asteroidMap[mSpawnRange.x - 1][mSpawnRange.y - 1] = false;
-//        while(asteroidMap[x][y]) {
-//            x = random.nextInt(mSpawnRange.x - 1) + 1;
-//            y = random.nextInt(mSpawnRange.y - 1) + 1;
-//        }
-//        return new Point(x,y);
-//    }
-
     @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(mBitmapBlackHole,
                 location.x * mSize, location.y * mSize, paint);
     }
 
-//    static void setAsteroidBelt(AsteroidBelt aBelt){
-//        mAsteroidBelt = aBelt;
-//    }
+    public StarType getType(){
+        return type;
+    }
 }

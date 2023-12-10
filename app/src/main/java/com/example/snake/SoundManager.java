@@ -22,6 +22,11 @@ public class SoundManager {
     private static SoundPool mSP = null;
     private static int mEat_ID = -1;
     private static int mCrashID = -1;
+    private static int mPowerUp1ID = -1;
+    private static int mPowerUp2ID = -1;
+    private static int mPowerUp3ID = -1;
+    private static int mPowerUp4ID = -1;
+    private static int mHit1ID = -1;
 
     public static void InitializeSoundManager(Context context) {
         // Initialize the SoundPool
@@ -53,6 +58,14 @@ public class SoundManager {
             descriptor = assetManager.openFd("snake_death.ogg");
             mCrashID = mSP.load(descriptor, 0);
 
+            descriptor = assetManager.openFd("powerUp1.wav");
+            mPowerUp1ID = mSP.load(descriptor, 0);
+            descriptor = assetManager.openFd("powerUp2.wav");
+            mPowerUp2ID = mSP.load(descriptor, 0);
+
+            descriptor = assetManager.openFd("hit1.wav");
+            mHit1ID = mSP.load(descriptor, 0);
+
         } catch (IOException e) {
             // Error
         }
@@ -63,5 +76,31 @@ public class SoundManager {
         mSP.play(mEat_ID, 1, 1, 0, 0, 1);
     }
     public static void playCrashSound(){ mSP.play(mCrashID, 1, 1, 0, 0, 1); }
+    private static void playPowerUp1Sound(){ mSP.play(mPowerUp1ID, 1, 1, 0, 0, 1); }
+    private static void playPowerUp2Sound(){ mSP.play(mPowerUp2ID, 1, 1, 0, 0, 1); }
+    private static void playHit1Sound(){ mSP.play(mHit1ID, 1, 1, 0, 0, 1); }
+
+    public static void playStarSound(StarType type){
+        switch(type){
+            case blue:
+                playPowerUp1Sound();
+                break;
+            case supernova:
+                playPowerUp2Sound();
+                break;
+            case blackhole:
+                playHit1Sound();
+                break;
+            //case yellow:
+
+            //case pink:
+
+
+
+            default:
+                playEatSound();
+                break;
+        }
+    }
 }
 
