@@ -247,11 +247,6 @@ class SnakeGame extends SurfaceView implements Runnable {
             gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
             gameObjects.createGameObjectIterator().findStar().spawn();
 
-// check           // If mScore is a factor of 3 then spawn a new black hole
-//            if (mScore % 3 == 0 && mScore != 0) {
-//                gameObjects.addGameObject(mBlackHoleFactory.createObject());
-//                /** mSoundManager.playEatSound(); TODO: make a noise for spawning black holes **/
-//            }
 
             // Play a sound
             mSoundManager.playEatSound();
@@ -272,6 +267,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         // TODO: Make spawns based on amount of stars
         // Did the head of the snake go into a black hole
         int i = 0; // Keep count of number of black holes
+        int tempScore = mScore; // To detect death
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
@@ -279,13 +275,16 @@ class SnakeGame extends SurfaceView implements Runnable {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
-                        addToScore(- gameObjects.createGameObjectIterator().findBlackHole().points());
+                        addToScore(- gameObjects.createGameObjectIterator().findBlackHole().points(mScore));
 
-                    if(spaceWorm.getSegmentsCount() <= 1) // worm will die if it eats a black hole with one segment left
-                        mScore = -1;
 
-                    if(mScore == -1)
+                    if(spaceWorm.getSegmentsCount() <= 1) {// worm will die if it eats a black hole with one segment left
+                        tempScore = -1;
+                    }
+
+                    if(tempScore == -1) {
                         break;
+                    }
 
                     // Move black hole off screen
                     o.getLocation().x = -1;
@@ -304,7 +303,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         }
 
         // Did the snake die?
-        if (mScore <= -1 || spaceWorm.detectDeath()) {
+        if (tempScore <= -1 || spaceWorm.detectDeath()) {
             mSoundManager.playCrashSound();
 
             // reset the worm to visible
