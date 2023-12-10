@@ -357,9 +357,9 @@ class SnakeGame extends SurfaceView implements Runnable {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!findSpaceWorm().getInvisible())
-                        addToScore((-1) * findBlackHole().points());
+                        addToScore((-1) * findBlackHole().points(mScore));
 
-                    if(spaceWorm.getSegmentsCount() == 1) // worm will die if it eats a black hole without any segments
+                    if(spaceWorm.getSegmentsCount() <= 0) // worm will die if it eats a black hole without any segments
                         mScore = -1;
 
                     if(mScore == -1)
