@@ -39,4 +39,6 @@ public abstract class GameObject {
     void setInactive() {
         isActive = false;
     }
+
+
 }
