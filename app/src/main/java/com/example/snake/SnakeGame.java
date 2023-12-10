@@ -316,8 +316,8 @@ class SnakeGame extends SurfaceView implements Runnable {
             mGameOver = true;
             setBackButtonVisibilityOnUiThread(VISIBLE);
 
-            //TODO:
-//            ScoresService.addScore(mScore);
+
+            ScoresService.addScore(mScore);
         }
     }
 

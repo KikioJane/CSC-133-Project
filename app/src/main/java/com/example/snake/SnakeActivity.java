@@ -62,10 +62,10 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
         // update the scores data dynamically.
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        //TODO:
-//        HighScoresAdapter highScoresAdapter = new HighScoresAdapter();
-//        recyclerView.setAdapter(highScoresAdapter);
-//        ScoresService.setHighScoresAdapter(highScoresAdapter);
+
+        HighScoresAdapter highScoresAdapter = new HighScoresAdapter();
+        recyclerView.setAdapter(highScoresAdapter);
+        ScoresService.setHighScoresAdapter(highScoresAdapter);
 
         // get objects for the game layout
         gameLayoutBackButton = findViewById(R.id.gameLayoutBackButton);
