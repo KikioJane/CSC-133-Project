@@ -12,8 +12,6 @@ public abstract class GameObject {
     protected Point mSpawnRange;
     protected int mSize;
     protected boolean isActive = false;
-    private String mTag;
-
 
     public GameObject (Point sr, int size)
     {
