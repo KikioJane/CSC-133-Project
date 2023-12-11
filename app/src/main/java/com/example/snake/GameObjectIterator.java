@@ -3,7 +3,8 @@ package com.example.snake;
 import java.util.ArrayList;
 
 public class GameObjectIterator implements IIterator{
-    ArrayList<GameObject> list;
+    ArrayList<GameObject> list; //refactor to make private
+
     int curr;
     public GameObjectIterator(ArrayList<GameObject> list){
         this.list = list;

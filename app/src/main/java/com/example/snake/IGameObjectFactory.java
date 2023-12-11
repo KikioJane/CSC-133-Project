@@ -2,7 +2,6 @@ package com.example.snake;
 
 import android.content.Context;
 
-import java.util.List;
 
 abstract class IGameObjectFactory {
     protected final Context context;

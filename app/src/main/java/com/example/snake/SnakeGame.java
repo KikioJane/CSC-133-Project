@@ -101,8 +101,30 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
+        // creation of portal
+        gameObjects.addGameObject(WormHole.getWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
+        findWormHole().spawn();
         gameObjects.addGameObject(mPauseResume);
     }
+
+    private WormHole findWormHole()
+    {
+        GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
+
+        while(gameObjectIterator.hasNext())
+        {
+            GameObject curr = gameObjectIterator.getNext();
+            if(curr instanceof WormHole)
+            {
+                return (WormHole) curr;
+            }
+        }
+        return null;
+    }
+
+    /* ********************
+    Functions for Snake Game
+    ******************** */
 
     // Called to start a new game
     public void newGame() {
@@ -120,6 +142,9 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         //createAsteroidBelt();
         mAsteroidBelt.spawn(this.context, difficulty);
+
+        // reset wormhole
+        WormHole.resetWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
         // remove the other objects by clearing the list
         gameObjects.clearGameObjectList();
@@ -295,6 +320,27 @@ class SnakeGame extends SurfaceView implements Runnable {
                     mSoundManager.playStarSound(gameObjects.createGameObjectIterator().findBlackHole().getType());
                 }
             }
+        }
+
+        //Did the SpaceWorm head enter a portal?
+        //Implements pootal functionality
+        WormHole wh = findWormHole();
+        if(wh.getLocation().equals(spaceWorm.getHeadLocation()))
+        {
+            spaceWorm.setHeadLocation(wh.getPartnerLocation());
+            wh.updatePassthrough();
+        }
+        //colides with partner portal
+        else if(wh.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
+        {
+            spaceWorm.setHeadLocation(wh.getLocation());
+            wh.updatePassthrough();
+        }
+        // Re-spawn portal if it has been used 5 times
+        if(wh.getPassthrough() >= 3)
+        {
+            wh.spawn();
+            wh.updatePassthrough();
         }
 
         // Did the snake die?

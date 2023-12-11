@@ -26,6 +26,8 @@ class SpaceWorm extends GameObject implements IDrawable {
     // horizontally in pixels?
     private final int halfWayPoint;
 
+    private static AsteroidBelt mAsteroidBelt;
+
     // For tracking movement Heading
     private enum Heading {
         UP, RIGHT, DOWN, LEFT
@@ -55,6 +57,8 @@ class SpaceWorm extends GameObject implements IDrawable {
 
     private SpaceWorm(Context context, Point mr, int ss) {
         super(mr, ss);
+        //***
+        //con = context;
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
 
@@ -81,7 +85,15 @@ class SpaceWorm extends GameObject implements IDrawable {
         }
         return mSpaceWorm;
     }
-
+    public Point getHeadLocation()
+    {
+        return segmentLocations.get(0);
+    }
+    public void setHeadLocation(Point location)
+    {
+        segmentLocations.get(0).set(location.x, location.y);
+    }
+    //
     private void createBitmaps(Context context) {
         // Create the Bitmaps
         mBitmapHeadRight = BitmapFactory
@@ -194,6 +206,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                 p.x--;
                 break;
         }
+
     }
 
     int detectDeath() {
@@ -224,6 +237,7 @@ class SpaceWorm extends GameObject implements IDrawable {
             if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y])
                 dead = 2;
         }
+
         return dead;
     }
 
@@ -279,6 +293,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                 int n = (((segmentLocations.get(i).y*mSegmentSize)+
                         (segmentLocations.get(i-1).y*mSegmentSize))/2);
                 canvas.drawBitmap(mBitmapBody, m, n, paint);
+
             }
             // Draw the head
             switch (heading) {
@@ -314,6 +329,8 @@ class SpaceWorm extends GameObject implements IDrawable {
                                     * mSegmentSize, paint);
                     break;
             }
+
+
         }
     }
 
@@ -336,6 +353,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                 case LEFT:
                     heading = Heading.UP;
                     break;
+
             }
         } else {
             // Rotate left
@@ -354,6 +372,10 @@ class SpaceWorm extends GameObject implements IDrawable {
                     break;
             }
         }
+    }
+
+    static void setAsteroidBelt(AsteroidBelt aBelt){
+        mAsteroidBelt = aBelt;
     }
 
     // if the worm eats a blue apple, it should be invisible
