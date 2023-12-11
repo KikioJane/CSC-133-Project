@@ -11,7 +11,7 @@ import android.view.SurfaceHolder;
 
 import java.util.Random;
 
-class Background {
+class Background extends GameObject{
 
     private SurfaceHolder mSurfaceHolder;
     private Canvas mCanvas;
@@ -24,6 +24,7 @@ class Background {
 
 
     Background(Context context, Point sr){
+        super(sr, sr.x);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         mBitmapBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.spacebackground);
@@ -31,6 +32,7 @@ class Background {
         bHeight = mBitmapBackground.getHeight();
         this.sr = sr;
     }
+    public void spawn(){}
 
     public void draw(Canvas canvas, Paint paint){
         canvas.drawColor(Color.argb(255,10,44,54));

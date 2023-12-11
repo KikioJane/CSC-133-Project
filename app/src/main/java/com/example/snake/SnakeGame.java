@@ -38,6 +38,7 @@ class SnakeGame extends SurfaceView implements Runnable {
     private int mScore;
 
     // Objects for drawing
+    private Renderer mRenderer;
     private Canvas mCanvas;
     private final SurfaceHolder mSurfaceHolder;
     private final Paint mPaint;
@@ -78,6 +79,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         SoundManager.InitializeSoundManager(context);
 
         // Initialize the drawing objects
+        mRenderer = new Renderer(this);
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
         mBackground = new Background(context, size);
@@ -171,7 +173,11 @@ class SnakeGame extends SurfaceView implements Runnable {
                 if (mGameRunning && !mPaused) {
                     update();
                 }
-                draw();
+                // draw the first frame
+                //draw();
+                mRenderer.draw(context, gameObjects, new boolean[]
+                        {mPaused, mGameRunning, mGameOver}, mScore);
+
                 if (mPaused) {
                     // wait a moment so we don't waste CPU while paused
                     try {

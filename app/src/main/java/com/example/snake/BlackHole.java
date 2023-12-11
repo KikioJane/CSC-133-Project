@@ -38,8 +38,14 @@ public class BlackHole extends YellowStar implements IDrawable {
         segmentAmount = (-1) * points;
         return points;
     }
+    public void changeLocation(){
+        Point coord = validCoord();
+        setLocation(coord.x, coord.y);
+        isActive = true;
+    }
 
     public StarType getType(){
         return type;
     }
+
 }

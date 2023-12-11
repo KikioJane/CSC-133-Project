@@ -54,4 +54,38 @@ public class GameObjectIterator implements IIterator{
         }
         return null;
     }
+    BlackHole findInactiveBlackHole() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof BlackHole) {
+                if(curr.checkActive())
+                    return (BlackHole) curr;
+            }
+        }
+        return null;
+    }
+
+    boolean checkInactiveBlackHole(){
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof BlackHole) {
+                if (!curr.checkActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    PauseResume findPauseResume() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof PauseResume) {
+                return (PauseResume) curr;
+            }
+        }
+        return null;
+    }
+
+
 }
