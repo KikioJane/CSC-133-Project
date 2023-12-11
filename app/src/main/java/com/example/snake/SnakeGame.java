@@ -89,6 +89,8 @@ class SnakeGame extends SurfaceView implements Runnable {
         // Add asteroid belt
         mAsteroidBelt = AsteroidBelt.getInstance(new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
+        // For asteroid belt
+        createAsteroidBelt();
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
         mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
@@ -99,9 +101,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
     // Method to add game objects into the game object collection
     private void addGameObjects() {
-        // For asteroid belt
-        createAsteroidBelt();
-
+        gameObjects.addGameObject(mBackground);
         // Add asteroid belt
         gameObjects.addGameObject(mAsteroidBelt);
 
@@ -230,7 +230,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         spaceWorm.move();
         spaceWorm.updateInvisible(context);
 
-        // Did the head of the snake eat the apple?
+        // Did the head of the snake eat a star?
         Star star = gameObjects.createGameObjectIterator().findStar();
         if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded())){
             // This reminds me of Edge of Tomorrow.
@@ -273,9 +273,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
-                        addToScore(- gameObjects.createGameObjectIterator().findBlackHole().points(mScore));
-
-
+                        addToScore((-1) * gameObjects.createGameObjectIterator().findBlackHole().points(mScore));
                     if(spaceWorm.getSegmentsCount() <= 1) {// worm will die if it eats a black hole with one segment left
                         tempScore = -1;
                     }
@@ -287,10 +285,21 @@ class SnakeGame extends SurfaceView implements Runnable {
                     // Move black hole off screen
                     o.getLocation().x = -1;
                     o.getLocation().y = -1;
+                    // Make black hole inactive
+                    o.setInactive();
 
                     // Respawn only if score is higher than factor
-                    if(mScore >= 3 * i && !gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
-                        o.spawn();
+                    int spawnRate = mBlackHoleFactory.getSpawnRate();
+                    if(mScore >= spawnRate * i && !gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
+                        // Reuse inactive black stars
+                        if (gameObjects.createGameObjectIterator().checkInactiveBlackHole()){
+                            BlackHole b = gameObjects.createGameObjectIterator().findInactiveBlackHole();
+                            b.changeLocation();
+                            b.setActive();
+                        }
+                        else {  // Otherwise spawn a new one
+                                o.spawn();
+                            }
                     else{
                         mBlackHoleFactory.setCount(mBlackHoleFactory.getCount() - 1);
                     }
