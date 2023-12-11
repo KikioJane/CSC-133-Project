@@ -24,7 +24,7 @@ public class Supernova extends Star implements IDrawable {
         super(sr, size);
         isActive = true;
         points = randPoints();
-        segmentAmount = 0;
+        segmentAmount = -points;
         mBitmapSupernova = BitmapFactory.decodeResource(c.getResources(), R.drawable.supernova);
         // Resize the bitmap
         mBitmapSupernova = Bitmap.createScaledBitmap(mBitmapSupernova, size*2, size*2, false);

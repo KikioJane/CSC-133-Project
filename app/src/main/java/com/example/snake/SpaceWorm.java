@@ -290,8 +290,9 @@ class SpaceWorm extends GameObject implements IDrawable {
                 //Draw the in-between segments
                 int s = segmentLocations.get(i-1).x - segmentLocations.get(i).x;
                 int t = segmentLocations.get(i-1).y - segmentLocations.get(i).y;
-                int m, n;
-                if (s==0 && t>0){
+                int m = 0;
+                int n = 0;
+                /*if (s==0 && t>0){
                     m = segmentLocations.get(i).x*mSegmentSize;
                     n = segmentLocations.get(i).y*mSegmentSize + (mSegmentSize/2);
                 }else if (s>0 && t==0){
@@ -302,6 +303,22 @@ class SpaceWorm extends GameObject implements IDrawable {
                     n = segmentLocations.get(i).y*mSegmentSize - (mSegmentSize/2);
                 }else{
                     m = segmentLocations.get(i).x*mSegmentSize - (mSegmentSize/2);
+                    n = segmentLocations.get(i).y*mSegmentSize;
+                }*/
+                if (s==0 && t>0){
+                    m = segmentLocations.get(i).x*mSegmentSize;
+                    n = segmentLocations.get(i).y*mSegmentSize + (mSegmentSize/2);
+                }else if (s>0 && t==0){
+                    m = segmentLocations.get(i).x*mSegmentSize + (mSegmentSize/2);
+                    n = segmentLocations.get(i).y*mSegmentSize;
+                }else if (s==0 && t<0){
+                    m = segmentLocations.get(i).x*mSegmentSize;
+                    n = segmentLocations.get(i).y*mSegmentSize - (mSegmentSize/2);
+                }else if (s<0 && t==0){
+                    m = segmentLocations.get(i).x*mSegmentSize - (mSegmentSize/2);
+                    n = segmentLocations.get(i).y*mSegmentSize;
+                }else{
+                    m = segmentLocations.get(i).x*mSegmentSize;
                     n = segmentLocations.get(i).y*mSegmentSize;
                 }
                 canvas.drawBitmap(mBitmapBody, m, n, paint);
