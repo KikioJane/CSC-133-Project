@@ -11,14 +11,12 @@ import android.graphics.Point;
 // They will kill the SpaceWorm if it collides with it
 public class BlackHole extends YellowStar implements IDrawable {
     private Bitmap mBitmapBlackHole;
-
     private final StarType type = StarType.blackhole;
-
 
     public BlackHole(Context c, Point sr, int size) {
         super(c, sr, size);
         points = 1;
-        segmentAmount = -1;
+        segmentAmount = (-1) * points;
 
         mBitmapBlackHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.blackholepurple);
         // Resize the bitmap
@@ -37,9 +35,10 @@ public class BlackHole extends YellowStar implements IDrawable {
         } else {
             points = score / 10;
         }
-        segmentAmount = -points;
+        segmentAmount = (-1) * points;
         return points;
     }
+
     public StarType getType(){
         return type;
     }
