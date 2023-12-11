@@ -269,11 +269,13 @@ class SnakeGame extends SurfaceView implements Runnable {
         for (GameObject o : gameObjects.createGameObjectIterator().list) {
             if (o instanceof BlackHole) {
                 i++;
-                if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsAdded())) {
+                if(spaceWorm.checkDinner(o.getLocation(), (-1) * gameObjects.createGameObjectIterator().findBlackHole().points(mScore))) {
 
                     // Subtract from  mScore if worm is not invisible
                     if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
                         addToScore((-1) * gameObjects.createGameObjectIterator().findBlackHole().points(mScore));
+
+
                     if(spaceWorm.getSegmentsCount() <= 1) {// worm will die if it eats a black hole with one segment left
                         tempScore = -1;
                     }
@@ -502,7 +504,8 @@ class SnakeGame extends SurfaceView implements Runnable {
     }
 
     private void updateBlackHoleSpawn(){
-        if(mScore % 3 == 0 && mScore != 0) {
+        int spawnRate = mBlackHoleFactory.getSpawnRate();
+        if(mScore % spawnRate == 0 && mScore != 0) {
             gameObjects.addGameObject(mBlackHoleFactory.createObject());
         }
     }
