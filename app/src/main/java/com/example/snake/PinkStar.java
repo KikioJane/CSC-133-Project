@@ -18,8 +18,8 @@ class PinkStar extends Star {
     public PinkStar(Context context, Point sr, int s){
         super(sr, s);
         isActive = true;
-        points = 1;
-        segmentAmount = -1;
+        points = randPoints();
+        segmentAmount = points;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.pinkstar);
         // Resize the bitmap

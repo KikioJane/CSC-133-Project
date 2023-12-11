@@ -129,5 +129,5 @@ public class AsteroidBelt extends GameObject implements IDrawable{
             Arrays.fill(row, false);
         }
     }
-
+    public boolean checkActive(){ return isActive; }
 }

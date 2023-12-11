@@ -411,4 +411,6 @@ class SpaceWorm extends GameObject implements IDrawable {
     }
 
     public int getSegmentsCount(){return segmentLocations.size();}
+
+    public boolean checkActive(){ return isActive; }
 }

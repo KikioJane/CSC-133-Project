@@ -31,6 +31,7 @@ class Background extends GameObject{
         bWidth = mBitmapBackground.getWidth();
         bHeight = mBitmapBackground.getHeight();
         this.sr = sr;
+        isActive = true;
     }
     public void spawn(){}
 
@@ -49,5 +50,5 @@ class Background extends GameObject{
         x *= -1;
         y *= -1;
     }
-
+    public boolean checkActive(){ return isActive; }
 }

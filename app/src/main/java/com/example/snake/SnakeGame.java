@@ -44,6 +44,7 @@ class SnakeGame extends SurfaceView implements Runnable {
     private final Paint mPaint;
     Bitmap mPausedBitmap;
     Bitmap mResumeBitmap;
+    private final PauseResume mPauseResume;
 
     private Difficulty difficulty = Difficulty.Easy;
 
@@ -93,6 +94,7 @@ class SnakeGame extends SurfaceView implements Runnable {
                 mNumBlocksHigh), blockSize, difficulty);
         // For asteroid belt
         createAsteroidBelt();
+        mPauseResume = new PauseResume(context, size);
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
         mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
@@ -114,6 +116,7 @@ class SnakeGame extends SurfaceView implements Runnable {
 
         // Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
+        gameObjects.addGameObject(mPauseResume);
     }
 
 
@@ -165,7 +168,10 @@ class SnakeGame extends SurfaceView implements Runnable {
             throw new RuntimeException(e);
         }
         // draw the first frame
-        draw();
+        //draw();
+        mRenderer.draw(context, gameObjects, new boolean[]
+                {mPaused, mGameRunning, mGameOver}, mScore);
+
 
         while (mPlaying) {
             // Update 10 times a second

@@ -58,7 +58,7 @@ public class GameObjectIterator implements IIterator{
         while (hasNext()) {
             GameObject curr = getNext();
             if (curr instanceof BlackHole) {
-                if(curr.checkActive())
+                if(!curr.checkActive())
                     return (BlackHole) curr;
             }
         }
