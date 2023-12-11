@@ -96,7 +96,7 @@
                 android:id="@+id/mainMenuGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:constraint_referenced_ids="easyButton,mediumButton,hardButton,highScoresButton" />
 
             <Button
@@ -174,7 +174,7 @@
                 android:id="@+id/scoresMenuGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:constraint_referenced_ids="scoresHardButton,scoresMediumButton,scoresEasyButton,recyclerView,scoresMenuBackButton" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
