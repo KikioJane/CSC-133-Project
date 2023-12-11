@@ -289,7 +289,8 @@ class SnakeGame extends SurfaceView implements Runnable {
                     o.getLocation().y = -1;
 
                     // Respawn only if score is higher than factor
-                    if(mScore >= 3 * i && !gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
+                    int spawnRate = mBlackHoleFactory.getSpawnRate();
+                    if(mScore >= spawnRate * i && !gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
                         o.spawn();
                     else{
                         mBlackHoleFactory.setCount(mBlackHoleFactory.getCount() - 1);
@@ -492,7 +493,8 @@ class SnakeGame extends SurfaceView implements Runnable {
     }
 
     private void updateBlackHoleSpawn(){
-        if(mScore % 3 == 0 && mScore != 0) {
+        int spawnRate = mBlackHoleFactory.getSpawnRate();
+        if(mScore % spawnRate == 0 && mScore != 0) {
             gameObjects.addGameObject(mBlackHoleFactory.createObject());
         }
     }
