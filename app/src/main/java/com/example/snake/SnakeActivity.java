@@ -3,6 +3,8 @@ package com.example.snake;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +25,12 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
     private Button mediumButton;
     private Button hardButton;
     private Button highScoresButton;
+
     private Button scoresMenuBackButton;
+    private Button scoresEasyButton;
+    private Button scoresMediumButton;
+    private Button scoresHardButton;
+    private HighScoresAdapter highScoresAdapter;
 
     private Button gameLayoutBackButton;
 
@@ -58,12 +65,15 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
         // get high scores menu objects
         scoresMenuGroup = findViewById(R.id.scoresMenuGroup);
         scoresMenuBackButton = findViewById(R.id.scoresMenuBackButton);
+        scoresEasyButton = findViewById(R.id.scoresEasyButton);
+        scoresMediumButton = findViewById(R.id.scoresMediumButton);
+        scoresHardButton = findViewById(R.id.scoresHardButton);
         // Set up high scores view. We use a RecyclerView with a custom adapter so that we can
         // update the scores data dynamically.
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        HighScoresAdapter highScoresAdapter = new HighScoresAdapter();
+        highScoresAdapter = new HighScoresAdapter();
         recyclerView.setAdapter(highScoresAdapter);
         ScoresService.setHighScoresAdapter(highScoresAdapter);
 
@@ -77,13 +87,10 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
         for (int id : mainMenuGroup.getReferencedIds()) {
             findViewById(id).setOnClickListener(this);
         }
-        scoresMenuBackButton.setOnClickListener(this);
+        for (int id : scoresMenuGroup.getReferencedIds()) {
+            findViewById(id).setOnClickListener(this);
+        }
         gameLayoutBackButton.setOnClickListener(this);
-
-        // uncomment this to add some scores for testing
-        /* for (int i = 0; i < 10; i++) {
-            ScoresService.addScore(i * 2);
-        } */
     }
 
     // Start the thread in snakeEngine
@@ -105,14 +112,14 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
     // Handle click events for all the menu buttons
     @Override
     public void onClick(View clickedView) {
-        // TODO: figure out how to add animations between menus
-
         if (clickedView == highScoresButton) {
             // go to high scores menu
+            TransitionManager.beginDelayedTransition(findViewById(R.id.main_menu_layout));
             mainMenuGroup.setVisibility(View.INVISIBLE);
             scoresMenuGroup.setVisibility(View.VISIBLE);
         } else if (clickedView == scoresMenuBackButton) {
             // go back to main menu
+            TransitionManager.beginDelayedTransition(findViewById(R.id.main_menu_layout));
             scoresMenuGroup.setVisibility(View.INVISIBLE);
             mainMenuGroup.setVisibility(View.VISIBLE);
         } else if (mainMenuGroup.containsId(clickedView.getId())) {
@@ -126,6 +133,16 @@ public class SnakeActivity extends Activity implements View.OnClickListener {
             }
             // go to the game view
             viewFlipper.setDisplayedChild(1);
+        } else if (scoresMenuGroup.containsId(clickedView.getId())) {
+            TransitionManager.beginDelayedTransition(findViewById(R.id.main_menu_layout), new Fade());
+            // change the difficulty filter in the scores adapter
+            if (clickedView == scoresEasyButton) {
+                highScoresAdapter.setDifficulty(Difficulty.Easy);
+            } else if (clickedView == scoresMediumButton) {
+                highScoresAdapter.setDifficulty(Difficulty.Medium);
+            } else if (clickedView == scoresHardButton) {
+                highScoresAdapter.setDifficulty(Difficulty.Hard);
+            }
         } else if (clickedView == gameLayoutBackButton) {
             // go back to the main menu view
             viewFlipper.setDisplayedChild(0);
