@@ -58,8 +58,6 @@ class SnakeGame extends SurfaceView implements Runnable{
     private final BlackHoleFactory mBlackHoleFactory;
     private int invisibilityCount = 0;
 
-    private WormHoleCollection mWormHoleCollection;
-
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
     //private LinkedList<IGameObject> mGameObjects = new LinkedList<>();
@@ -109,18 +107,16 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Add new BlackHole Object
         gameObjects.addGameObject(mBlackHoleFactory.createObject());
 
-       // mGameObjects.add(mSnake);
-        mWormHoleCollection = new WormHoleCollection();
-        //test creation of portal
-        mWormHoleCollection.addWormHole(new WormHole(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
-        //spawn portal
-        GameObjectIterator whIterator = mWormHoleCollection.createGameObjectIterator();
-        while(whIterator.hasNext()) {
-            WormHole curr = (WormHole) whIterator.getNext();
-            curr.spawn();
-        }
+        // creation of portal
+        gameObjects.addGameObject(WormHole.getWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
+        findWormHole().spawn();
+
 
     }
+    /* ***********************************************************
+    Functions for finding specific instances of commonly accessed
+    game object variables in the Game Collection Object
+    *********************************************************** */
     private SpaceWorm findSpaceWorm()
     {
         GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
@@ -164,23 +160,53 @@ class SnakeGame extends SurfaceView implements Runnable{
         return null;
     }
 
+    private WormHole findWormHole()
+    {
+        GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
+
+        while(gameObjectIterator.hasNext())
+        {
+            GameObject curr = gameObjectIterator.getNext();
+            if(curr instanceof WormHole)
+            {
+                return (WormHole) curr;
+            }
+        }
+        return null;
+    }
+
+    /* ********************
+    Functions for Snake Game
+    ******************** */
+
     // Called to start a new game
     public void newGame() {
         mGameRunning = true;
 
-        // reset the snake
+        // reset the snake, astroid best, and wormhole
         findSpaceWorm().reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
         createAsteroidBelt();
+        WormHole.resetWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
         // remove the other objects by clearing the list
         gameObjects.clearGameObjectList();
         gameObjects.addGameObject(mAsteroidBelt);
 
         //re-add Spaceworm object
-        gameObjects.addGameObject(SpaceWorm.getSnakeInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
+        gameObjects.addGameObject(SpaceWorm.getSnakeInstance(
+                context,
+                new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
+                blockSize));
 
         //Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
+
+        // Add WormHole
+        gameObjects.addGameObject(WormHole.getWormHoleInstance(
+                context,
+                new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
+                blockSize));
+        findWormHole().spawn();
 
 //        // Add new BlackHole Object
 //        gameObjects.addGameObject(mBlackHoleFactory.createObject());
@@ -339,21 +365,24 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
 
         //Did the SpaceWorm head enter a portal?
-        GameObjectIterator whIterator = mWormHoleCollection.createGameObjectIterator();
-        while(whIterator.hasNext()){
-            WormHole curr = (WormHole) whIterator.getNext();
-            //colides with main portal
-            if(curr.getLocation().equals(spaceWorm.getHeadLocation()))
-            {
-                spaceWorm.setHeadLocation(curr.getPartnerLocation());
-                break;
-            }
-            //colides with partner portal
-            if(curr.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
-            {
-                spaceWorm.setHeadLocation(curr.getLocation());
-                break;
-            }
+        //Implements pootal functionality
+        WormHole wh = findWormHole();
+        if(wh.getLocation().equals(spaceWorm.getHeadLocation()))
+        {
+            spaceWorm.setHeadLocation(wh.getPartnerLocation());
+            wh.updatePassthrough();
+        }
+        //colides with partner portal
+        else if(wh.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
+        {
+            spaceWorm.setHeadLocation(wh.getLocation());
+            wh.updatePassthrough();
+        }
+        // Re-spawn portal if it has been used 5 times
+        if(wh.getPassthrough() >= 3)
+        {
+            wh.spawn();
+            wh.updatePassthrough();
         }
 
         // Did the snake die?
@@ -399,11 +428,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 //            findBlackHole().draw(mCanvas, mPaint);
             mAsteroidBelt.draw(mCanvas, mPaint);
             //draw WormHoles
-            GameObjectIterator whIterator = mWormHoleCollection.createGameObjectIterator();
-            while(whIterator.hasNext())
-            {
-                ((WormHole) whIterator.getNext()).draw(mCanvas, mPaint);
-            }
+            findWormHole().draw(mCanvas, mPaint);
 
             if(mPaused) {
                 if (mGameRunning) {

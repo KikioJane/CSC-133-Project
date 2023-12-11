@@ -13,13 +13,28 @@ import java.util.Random;
 //Each wormhole will have a partner location that will
 // be where the wormhole will transport the SpaceWorm
 public class WormHole extends GameObject implements IDrawable {
+    private static WormHole instance = null;
     private Point partnerLocation = new Point();
     private Bitmap mBitmapWormHole;
-    public WormHole(Context c, Point sr, int size) {
+
+    private int passthrough = 0;
+    private WormHole(Context c, Point sr, int size) {
         super(sr, size);
         mBitmapWormHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.worm_hole);
         // Resize the bitmap
         mBitmapWormHole = Bitmap.createScaledBitmap(mBitmapWormHole, size, size, false);
+
+    }
+
+    public static WormHole getWormHoleInstance(Context c, Point sr, int size)
+    {
+        if(instance == null)
+            instance = new WormHole(c, sr, size);
+        return instance;
+    }
+    public static void resetWormHoleInstance(Context c, Point sr, int size)
+    {
+
     }
 
     public Point getPartnerLocation()
@@ -30,6 +45,17 @@ public class WormHole extends GameObject implements IDrawable {
         super.setLocation(mx, my);
         partnerLocation.x = px;
         partnerLocation.y = py;
+    }
+
+    public int getPassthrough() {
+        return passthrough;
+    }
+
+    public void updatePassthrough() {
+        if(passthrough < 3)
+            passthrough += 1;
+        else
+            passthrough = 0;
     }
 
     @Override
