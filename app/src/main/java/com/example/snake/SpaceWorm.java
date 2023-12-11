@@ -288,12 +288,23 @@ class SpaceWorm extends GameObject implements IDrawable {
                         segmentLocations.get(i).y
                                 * mSegmentSize, paint);
                 //Draw the in-between segments
-                int m = (((segmentLocations.get(i).x*mSegmentSize)+
-                        (segmentLocations.get(i-1).x*mSegmentSize))/2);
-                int n = (((segmentLocations.get(i).y*mSegmentSize)+
-                        (segmentLocations.get(i-1).y*mSegmentSize))/2);
+                int s = segmentLocations.get(i-1).x - segmentLocations.get(i).x;
+                int t = segmentLocations.get(i-1).y - segmentLocations.get(i).y;
+                int m, n;
+                if (s==0 && t>0){
+                    m = segmentLocations.get(i).x*mSegmentSize;
+                    n = segmentLocations.get(i).y*mSegmentSize + (mSegmentSize/2);
+                }else if (s>0 && t==0){
+                    m = segmentLocations.get(i).x*mSegmentSize + (mSegmentSize/2);
+                    n = segmentLocations.get(i).y*mSegmentSize;
+                }else if (s==0 && t<0){
+                    m = segmentLocations.get(i).x*mSegmentSize;
+                    n = segmentLocations.get(i).y*mSegmentSize - (mSegmentSize/2);
+                }else{
+                    m = segmentLocations.get(i).x*mSegmentSize - (mSegmentSize/2);
+                    n = segmentLocations.get(i).y*mSegmentSize;
+                }
                 canvas.drawBitmap(mBitmapBody, m, n, paint);
-
             }
             // Draw the head
             switch (heading) {
