@@ -44,16 +44,18 @@ public class Supernova extends Star implements IDrawable {
     @Override
     public void updateStar(){
         if (timeCounter == 30){    // if number of frames has been reached
+            SoundManager.playNovaTele();
             timeCounter = 0;
             this.spawn();                // supernova should jump
             timeCounter++;
             jumpCounter++;          // increase jump counter
-            if(jumpCounter ==3 ){
+            if(jumpCounter == 3 ){
+                SoundManager.playNovaGone();
                 isActive = false;   // remove from map at next update
                 jumpCounter = 0;    // reset jump counter
             }
         }
-        else{
+        else {
             timeCounter++;
         }
     }

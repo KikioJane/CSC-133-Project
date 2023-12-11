@@ -29,6 +29,11 @@ public class SoundManager {
     private static int mPowerUp4ID = -1;
     private static int mHit1ID = -1;
 
+    private static int mInvisiGlowID = -1;
+
+    private static int mNovaTeleID = -1;
+    private static int mNovaGoneID = -1;
+
     public static void InitializeSoundManager(Context context) {
         // Initialize the SoundPool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -74,6 +79,15 @@ public class SoundManager {
             descriptor = assetManager.openFd("hit1.wav");
             mHit1ID = mSP.load(descriptor, 0);
 
+            descriptor = assetManager.openFd("novaTele.wav");
+            mNovaTeleID = mSP.load(descriptor, 0);
+
+            descriptor = assetManager.openFd("novaGone.wav");
+            mNovaGoneID = mSP.load(descriptor, 0);
+
+            descriptor = assetManager.openFd("invisibleGlow3.wav");
+            mInvisiGlowID = mSP.load(descriptor, 0);
+
         } catch (IOException e) {
             // Error
         }
@@ -90,6 +104,9 @@ public class SoundManager {
     private static void playPowerUp3Sound(){ mSP.play(mPowerUp3ID, 1, 1, 0, 0, 1); }
     private static void playPowerUp4Sound(){ mSP.play(mPowerUp4ID, 1, 1, 0, 0, 1); }
     private static void playHit1Sound(){ mSP.play(mHit1ID, 1, 1, 0, 0, 1); }
+    public static void playInvisibleGlow(){ mSP.play(mInvisiGlowID, 1,1,0,0,1); }
+    public static void playNovaTele(){ mSP.play(mNovaTeleID,1,1,0,0,1);}
+    public static void playNovaGone(){ mSP.play(mNovaGoneID,1,1,0,0,1);}
 
     public static void playStarSound(StarType type){
         switch(type){
