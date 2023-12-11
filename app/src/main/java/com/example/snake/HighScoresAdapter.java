@@ -12,7 +12,8 @@ import java.util.List;
 
 public class HighScoresAdapter extends RecyclerView.Adapter<HighScoresAdapter.ViewHolder> {
     // the list of scores to use for displaying data
-    private final List<Score> dataSet;
+    private List<Score> dataSet;
+    private Difficulty currentDifficulty = Difficulty.Medium;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
@@ -30,7 +31,13 @@ public class HighScoresAdapter extends RecyclerView.Adapter<HighScoresAdapter.Vi
     }
 
     public HighScoresAdapter() {
-        dataSet = ScoresService.getScores();
+        dataSet = ScoresService.getScores(currentDifficulty);
+    }
+
+    public void setDifficulty(Difficulty newDifficulty) {
+        this.currentDifficulty = newDifficulty;
+        dataSet = ScoresService.getScores(currentDifficulty);
+        notifyDataSetChanged();
     }
 
     // Create new views (invoked by the layout manager)
@@ -47,20 +54,26 @@ public class HighScoresAdapter extends RecyclerView.Adapter<HighScoresAdapter.Vi
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
-        // Each score needs to be called on twice, once for the date and once for points. Divide the
-        // given position by two in order to get the actual index of the list we need
-        int newPosition = position / 2;
-        Score curScore = dataSet.get(newPosition);
-
         String text;
-        if(position % 2 == 0) {
-            // even positions go in the first column and are dates
-            text = String.format("%d.  %s", newPosition + 1, curScore.getDate());
+        if(dataSet.size() == 0) {
+            // if no scores display special text
+            text = "No scores";
             viewHolder.getTextView().setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
         } else {
-            // odd positions go in the second column and are point values
-            text = curScore.getPoints() + " points";
-            viewHolder.getTextView().setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            // Each score needs to be called on twice, once for the date and once for points. Divide the
+            // given position by two in order to get the actual index of the list we need
+            int newPosition = position / 2;
+            Score curScore = dataSet.get(newPosition);
+
+            if (position % 2 == 0) {
+                // even positions go in the first column and are dates
+                text = String.format("%d.  %s", newPosition + 1, curScore.getDate());
+                viewHolder.getTextView().setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            } else {
+                // odd positions go in the second column and are point values
+                text = curScore.getPoints() + " points";
+                viewHolder.getTextView().setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
         }
         viewHolder.getTextView().setText(text);
     }
@@ -69,9 +82,8 @@ public class HighScoresAdapter extends RecyclerView.Adapter<HighScoresAdapter.Vi
     @Override
     public int getItemCount() {
         // Multiply by two for two-column data.
-        return dataSet.size() * 2;
-        // Use this line instead if we want to limit it to top 10 scores (or some other amount)
-        // return Math.min(10, dataSet.size()) * 2;
+        // Minimum one for displaying special text with no scores.
+        return Math.max(dataSet.size() * 2, 1);
     }
 }
 
