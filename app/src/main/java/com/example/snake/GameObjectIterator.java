@@ -3,7 +3,8 @@ package com.example.snake;
 import java.util.ArrayList;
 
 public class GameObjectIterator implements IIterator{
-    ArrayList<GameObject> list;
+    ArrayList<GameObject> list; //refactor to make private
+
     int curr;
     public GameObjectIterator(ArrayList<GameObject> list){
         this.list = list;
@@ -21,9 +22,7 @@ public class GameObjectIterator implements IIterator{
 
     @Override
     public boolean hasNext() {
-        if(curr < list.size() - 1)
-            return true;
-        return false;
+        return curr < list.size() - 1;
     }
     SpaceWorm findSpaceWorm() {
         while (hasNext()) {
@@ -54,4 +53,48 @@ public class GameObjectIterator implements IIterator{
         }
         return null;
     }
+    BlackHole findInactiveBlackHole() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof BlackHole) {
+                if(!curr.checkActive())
+                    return (BlackHole) curr;
+            }
+        }
+        return null;
+    }
+
+    boolean checkInactiveBlackHole(){
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof BlackHole) {
+                if (!curr.checkActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    PauseResume findPauseResume() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof PauseResume) {
+                return (PauseResume) curr;
+            }
+        }
+        return null;
+    }
+
+    WormHole findWormHole() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof WormHole) {
+                return (WormHole) curr;
+            }
+        }
+        return null;
+    }
+
+
 }

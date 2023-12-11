@@ -1,5 +1,7 @@
 package com.example.snake;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 
 public abstract class GameObject {
@@ -21,6 +23,7 @@ public abstract class GameObject {
     }
 
     abstract public void spawn();
+    abstract public void draw(Canvas canvas, Paint paint);
 
     void setLocation(int x, int y) {
         location.x = x;
@@ -37,6 +40,8 @@ public abstract class GameObject {
     void setInactive() {
         isActive = false;
     }
-
-
+    void setActive() {
+        isActive = false;
+    }
+    Point getSpawnRange() { return mSpawnRange; }
 }
