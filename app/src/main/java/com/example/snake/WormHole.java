@@ -23,7 +23,7 @@ public class WormHole extends GameObject implements IDrawable {
         mBitmapWormHole = BitmapFactory.decodeResource(c.getResources(), R.drawable.worm_hole);
         // Resize the bitmap
         mBitmapWormHole = Bitmap.createScaledBitmap(mBitmapWormHole, size, size, false);
-
+        isActive = true;
     }
 
     public static WormHole getWormHoleInstance(Context c, Point sr, int size)

@@ -86,5 +86,15 @@ public class GameObjectIterator implements IIterator{
         return null;
     }
 
+    WormHole findWormHole() {
+        while (hasNext()) {
+            GameObject curr = getNext();
+            if (curr instanceof WormHole) {
+                return (WormHole) curr;
+            }
+        }
+        return null;
+    }
+
 
 }

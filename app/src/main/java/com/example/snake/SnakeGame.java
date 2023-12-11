@@ -103,24 +103,10 @@ class SnakeGame extends SurfaceView implements Runnable {
         gameObjects.addGameObject(mStarFactory.createObject());
         // creation of portal
         gameObjects.addGameObject(WormHole.getWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
-        findWormHole().spawn();
+        gameObjects.createGameObjectIterator().findWormHole().spawn();
         gameObjects.addGameObject(mPauseResume);
     }
 
-    private WormHole findWormHole()
-    {
-        GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
-
-        while(gameObjectIterator.hasNext())
-        {
-            GameObject curr = gameObjectIterator.getNext();
-            if(curr instanceof WormHole)
-            {
-                return (WormHole) curr;
-            }
-        }
-        return null;
-    }
 
     /* ********************
     Functions for Snake Game
@@ -323,14 +309,14 @@ class SnakeGame extends SurfaceView implements Runnable {
         }
 
         //Did the SpaceWorm head enter a portal?
-        //Implements pootal functionality
-        WormHole wh = findWormHole();
+        //Implements portal functionality
+        WormHole wh = gameObjects.createGameObjectIterator().findWormHole();
         if(wh.getLocation().equals(spaceWorm.getHeadLocation()))
         {
             spaceWorm.setHeadLocation(wh.getPartnerLocation());
             wh.updatePassthrough();
         }
-        //colides with partner portal
+        //collides with partner portal
         else if(wh.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
         {
             spaceWorm.setHeadLocation(wh.getLocation());
