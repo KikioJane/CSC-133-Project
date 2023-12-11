@@ -1,5 +1,6 @@
 package com.example.snake;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,8 +11,9 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 
-class SnakeGame extends SurfaceView implements Runnable{
+class SnakeGame extends SurfaceView implements Runnable {
     //Context
     private final Context context;
     // Objects for the game loop/thread
@@ -22,6 +24,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
     private volatile boolean mGameRunning = false;
+    private volatile boolean mGameOver = false;
     private final Point screenSize;
 
     // for playing sound effects
@@ -45,18 +48,14 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // GameObjects
     private final GameObjectCollection gameObjects;
-    //private GameObjectIterator gameObjectIterator;
-    //private SpaceWorm mSpaceWorm;
-    //private Star mStar;
-
     //***
     private AsteroidBelt mAsteroidBelt;
-    private int blockSize;
+    private final int blockSize;
     private final Background mBackground;
 
     private final StarFactory mStarFactory;
     private final BlackHoleFactory mBlackHoleFactory;
-    private int invisibilityCount = 0;
+    private final Button backButton;
 
     // Use a linked list for O(1) time add/remove operations.
     // This doesn't really matter that much, but why not lol
@@ -64,7 +63,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // This is the constructor method that gets called
     // from SnakeActivity
-    public SnakeGame(Context context, Point size) {
+    public SnakeGame(Context context, Point size, Button backButton) {
         super(context);
         this.context = context;
         screenSize = size;
@@ -73,91 +72,58 @@ class SnakeGame extends SurfaceView implements Runnable{
         // How many blocks of the same size will fit into the height
         mNumBlocksHigh = size.y / blockSize;
 
+        this.backButton = backButton;
+
         // Initialize mSoundManager
         SoundManager.InitializeSoundManager(context);
 
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
-        mBackground = new Background(context);
+        mBackground = new Background(context, size);
 
-        mPausedBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_icon);
-        mPausedBitmap = Bitmap.createScaledBitmap(mPausedBitmap, 100, 100, false);
-        mResumeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.resume_icon);
-        mResumeBitmap = Bitmap.createScaledBitmap(mResumeBitmap, 100, 100, false);
+        setBitmaps();
 
         gameObjects = new GameObjectCollection();
-        //gameObjectIterator = (GameObjectIterator) gameObjects.createGameObjectIterator();
-        // for asteroid belt
-        createAsteroidBelt();
-        // Add astroid belt
-        gameObjects.addGameObject(mAsteroidBelt);
+
+        // Add asteroid belt
+        mAsteroidBelt = AsteroidBelt.getInstance(new Point(NUM_BLOCKS_WIDE,
+                mNumBlocksHigh), blockSize, difficulty);
 
         mStarFactory = new StarFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
-        mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh, blockSize);
+        mBlackHoleFactory = new BlackHoleFactory(context, NUM_BLOCKS_WIDE, mNumBlocksHigh,
+                blockSize);
+
+        addGameObjects();
+    }
+
+    // Method to add game objects into the game object collection
+    private void addGameObjects() {
+        // For asteroid belt
+        createAsteroidBelt();
+
+        // Add asteroid belt
+        gameObjects.addGameObject(mAsteroidBelt);
 
         // Call the constructors of our two game objects
         gameObjects.addGameObject(SpaceWorm.getSnakeInstance(context,
-                                  new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
-                                  blockSize));
+                new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
+                blockSize));
 
         // Add new Star Object
         gameObjects.addGameObject(mStarFactory.createObject());
-
-        // Add new BlackHole Object
-        gameObjects.addGameObject(mBlackHoleFactory.createObject());
-
         // creation of portal
         gameObjects.addGameObject(WormHole.getWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize));
         findWormHole().spawn();
-
-
-    }
-    /* ***********************************************************
-    Functions for finding specific instances of commonly accessed
-    game object variables in the Game Collection Object
-    *********************************************************** */
-    private SpaceWorm findSpaceWorm()
-    {
-        GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
-
-        while(gameObjectIterator.hasNext())
-        {
-            GameObject curr = gameObjectIterator.getNext();
-            if(curr instanceof SpaceWorm){
-                return (SpaceWorm) curr;
-            }
-        }
-        return null;
-    }
-    private Star findStar()
-    {
-        GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
-
-        while(gameObjectIterator.hasNext())
-        {
-            GameObject curr = gameObjectIterator.getNext();
-            if(curr instanceof Star)
-            {
-                return (Star) curr;
-            }
-        }
-        return null;
     }
 
-    private BlackHole findBlackHole()
-    {
-        GameObjectIterator gameObjectIterator = gameObjects.createGameObjectIterator();
 
-        while(gameObjectIterator.hasNext())
-        {
-            GameObject curr = gameObjectIterator.getNext();
-            if(curr instanceof BlackHole)
-            {
-                return (BlackHole) curr;
-            }
-        }
-        return null;
+    private void setBitmaps() {
+        mPausedBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_icon);
+        mPausedBitmap = Bitmap.createScaledBitmap(mPausedBitmap, 100, 100, false);
+        mResumeBitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.resume_icon);
+        mResumeBitmap = Bitmap.createScaledBitmap(mResumeBitmap, 100, 100, false);
     }
 
     private WormHole findWormHole()
@@ -181,35 +147,27 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Called to start a new game
     public void newGame() {
-        mGameRunning = true;
+        mGameOver = false;
+        // set difficulty levels
+        mStarFactory.setDifficulty(difficulty);
+        mBlackHoleFactory.setDifficulty(difficulty);
+        mBlackHoleFactory.setCount(0);
+        // change background placement
+        mBackground.resetPlacement();
+        // reset the snake
+        SpaceWorm spaceWorm = gameObjects.createGameObjectIterator().findSpaceWorm();
+        spaceWorm.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        spaceWorm.resetInvisible(context);
 
-        // reset the snake, astroid best, and wormhole
-        findSpaceWorm().reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
-        createAsteroidBelt();
+        //createAsteroidBelt();
+        mAsteroidBelt.spawn(this.context, difficulty);
+
+        // reset wormhole
         WormHole.resetWormHoleInstance(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
         // remove the other objects by clearing the list
         gameObjects.clearGameObjectList();
-        gameObjects.addGameObject(mAsteroidBelt);
-
-        //re-add Spaceworm object
-        gameObjects.addGameObject(SpaceWorm.getSnakeInstance(
-                context,
-                new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
-                blockSize));
-
-        //Add new Star Object
-        gameObjects.addGameObject(mStarFactory.createObject());
-
-        // Add WormHole
-        gameObjects.addGameObject(WormHole.getWormHoleInstance(
-                context,
-                new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
-                blockSize));
-        findWormHole().spawn();
-
-//        // Add new BlackHole Object
-//        gameObjects.addGameObject(mBlackHoleFactory.createObject());
+        addGameObjects();
 
         // Reset the mScore
         mScore = 0;
@@ -247,20 +205,9 @@ class SnakeGame extends SurfaceView implements Runnable{
                         throw new RuntimeException(e);
                     }
                 }
-                // set invisibility to last for 10 seconds
-                if(findSpaceWorm().getInvisible()){
-                    if(invisibilityCount == 120){
-                        findSpaceWorm().resetInvisible(context);
-                        invisibilityCount = 0;
-                    }
-                    else{
-                        invisibilityCount += 1;
-                    }
-                }
             }
         }
     }
-
 
     // Check to see if it is time for an update
     public boolean updateRequired() {
@@ -285,15 +232,15 @@ class SnakeGame extends SurfaceView implements Runnable{
         final long MILLIS_PER_SECOND = 1000;
 
         // Are we due to update the frame
-        if(mNextFrameTime <= System.currentTimeMillis()){
+        if (mNextFrameTime <= System.currentTimeMillis()) {
             // Tenth of a second has passed
 
             // Setup when the next update will be triggered
-            mNextFrameTime =System.currentTimeMillis()
+            mNextFrameTime = System.currentTimeMillis()
                     + MILLIS_PER_SECOND / TARGET_FPS;
 
             // Return true so that the update and draw
-            // methods are executed
+            // Methods are executed
             return true;
         }
 
@@ -303,64 +250,79 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Update all the game objects
     public void update() {
-        SpaceWorm spaceWorm = findSpaceWorm();
+        SpaceWorm spaceWorm = gameObjects.createGameObjectIterator().findSpaceWorm();
 
-        //for(IGameObject gameObject : mGameObjects) {
-        //    gameObject.update(mGameObjects);
-        //}
         // Move the snake
         spaceWorm.move();
+        spaceWorm.updateInvisible(context);
 
         // Did the head of the snake eat the apple?
-        Star star = findStar();
-        if(star != null && spaceWorm.checkDinner(star.getLocation())){
+        Star star = gameObjects.createGameObjectIterator().findStar();
+        if(star != null && spaceWorm.checkDinner(star.getLocation(), star.segmentsAdded())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
-            if (findStar().getType() == StarType.blue){
+            if (gameObjects.createGameObjectIterator().findStar().getType() == StarType.blue){
                 // set invisibility count to 0 in the event that the worm is already invisible
-                invisibilityCount = 0;
-                findSpaceWorm().setInvisible(context);
+                gameObjects.createGameObjectIterator().findSpaceWorm().setInvisibilityCount(0);
+                spaceWorm.setInvisible(context);
             }
-            // Generate a new kind of star
-            gameObjects.changeGameObject(findStar(), mStarFactory.createObject());
-            findStar().spawn();
-
             // Add to  mScore
-            mScore = mScore + 1;
+            addToScore(gameObjects.createGameObjectIterator().findStar().points());
 
-            // If mScore is a factor of 3 then spawn a new black hole and a new Portal
-            if(mScore % 3 == 0 && mScore != 0){
-                gameObjects.addGameObject(mBlackHoleFactory.createObject());
-            }
+            // Updates to a a new kind of star
+            gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
+            gameObjects.createGameObjectIterator().findStar().spawn();
+
 
             // Play a sound
-            mSoundManager.playEatSound();
+            mSoundManager.playStarSound(star.getType());
+        }
+        else { // this stuff is for the supernova star
+            if (star.getType() == StarType.supernova){
+                star.updateStar();
+            }
+            if (!star.checkActive()){
+                // if the star is inactive, change the star.
+                gameObjects.changeGameObject(gameObjects.createGameObjectIterator().findStar(), mStarFactory.createObject());
+                gameObjects.createGameObjectIterator().findStar().spawn();
+            }
         }
 
         // TODO: Make spawns based on amount of stars
         // Did the head of the snake go into a black hole
-        int i = 0;
-        for(GameObject o : gameObjects.createGameObjectIterator().list){
-            if(o instanceof BlackHole){
+        int i = 0; // Keep count of number of black holes
+        int tempScore = mScore; // To detect death
+        for (GameObject o : gameObjects.createGameObjectIterator().list) {
+            if (o instanceof BlackHole) {
                 i++;
-                if(spaceWorm.removeDinner(o.getLocation())) {
+                if(spaceWorm.checkDinner(o.getLocation(), gameObjects.createGameObjectIterator().findBlackHole().segmentsAdded())) {
 
-                    // Subtract from  mScore
-                    mScore = mScore - 1;
-                    if(mScore == -1)
+                    // Subtract from  mScore if worm is not invisible
+                    if (!gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
+                        addToScore(- gameObjects.createGameObjectIterator().findBlackHole().points(mScore));
+
+
+                    if(spaceWorm.getSegmentsCount() <= 1) {// worm will die if it eats a black hole with one segment left
+                        tempScore = -1;
+                    }
+
+                    if(tempScore == -1) {
                         break;
+                    }
 
-                    // Move off screen
+                    // Move black hole off screen
                     o.getLocation().x = -1;
                     o.getLocation().y = -1;
 
                     // Respawn only if score is higher than factor
-                    if(mScore >= 3 * i)
+                    if(mScore >= 3 * i && !gameObjects.createGameObjectIterator().findSpaceWorm().getInvisible())
                         o.spawn();
+                    else{
+                        mBlackHoleFactory.setCount(mBlackHoleFactory.getCount() - 1);
+                    }
                     // Play a sound
-                    mSoundManager.playEatSound(); //TODO: might want to make a new sound
+                    mSoundManager.playStarSound(gameObjects.createGameObjectIterator().findBlackHole().getType());
                 }
-
             }
         }
 
@@ -386,19 +348,27 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
 
         // Did the snake die?
-        if (mScore == -1 || spaceWorm.detectDeath()) {
-            // Pause the game ready to start again
-            mSoundManager.playCrashSound();
-            // reset the worm to visible
-            invisibilityCount = 0;
-            findSpaceWorm().resetInvisible(context);
+        if (tempScore <= -1 || spaceWorm.detectDeath()>0) {
+            // Determine which death sound to play
+            if (spaceWorm.detectDeath() == 2){
+                mSoundManager.playAsteroidCrashSound();
+            }
+            else{
+                mSoundManager.playEdgeCrashSound();
+            }
 
+            // reset the worm to visible
+            gameObjects.createGameObjectIterator().findSpaceWorm().setInvisibilityCount(0);
+            gameObjects.createGameObjectIterator().findSpaceWorm().resetInvisible(context);
+            // Pause the game ready to start again
             mPaused = true;
             mGameRunning = false;
+            mGameOver = true;
+            setBackButtonVisibilityOnUiThread(VISIBLE);
+
+            ScoresService.addScore(mScore, difficulty);
         }
-
     }
-
 
     // Do all the drawing
     public void draw() {
@@ -416,44 +386,57 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Draw the score
             mCanvas.drawText("" + mScore, 20, 120, mPaint);
 
-            // Draw the apple and the snake
-            findStar().draw(mCanvas, mPaint);
-            findSpaceWorm().draw(mCanvas, mPaint);
-
+            if (gameObjects.createGameObjectIterator().findStar() != null) {  // prevents crash caused by null star reference
+                gameObjects.createGameObjectIterator().findStar().draw(mCanvas, mPaint);
+            }
             for(GameObject o : gameObjects.createGameObjectIterator().list){
-                if(o instanceof BlackHole){
+                if(o instanceof BlackHole) {
                     ((BlackHole) o).draw(mCanvas, mPaint);
                 }
             }
-//            findBlackHole().draw(mCanvas, mPaint);
+            if(gameObjects.createGameObjectIterator().findSpaceWorm() != null)
+                gameObjects.createGameObjectIterator().findSpaceWorm().draw(mCanvas, mPaint);
             mAsteroidBelt.draw(mCanvas, mPaint);
             //draw WormHoles
             findWormHole().draw(mCanvas, mPaint);
 
-            if(mPaused) {
+            if (mPaused) {
                 if (mGameRunning) {
+                    // Darken the screen when paused during gameplay
+                    mCanvas.drawColor(Color.argb(127, 0, 0, 0));
+
                     // Draw resume icon
                     mCanvas.drawBitmap(mResumeBitmap, screenSize.x - 125, 25, mPaint);
                     // Draw resume text
                     mPaint.setColor(Color.argb(255, 255, 255, 255));
                     mPaint.setTextSize(60);
                     mCanvas.drawText(getResources().getString(R.string.tap_to_resume),
-                        screenSize.x - 530, 95, mPaint);
-
-                    // Darken the screen when paused during gameplay
-                    mCanvas.drawColor(Color.argb(127, 0, 0, 0));
+                            screenSize.x - 530, 95, mPaint);
                 } else {
-                    // Draw some text while paused
                     // Set the size and color of the mPaint for the text
                     mPaint.setColor(Color.argb(255, 255, 255, 255));
-                    mPaint.setTextSize(250);
 
                     // Draw the message
-                    // We will give this an international upgrade soon
-                    //mCanvas.drawText("Tap To Play!", 200, 700, mPaint);
-                    mCanvas.drawText(getResources().
-                                    getString(R.string.tap_to_play),
-                            200, 700, mPaint);
+                    if (mGameOver) {
+                        // Draw red overlay on screen
+                        mCanvas.drawColor(Color.argb(80, 255, 0, 0));
+
+                        mPaint.setTextSize(200);
+                        mCanvas.drawText(getResources().getString(R.string.game_over),
+                                200, 400, mPaint);
+
+                        mPaint.setTextSize(100);
+                        mCanvas.drawText(String.format("%s: %d", getResources().getString(R.string.score), mScore),
+                                220, 530, mPaint);
+
+                        mPaint.setTextSize(76);
+                        mCanvas.drawText(getResources().getString(R.string.tap_to_play_again),
+                                220, 650, mPaint);
+                    } else {
+                        mPaint.setTextSize(200);
+                        mCanvas.drawText(getResources().getString(R.string.tap_to_play),
+                                50, 400, mPaint);
+                    }
                 }
             } else {
                 // Draw pause icon
@@ -471,14 +454,24 @@ class SnakeGame extends SurfaceView implements Runnable{
             case MotionEvent.ACTION_UP:
                 if (mPaused && !mGameRunning) {
                     // start a new game
-                    mPaused = false;
                     newGame();
+                    mPaused = false;
+                    mGameRunning = true;
+                    backButton.setVisibility(GONE);
                 } else if (motionEvent.getX() > screenSize.x - 150 && motionEvent.getY() < 150) {
                     // The player hit the pause/resume button
-                    mPaused = !mPaused;
+                    if (mPaused) {
+                        mPaused = false;
+                        backButton.setVisibility(INVISIBLE);
+                    } else {
+                        mPaused = true;
+                        backButton.setVisibility(VISIBLE);
+                    }
+                    // draw immediately so that the screen fade/unfade matches up with the button hide/unhide
+                    draw();
                 } else if (!mPaused) {
                     // Let the Snake class handle the input
-                    findSpaceWorm().switchHeading(motionEvent);
+                    gameObjects.createGameObjectIterator().findSpaceWorm().switchHeading(motionEvent);
                 }
                 break;
             default:
@@ -487,20 +480,34 @@ class SnakeGame extends SurfaceView implements Runnable{
         return true;
     }
 
-    // Pause the game
-    public void pause() {
+    // called to reset the game state when we return to main menu
+    public void returnToMenu() {
         mPaused = true;
+        mGameRunning = false;
+        backButton.setVisibility(GONE);
+    }
+
+    private void setBackButtonVisibilityOnUiThread(int visibility) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                backButton.setVisibility(visibility);
+            }
+        });
     }
 
     // Stop the thread
     public void stop() {
         mPlaying = false;
+        mPaused = true;
         mGameRunning = false;
+        mGameOver = false;
         try {
             mThread.join();
         } catch (InterruptedException e) {
             // Error
         }
+        setBackButtonVisibilityOnUiThread(GONE);
     }
 
     // Start the thread
@@ -510,22 +517,33 @@ class SnakeGame extends SurfaceView implements Runnable{
         mThread.start();
     }
 
-    public void incrementScore() {
-        mScore++;
-    }
-
     private void createAsteroidBelt() {
-        mAsteroidBelt = new AsteroidBelt(this.getContext(), new Point(NUM_BLOCKS_WIDE,
+        mAsteroidBelt = AsteroidBelt.getInstance(new Point(NUM_BLOCKS_WIDE,
                 mNumBlocksHigh), blockSize, difficulty);
-
         mAsteroidBelt.spawn();
-
-        SpaceWorm.setAsteroidBelt(mAsteroidBelt);
-        Star.setAsteroidBelt(mAsteroidBelt);
-        BlackHole.setAsteroidBelt(mAsteroidBelt);
     }
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+    }
+
+    void addToScore(int point){
+        if(point >= 0) {
+            for (int i = 0; i < point; i++) {
+                mScore += 1;
+                updateBlackHoleSpawn();
+            }
+        }
+        else if(point < 0){
+            for (int i = 0; i < (-1) * point; i++) {
+                mScore -= 1;
+            }
+        }
+    }
+
+    private void updateBlackHoleSpawn(){
+        if(mScore % 3 == 0 && mScore != 0) {
+            gameObjects.addGameObject(mBlackHoleFactory.createObject());
+        }
     }
 }

@@ -1,9 +1,6 @@
 package com.example.snake;
 
-import android.graphics.Bitmap;
 import android.graphics.Point;
-
-import java.util.List;
 
 public abstract class GameObject {
     // The location of the Game Object on the grid
@@ -14,7 +11,7 @@ public abstract class GameObject {
     // to spawn an apple
     protected Point mSpawnRange;
     protected int mSize;
-
+    protected boolean isActive = false;
 
     public GameObject (Point sr, int size)
     {
@@ -35,4 +32,11 @@ public abstract class GameObject {
     Point getLocation(){
         return location;
     }
+    // see if the object is active
+    boolean checkActive(){ return isActive; }
+    void setInactive() {
+        isActive = false;
+    }
+
+
 }

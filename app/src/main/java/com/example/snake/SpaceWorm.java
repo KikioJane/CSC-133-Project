@@ -49,7 +49,11 @@ class SpaceWorm extends GameObject implements IDrawable {
     static private SpaceWorm mSpaceWorm = null;
 
     private boolean invisible = false;
-
+    //private final boolean isActive;
+    int invisibilityCount = 0;
+    public void setInvisibilityCount(int invisibilityCount) {
+        this.invisibilityCount = invisibilityCount;
+    }
 
     private SpaceWorm(Context context, Point mr, int ss) {
         super(mr, ss);
@@ -65,11 +69,12 @@ class SpaceWorm extends GameObject implements IDrawable {
 
         // Setting up the bitmaps
         createBitmaps(context);
-        setBitmaps(context, ss);
+        setBitmaps(ss);
 
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+        isActive = true;
     }
 
     static SpaceWorm getSnakeInstance(Context context, Point mr, int ss){
@@ -114,7 +119,7 @@ class SpaceWorm extends GameObject implements IDrawable {
                         R.drawable.octabody);
     }
 
-    private void setBitmaps(Context context, int ss) {
+    private void setBitmaps(int ss) {
         // Modify the bitmaps to face the snake head
         // in the correct direction
         mBitmapHeadRight = Bitmap
@@ -204,17 +209,16 @@ class SpaceWorm extends GameObject implements IDrawable {
 
     }
 
-    boolean detectDeath() {
+    int detectDeath() {
         // Has the snake died?
-        boolean dead = false;
+        int dead = 0;
 
         // Hit any of the screen edges
         if (segmentLocations.get(0).x == -1 ||
                 segmentLocations.get(0).x > mMoveRange.x-1 ||
                 segmentLocations.get(0).y == -1 ||
                 segmentLocations.get(0).y > mMoveRange.y-1) {
-
-            dead = true;
+            dead = 1;
         }
 
         // Eaten itself?
@@ -222,50 +226,46 @@ class SpaceWorm extends GameObject implements IDrawable {
             // Have any of the sections collided with the head
             if (segmentLocations.get(0).x == segmentLocations.get(i).x &&
                     segmentLocations.get(0).y == segmentLocations.get(i).y) {
-
-                dead = true;
+                dead = 1;
+                break;
             }
         }
 
-        // don't check if snake is already dead.
-        if (dead == false && invisible == false){
-            boolean[][] asteroidMap = mAsteroidBelt.getAsteroidMap();
-            if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y] == true)
-                dead = true;
+        // Don't check if snake is already dead.
+        if (dead == 0 && !invisible){
+            boolean[][] asteroidMap = AsteroidBelt.getAsteroidMap();
+            if(asteroidMap[segmentLocations.get(0).x][segmentLocations.get(0).y])
+                dead = 2;
         }
 
         return dead;
     }
 
-
-
-    boolean checkDinner(Point l) {
+    boolean checkDinner(Point l, int segmentsAdded) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
-
-            // Add a new Point to the list
-            // located off-screen.
-            // This is OK because on the next call to
-            // move it will take the position of
-            // the segment in front of it
-            segmentLocations.add(new Point(-10, -10));
-            return true;
-        }
-        return false;
-    }
-
-    boolean removeDinner(Point l) {
-        //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
-        if (segmentLocations.get(0).x == l.x &&
-                segmentLocations.get(0).y == l.y) {
-
-            // Add a new Point to the list
-            // located off-screen.
-            // This is OK because on the next call to
-            // move it will take the position of
-            // the segment in front of it
-            segmentLocations.remove(segmentLocations.size()-1);
+            if (segmentsAdded>=0){
+                for (int i = 0; i < segmentsAdded; i++){
+                    // Add a new Point to the list
+                    // located off-screen.
+                    // This is OK because on the next call to
+                    // move it will take the position of
+                    // the segment in front of it
+                    segmentLocations.add(new Point(-10, -10));
+                }
+            }
+            else if (segmentsAdded < 0){
+                // remove segments
+                if (segmentLocations.size() <= -segmentsAdded){
+                    segmentsAdded = -segmentLocations.size();
+                }
+                for (int i = 0; i > segmentsAdded; i--){
+                    if (segmentLocations.size() > 1){
+                        segmentLocations.remove(segmentLocations.size()-1);
+                    }
+                }
+            }
             return true;
         }
         return false;
@@ -381,7 +381,7 @@ class SpaceWorm extends GameObject implements IDrawable {
     // if the worm eats a blue apple, it should be invisible
     public void setInvisible(Context context){
         createInvisibleBitmaps(context);
-        setBitmaps(context, mSegmentSize);
+        setBitmaps(mSegmentSize);
         invisible = true;
     }
     private void createInvisibleBitmaps(Context context) {
@@ -412,8 +412,25 @@ class SpaceWorm extends GameObject implements IDrawable {
     // reset the worm to normal
     public void resetInvisible(Context context){
         createBitmaps(context);
-        setBitmaps(context, mSegmentSize);
+        setBitmaps(mSegmentSize);
         invisible = false;
     }
+
     public boolean getInvisible(){ return invisible;}
+
+    public void updateInvisible(Context context){
+        // set invisibility to last for 10 seconds
+        if (invisible) {
+            if (invisibilityCount == 120) {
+                resetInvisible(context);
+                invisibilityCount = 0;
+            } else {
+                if(invisibilityCount % 5 == 0)
+                    SoundManager.playInvisibleGlow();
+                invisibilityCount += 1;
+            }
+        }
+    }
+
+    public int getSegmentsCount(){return segmentLocations.size();}
 }

@@ -14,16 +14,14 @@ class YellowStar extends Star implements IDrawable {
     /// Set up the apple in the constructor
     public YellowStar(Context context, Point sr, int s){
         super(sr, s);
+        isActive = true;
+        points = 1;
+        segmentAmount = 1;
         // Load the image to the bitmap
         mBitmapStar = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellowstar);
 
         // Resize the bitmap
         mBitmapStar = Bitmap.createScaledBitmap(mBitmapStar, s, s, false);
-    }
-
-    public void spawn(){
-        Point coord = ValidCoord();
-        setLocation(coord.x, coord.y);
     }
 
     // Draw the star
@@ -32,9 +30,16 @@ class YellowStar extends Star implements IDrawable {
         canvas.drawBitmap(mBitmapStar,
                 location.x * mSize, location.y * mSize, paint);
     }
+    @Override
+    public void updateStar(){}
+
+    //public StarType getType(){ return type; }
+    @Override
+    public int points(){ return points; }
 
     public StarType getType(){
         return type;
     }
+
 
 }
