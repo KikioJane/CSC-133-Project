@@ -320,6 +320,7 @@ class SnakeGame extends SurfaceView implements Runnable {
         //collides with partner portal
         else if(wh.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
         {
+            mSoundManager.playPortal2();
             spaceWorm.setHeadLocation(wh.getLocation());
             wh.updatePassthrough();
         }
