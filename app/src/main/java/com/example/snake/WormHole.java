@@ -60,6 +60,7 @@ public class WormHole extends GameObject implements IDrawable {
 
     @Override
     public void spawn() {
+        SoundManager.playPortal1();
         Random random = new Random();
         int mx = random.nextInt(mSpawnRange.x - 1) + 1;
         int my = random.nextInt(mSpawnRange.y - 1) + 1;

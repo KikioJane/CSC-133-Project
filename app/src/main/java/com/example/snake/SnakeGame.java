@@ -313,12 +313,14 @@ class SnakeGame extends SurfaceView implements Runnable {
         WormHole wh = gameObjects.createGameObjectIterator().findWormHole();
         if(wh.getLocation().equals(spaceWorm.getHeadLocation()))
         {
+            mSoundManager.playPortal2();
             spaceWorm.setHeadLocation(wh.getPartnerLocation());
             wh.updatePassthrough();
         }
         //collides with partner portal
         else if(wh.getPartnerLocation().equals(spaceWorm.getHeadLocation()))
         {
+            mSoundManager.playPortal2();
             spaceWorm.setHeadLocation(wh.getLocation());
             wh.updatePassthrough();
         }
