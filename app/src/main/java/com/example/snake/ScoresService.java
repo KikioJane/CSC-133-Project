@@ -5,12 +5,18 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-// TODO: split scores by difficulty
+import java.util.Map;
 
 public class ScoresService {
-    private static final ArrayList<Score> scores = new ArrayList<>();
+    private static final Map<Difficulty, List<Score>> scores = new HashMap<>();
+    static {
+        scores.put(Difficulty.Easy, new ArrayList<>());
+        scores.put(Difficulty.Medium, new ArrayList<>());
+        scores.put(Difficulty.Hard, new ArrayList<>());
+    }
+
     private static final DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
     private static HighScoresAdapter highScoresAdapter;
 
@@ -20,17 +26,19 @@ public class ScoresService {
     }
 
     // add a new score to the list, sort the list, and notify the adapter of changes
-    public static void addScore(int points) {
+    public static void addScore(int points, Difficulty difficulty) {
         String dateString = dateFormat.format(new Date());
-        scores.add(new Score(points, dateString));
+        scores.get(difficulty).add(new Score(points, dateString));
 
-        Collections.sort(scores);
+        for(List<Score> currentList : scores.values()) {
+            Collections.sort(currentList);
+        }
 
         highScoresAdapter.notifyDataSetChanged();
     }
 
-    public static List<Score> getScores() {
-        return scores;
+    public static List<Score> getScores(Difficulty difficulty) {
+        return scores.get(difficulty);
     }
 }
 
