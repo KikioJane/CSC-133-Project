@@ -51,6 +51,7 @@ public class Supernova extends Star implements IDrawable {
             timeCounter++;
             jumpCounter++;          // increase jump counter
             if(jumpCounter == 3 ){
+                mSoundManager.playNovaGone();
                 isActive = false;   // remove from map at next update
                 jumpCounter = 0;    // reset jump counter
             }
