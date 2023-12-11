@@ -21,9 +21,7 @@ public class GameObjectIterator implements IIterator{
 
     @Override
     public boolean hasNext() {
-        if(curr < list.size() - 1)
-            return true;
-        return false;
+        return curr < list.size() - 1;
     }
     SpaceWorm findSpaceWorm() {
         while (hasNext()) {
